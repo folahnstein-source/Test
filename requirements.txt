@@ -1,0 +1,11 @@
+# Core dependencies – the agents use only the Python standard library today.
+# Add external packages here as integrations are added.
+#
+# Future integrations might include:
+#   requests          # HTTP client for API integrations
+#   openai            # LLM-based lead qualification
+#   anthropic         # Claude API for analysis
+#   pandas            # Data manipulation
+#   sqlalchemy        # Database persistence
+#   pydantic          # Stricter data validation
+#   schedule          # Periodic sourcing cycles
