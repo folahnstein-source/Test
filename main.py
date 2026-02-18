@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
-"""Entry point – demonstrates both sourcing agents with sample data."""
+"""Entry point – runs both sourcing agents with sample data and live APIs.
+
+When API keys are configured (via env vars or config.py), the agents will
+query external sources in addition to the sample data.  Without keys, only
+sample data and free/unauthenticated endpoints are used.
+"""
 
 import json
 import logging
+import os
 import sys
 
 import config
 from agents.deal_sourcing import DealSourcingAgent
 from agents.fundraising import FundraisingAgent
+from integrations.mcp.registry import MCPRegistry, MCPServerConfig
 from models.deal import Deal, DealCriteria, DealStage
 from models.investor import Investor, InvestorStatus, InvestorType
 
@@ -16,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# Sample data – replace with real integrations in production
+# Sample data – always available as a baseline
 # ---------------------------------------------------------------------------
 
 SAMPLE_DEALS = [
@@ -182,8 +189,18 @@ def _pp(data: dict) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False)
 
 
-def demo_deal_sourcing() -> None:
-    """Run the deal sourcing agent with sample data."""
+def _setup_mcp_registry() -> MCPRegistry:
+    """Load MCP server configs from mcp_servers.json (if present)."""
+    registry = MCPRegistry()
+    loaded = registry.load_config()
+    if loaded:
+        connected = registry.connect_all()
+        logger.info("MCP: %d/%d servers connected", connected, loaded)
+    return registry
+
+
+def demo_deal_sourcing(mcp: MCPRegistry) -> DealSourcingAgent:
+    """Run the deal sourcing agent with sample data + live APIs."""
     print("\n" + "=" * 72)
     print("  DEAL SOURCING AGENT – German Mittelstand PE Opportunities")
     print("=" * 72)
@@ -192,18 +209,25 @@ def demo_deal_sourcing() -> None:
         criteria=DealCriteria(
             min_revenue_eur=10_000_000,
             max_revenue_eur=100_000_000,
-        )
+        ),
+        opencorporates_token=config.OPENCORPORATES_TOKEN or None,
+        north_data_key=config.NORTH_DATA_API_KEY or None,
+        newsapi_key=config.NEWSAPI_KEY or None,
+        gnews_key=config.GNEWS_KEY or None,
+        mcp_registry=mcp,
     )
 
+    # Run the full sourcing cycle: sample data + all configured APIs + MCP
     summary = agent.run_cycle(raw_deals=SAMPLE_DEALS)
 
     print(f"\nPipeline summary:\n{_pp(summary)}")
 
     print("\nTop deals:")
     for i, deal in enumerate(agent.top_deals(5), 1):
+        rev = f"€{deal.revenue_eur/1e6:.0f}M" if deal.revenue_eur else "n/a"
         print(
             f"  {i}. {deal.company_name:40s} | Score: {deal.score:5.1f} "
-            f"| Rev: €{deal.revenue_eur/1e6:.0f}M | {deal.sector} | {deal.region}"
+            f"| Rev: {rev:>6s} | {deal.sector} | {deal.region}"
         )
 
     print("\nSuccession opportunities:")
@@ -214,14 +238,20 @@ def demo_deal_sourcing() -> None:
     return agent
 
 
-def demo_fundraising(deal_agent: DealSourcingAgent | None = None) -> None:
-    """Run the fundraising agent with sample data and optional deal matching."""
+def demo_fundraising(deal_agent: DealSourcingAgent, mcp: MCPRegistry) -> None:
+    """Run the fundraising agent with sample data + live APIs, then match."""
     print("\n" + "=" * 72)
     print("  FUNDRAISING AGENT – Co-Investor Sourcing for Independent Sponsors")
     print("=" * 72)
 
-    agent = FundraisingAgent()
+    agent = FundraisingAgent(
+        opencorporates_token=config.OPENCORPORATES_TOKEN or None,
+        newsapi_key=config.NEWSAPI_KEY or None,
+        gnews_key=config.GNEWS_KEY or None,
+        mcp_registry=mcp,
+    )
 
+    # Run the full sourcing cycle: sample data + all configured APIs + MCP
     summary = agent.run_cycle(raw_investors=SAMPLE_INVESTORS)
 
     print(f"\nInvestor database summary:\n{_pp(summary)}")
@@ -234,10 +264,10 @@ def demo_fundraising(deal_agent: DealSourcingAgent | None = None) -> None:
             f"| Ticket: {ticket:>5s} | {inv.investor_type.value} | {inv.country}"
         )
 
-    # Match investors to the top deal from the deal-sourcing agent
-    if deal_agent and deal_agent.pipeline:
+    # Match investors to the top deal
+    if deal_agent.pipeline:
         top_deal = deal_agent.top_deals(1)[0]
-        equity_needed = (top_deal.revenue_eur or 30e6) * 0.4  # rough 40% equity assumption
+        equity_needed = (top_deal.revenue_eur or 30e6) * 0.4
 
         print(f"\nOutreach list for: {top_deal.company_name} (equity ~€{equity_needed/1e6:.0f}M)")
         outreach = agent.outreach_list(top_deal, equity_required_eur=equity_needed, top_n=10)
@@ -254,11 +284,44 @@ def demo_fundraising(deal_agent: DealSourcingAgent | None = None) -> None:
 
 
 def main() -> None:
-    deal_agent = demo_deal_sourcing()
-    demo_fundraising(deal_agent)
+    print("\n" + "=" * 72)
+    print("  PE SOURCING AGENTS – DACH Region")
+    print("  APIs + MCP servers for maximum data coverage")
+    print("=" * 72)
+
+    # Show which API keys are configured
+    apis = {
+        "OpenCorporates": bool(config.OPENCORPORATES_TOKEN),
+        "North Data": bool(config.NORTH_DATA_API_KEY),
+        "NewsAPI": bool(config.NEWSAPI_KEY),
+        "GNews": bool(config.GNEWS_KEY),
+    }
+    print("\nConfigured APIs:")
+    for name, active in apis.items():
+        status = "ACTIVE" if active else "not configured (set env var)"
+        print(f"  {name:20s} {status}")
+
+    # Always-available (no key needed):
+    print("\nAlways-on sources (no API key required):")
+    for name in ["OpenCorporates (free tier)", "Handelsregister", "BaFin", "FMA", "FINMA",
+                  "DUB.de + nexxt-change", "RSS Feeds"]:
+        print(f"  {name}")
+
+    # MCP servers
+    mcp = _setup_mcp_registry()
+    if mcp.connected_servers:
+        print(f"\nMCP servers connected: {', '.join(mcp.connected_servers)}")
+    else:
+        print("\nMCP: no servers configured (add mcp_servers.json to connect)")
+
+    try:
+        deal_agent = demo_deal_sourcing(mcp)
+        demo_fundraising(deal_agent, mcp)
+    finally:
+        mcp.disconnect_all()
 
     print("\n" + "=" * 72)
-    print("  Demo complete. See data/ for persisted JSON files.")
+    print("  Complete. See data/ for persisted JSON pipelines.")
     print("=" * 72 + "\n")
 
 

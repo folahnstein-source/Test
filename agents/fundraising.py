@@ -25,6 +25,13 @@ from collections import Counter
 from datetime import datetime
 from typing import Any, Optional
 
+from integrations.bafin import BaFinClient
+from integrations.fma import FMAClient
+from integrations.finma import FINMAClient
+from integrations.opencorporates import OpenCorporatesClient
+from integrations.news_api import NewsAPIClient
+from integrations.rss_feeds import RSSFeedAggregator
+from integrations.mcp.registry import MCPRegistry
 from models.deal import Deal
 from models.investor import Investor, InvestorStatus, InvestorType
 
@@ -83,16 +90,39 @@ class FundraisingAgent:
         outreach = agent.outreach_list(deal, top_n=20)
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        opencorporates_token: Optional[str] = None,
+        newsapi_key: Optional[str] = None,
+        gnews_key: Optional[str] = None,
+        mcp_registry: Optional[MCPRegistry] = None,
+    ) -> None:
         from agents.base import DATA_DIR
 
         self._data_dir = DATA_DIR
         self._data_dir.mkdir(parents=True, exist_ok=True)
 
         self._investors: list[Investor] = self._load_investors()
+
+        # Regulator clients (DACH)
+        self._bafin = BaFinClient()
+        self._fma = FMAClient()
+        self._finma = FINMAClient()
+
+        # Cross-cutting clients
+        self._opencorporates = OpenCorporatesClient(api_token=opencorporates_token)
+        self._news = NewsAPIClient(newsapi_key=newsapi_key, gnews_key=gnews_key)
+        self._rss = RSSFeedAggregator()
+
+        # MCP server registry
+        self._mcp = mcp_registry or MCPRegistry()
+
         logger.info(
-            "FundraisingAgent ready – %d investors in database",
+            "FundraisingAgent ready – %d investors in database, "
+            "APIs: BaFin FMA FINMA OpenCorporates News=%s MCP=%d servers",
             len(self._investors),
+            self._news.is_configured,
+            len(self._mcp.connected_servers),
         )
 
     # -- persistence ----------------------------------------------------------
@@ -189,29 +219,313 @@ class FundraisingAgent:
                 return inv
         return None
 
-    # -- sourcing (pluggable) -------------------------------------------------
+    # -- sourcing (multi-API + MCP) -------------------------------------------
 
     def source(self, raw_investors: Optional[list[dict]] = None, **kwargs: Any) -> list[Investor]:
-        """Run a sourcing cycle.
+        """Run a full sourcing cycle across all connected APIs and MCP servers.
 
-        If ``raw_investors`` is provided, they are ingested directly.  In
-        production this method would call external APIs and databases:
-
-        * BaFin / FMA / FINMA registers for regulated entities
-        * Family-office directories (e.g. Listenchampion, Finleap)
-        * PE databases (Preqin, PitchBook, Majunke)
-        * XING / LinkedIn for HNWI identification
-        * Conference and event attendee lists
-        * Placement-agent networks
+        Data flow:
+        1. Ingest any manually provided ``raw_investors``
+        2. Query BaFin for German regulated investment firms / KVGs
+        3. Query FMA for Austrian AIFMs and investment firms
+        4. Query FINMA for Swiss asset managers and securities firms
+        5. Query OpenCorporates for PE / family-office vehicles in DE/AT/CH
+        6. Scan news APIs for co-investor / fundraising signals
+        7. Scan RSS feeds for investor activity
+        8. Call any connected MCP servers that provide investor-sourcing tools
         """
+        all_new: list[Investor] = []
+
+        # 0. Manual / direct ingest
         if raw_investors:
-            return self.ingest_investors(raw_investors)
+            all_new.extend(self.ingest_investors(raw_investors))
+
+        # 1. BaFin – German regulated investment firms
+        all_new.extend(self._source_bafin())
+
+        # 2. FMA – Austrian regulated entities
+        all_new.extend(self._source_fma())
+
+        # 3. FINMA – Swiss regulated entities
+        all_new.extend(self._source_finma())
+
+        # 4. OpenCorporates – PE / FO vehicles across DACH
+        all_new.extend(self._source_opencorporates())
+
+        # 5. News APIs – co-investor / fundraising signals
+        all_new.extend(self._source_news())
+
+        # 6. RSS feeds – investor activity
+        all_new.extend(self._source_rss())
+
+        # 7. MCP servers
+        all_new.extend(self._source_mcp())
 
         logger.info(
-            "source() called without raw_investors – connect external feeds "
-            "for automated sourcing"
+            "FundraisingAgent: sourcing cycle complete – %d new investors from all sources",
+            len(all_new),
         )
-        return []
+        return all_new
+
+    def _source_bafin(self) -> list[Investor]:
+        """Query BaFin for German KVGs, financial services firms, etc."""
+        try:
+            results = self._bafin.search_all_investor_types()
+        except Exception as exc:
+            logger.warning("BaFin sourcing failed: %s", exc)
+            return []
+
+        raw: list[dict] = []
+        for r in results:
+            name = r.get("name", "")
+            if not name:
+                continue
+            investor_type = self._infer_investor_type(name, r.get("category", ""))
+            raw.append({
+                "name": name,
+                "investor_type": investor_type.value,
+                "country": "DE",
+                "city": r.get("city", ""),
+                "source": "bafin",
+                "notes": f"BaFin category: {r.get('category', '')}",
+                "co_invest_appetite": True,
+                "independent_sponsor_friendly": investor_type in (
+                    InvestorType.FAMILY_OFFICE, InvestorType.PE_FUND,
+                ),
+            })
+
+        return self.ingest_investors(raw) if raw else []
+
+    def _source_fma(self) -> list[Investor]:
+        """Query FMA for Austrian AIFMs and investment firms."""
+        try:
+            results = self._fma.search_all_investor_types()
+        except Exception as exc:
+            logger.warning("FMA sourcing failed: %s", exc)
+            return []
+
+        raw: list[dict] = []
+        for r in results:
+            name = r.get("name", "")
+            if not name:
+                continue
+            investor_type = self._infer_investor_type(name, r.get("entity_type", ""))
+            raw.append({
+                "name": name,
+                "investor_type": investor_type.value,
+                "country": "AT",
+                "city": r.get("city", ""),
+                "source": "fma",
+                "notes": f"FMA type: {r.get('entity_type', '')}",
+                "co_invest_appetite": True,
+            })
+
+        return self.ingest_investors(raw) if raw else []
+
+    def _source_finma(self) -> list[Investor]:
+        """Query FINMA for Swiss asset managers and securities firms."""
+        try:
+            results = self._finma.search_all_investor_types()
+        except Exception as exc:
+            logger.warning("FINMA sourcing failed: %s", exc)
+            return []
+
+        raw: list[dict] = []
+        for r in results:
+            name = r.get("name", "")
+            if not name:
+                continue
+            investor_type = self._infer_investor_type(name, r.get("category", ""))
+            raw.append({
+                "name": name,
+                "investor_type": investor_type.value,
+                "country": "CH",
+                "city": r.get("city", ""),
+                "source": "finma",
+                "notes": f"FINMA category: {r.get('category', '')}",
+                "co_invest_appetite": True,
+            })
+
+        return self.ingest_investors(raw) if raw else []
+
+    def _source_opencorporates(self) -> list[Investor]:
+        """Query OpenCorporates for PE / family-office vehicles in DACH."""
+        jurisdictions = {"de": "DE", "at": "AT", "ch": "CH"}
+        raw: list[dict] = []
+
+        for jurisdiction, country in jurisdictions.items():
+            try:
+                results = self._opencorporates.search_investment_firms(
+                    jurisdiction_code=jurisdiction,
+                    per_page=30,
+                )
+            except Exception as exc:
+                logger.warning("OpenCorporates (%s) sourcing failed: %s", jurisdiction, exc)
+                continue
+
+            for company in results:
+                name = company.get("name", "")
+                if not name:
+                    continue
+                addr = company.get("registered_address_in_full", "") or ""
+                investor_type = self._infer_investor_type(name, "")
+                raw.append({
+                    "name": name,
+                    "investor_type": investor_type.value,
+                    "country": country,
+                    "city": self._infer_city(addr),
+                    "website": company.get("registry_url", ""),
+                    "source": "opencorporates",
+                    "notes": f"Status: {company.get('current_status', 'unknown')}",
+                    "co_invest_appetite": True,
+                })
+
+        return self.ingest_investors(raw) if raw else []
+
+    def _source_news(self) -> list[Investor]:
+        """Scan news for co-investor / fundraising signals."""
+        if not self._news.is_configured:
+            logger.debug("NewsAPI: skipped (no API key configured)")
+            return []
+
+        try:
+            articles = self._news.scan_investor_signals(max_per_keyword=5)
+        except Exception as exc:
+            logger.warning("News API sourcing failed: %s", exc)
+            return []
+
+        raw: list[dict] = []
+        for article in articles:
+            title = article.get("title", "")
+            if not title:
+                continue
+            # News articles provide signal intelligence rather than direct
+            # investor records.  We store them as identified leads.
+            raw.append({
+                "name": title[:80],
+                "investor_type": InvestorType.PE_FUND.value,
+                "country": "DE",
+                "source": "news_api",
+                "notes": f"Signal: {article.get('signal_keyword', '')} | {article.get('url', '')}",
+                "co_invest_appetite": True,
+            })
+
+        return self.ingest_investors(raw) if raw else []
+
+    def _source_rss(self) -> list[Investor]:
+        """Scan RSS feeds for investor activity signals."""
+        try:
+            items = self._rss.scan_investor_feeds()
+        except Exception as exc:
+            logger.warning("RSS sourcing failed: %s", exc)
+            return []
+
+        raw: list[dict] = []
+        for item in items:
+            title = item.get("title", "")
+            if not title:
+                continue
+            raw.append({
+                "name": title[:80],
+                "investor_type": InvestorType.PE_FUND.value,
+                "country": "DE",
+                "source": f"rss:{item.get('feed_source', '')}",
+                "notes": item.get("description", "")[:200],
+                "co_invest_appetite": True,
+            })
+
+        return self.ingest_investors(raw) if raw else []
+
+    def _source_mcp(self) -> list[Investor]:
+        """Call investor-sourcing tools on any connected MCP servers."""
+        if not self._mcp.connected_servers:
+            return []
+
+        all_raw: list[dict] = []
+        all_tools = self._mcp.all_tools()
+
+        for server_name, tools in all_tools.items():
+            for tool in tools:
+                if any(kw in tool.name.lower() for kw in (
+                    "investor", "fund", "family_office", "co_invest",
+                    "fundrais", "lp", "capital", "partner",
+                )):
+                    logger.info("MCP: calling %s.%s", server_name, tool.name)
+                    result = self._mcp.call_tool_safe(
+                        tool.name,
+                        arguments={
+                            "countries": ["DE", "AT", "CH"],
+                            "investor_types": [
+                                "family_office", "pe_fund", "hnwi",
+                                "institutional", "pension_fund",
+                            ],
+                        },
+                        server=server_name,
+                    )
+                    if isinstance(result, list):
+                        all_raw.extend(result)
+                    elif isinstance(result, str):
+                        import json
+                        try:
+                            parsed = json.loads(result)
+                            if isinstance(parsed, list):
+                                all_raw.extend(parsed)
+                        except json.JSONDecodeError:
+                            logger.debug("MCP tool %s returned non-JSON", tool.name)
+
+        return self.ingest_investors(all_raw) if all_raw else []
+
+    # -- helpers for normalising external data --------------------------------
+
+    _TYPE_KEYWORDS = {
+        InvestorType.FAMILY_OFFICE: [
+            "family office", "familien", "vermögensverwaltung",
+            "single family", "multi family",
+        ],
+        InvestorType.PE_FUND: [
+            "private equity", "beteiligungsgesellschaft", "beteiligungen",
+            "equity partners", "capital partners", "buyout",
+        ],
+        InvestorType.INSTITUTIONAL: [
+            "institutional", "kapitalverwaltung", "kvg", "verwaltungsgesellschaft",
+        ],
+        InvestorType.PENSION_FUND: [
+            "pension", "pensionskasse", "vorsorge",
+        ],
+        InvestorType.INSURANCE: [
+            "versicherung", "insurance", "rückversicherung",
+        ],
+        InvestorType.BANK: [
+            "bank", "kreditinstitut", "sparkasse", "landesbank",
+        ],
+        InvestorType.FUND_OF_FUNDS: [
+            "fund of funds", "dachfonds", "fund-of-funds",
+        ],
+        InvestorType.HNWI: [
+            "hnwi", "high net worth",
+        ],
+    }
+
+    def _infer_investor_type(self, name: str, category: str = "") -> InvestorType:
+        lower = f"{name} {category}".lower()
+        for inv_type, keywords in self._TYPE_KEYWORDS.items():
+            if any(kw in lower for kw in keywords):
+                return inv_type
+        return InvestorType.PE_FUND  # default
+
+    _CITY_KEYWORDS = [
+        "münchen", "munich", "frankfurt", "berlin", "hamburg", "düsseldorf",
+        "köln", "cologne", "stuttgart", "zürich", "zurich", "wien", "vienna",
+        "genf", "geneva", "bern", "basel", "graz", "salzburg", "linz",
+        "hannover", "nürnberg", "dresden", "leipzig", "dortmund", "essen",
+    ]
+
+    def _infer_city(self, text: str) -> str:
+        lower = text.lower()
+        for city in self._CITY_KEYWORDS:
+            if city in lower:
+                return city.capitalize()
+        return ""
 
     # -- scoring --------------------------------------------------------------
 

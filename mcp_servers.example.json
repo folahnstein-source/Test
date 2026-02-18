@@ -1,0 +1,39 @@
+{
+  "servers": [
+    {
+      "name": "web-search",
+      "transport": "stdio",
+      "command": ["npx", "-y", "@anthropic/mcp-server-web-search"],
+      "env": {"ANTHROPIC_API_KEY": "your-key-here"},
+      "enabled": false,
+      "description": "Web search for real-time deal and investor intelligence",
+      "tags": ["both"]
+    },
+    {
+      "name": "filesystem",
+      "transport": "stdio",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "./data"],
+      "enabled": false,
+      "description": "Read/write deal and investor data files",
+      "tags": ["both"]
+    },
+    {
+      "name": "database",
+      "transport": "sse",
+      "url": "http://localhost:8080/sse",
+      "headers": {},
+      "enabled": false,
+      "description": "Custom database MCP server for structured queries",
+      "tags": ["deals", "investors"]
+    },
+    {
+      "name": "crm",
+      "transport": "sse",
+      "url": "http://localhost:8081/sse",
+      "headers": {},
+      "enabled": false,
+      "description": "CRM MCP server for contact/relationship data",
+      "tags": ["investors"]
+    }
+  ]
+}

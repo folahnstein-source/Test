@@ -20,6 +20,13 @@ from collections import Counter
 from datetime import datetime
 from typing import Any, Optional
 
+from integrations.opencorporates import OpenCorporatesClient
+from integrations.handelsregister import HandelsregisterClient
+from integrations.north_data import NorthDataClient
+from integrations.news_api import NewsAPIClient
+from integrations.rss_feeds import RSSFeedAggregator
+from integrations.dub import DUBClient
+from integrations.mcp.registry import MCPRegistry
 from models.deal import Deal, DealCriteria, DealStage
 
 logger = logging.getLogger(__name__)
@@ -71,7 +78,15 @@ class DealSourcingAgent:
             print(deal.company_name, deal.score)
     """
 
-    def __init__(self, criteria: Optional[DealCriteria] = None) -> None:
+    def __init__(
+        self,
+        criteria: Optional[DealCriteria] = None,
+        opencorporates_token: Optional[str] = None,
+        north_data_key: Optional[str] = None,
+        newsapi_key: Optional[str] = None,
+        gnews_key: Optional[str] = None,
+        mcp_registry: Optional[MCPRegistry] = None,
+    ) -> None:
         from agents.base import BaseAgent, DATA_DIR
 
         self._data_dir = DATA_DIR
@@ -79,11 +94,28 @@ class DealSourcingAgent:
 
         self._criteria = criteria or DealCriteria()
         self._deals: list[Deal] = self._load_deals()
+
+        # API clients
+        self._opencorporates = OpenCorporatesClient(api_token=opencorporates_token)
+        self._handelsregister = HandelsregisterClient()
+        self._north_data = NorthDataClient(api_key=north_data_key)
+        self._news = NewsAPIClient(newsapi_key=newsapi_key, gnews_key=gnews_key)
+        self._rss = RSSFeedAggregator()
+        self._dub = DUBClient()
+
+        # MCP server registry
+        self._mcp = mcp_registry or MCPRegistry()
+
         logger.info(
-            "DealSourcingAgent ready – %d deals in pipeline, criteria: rev €%.0fM–€%.0fM",
+            "DealSourcingAgent ready – %d deals in pipeline, criteria: rev €%.0fM–€%.0fM, "
+            "APIs: OpenCorporates=%s NorthData=%s News=%s MCP=%d servers",
             len(self._deals),
             self._criteria.min_revenue_eur / 1e6,
             self._criteria.max_revenue_eur / 1e6,
+            bool(opencorporates_token),
+            self._north_data.is_configured,
+            self._news.is_configured,
+            len(self._mcp.connected_servers),
         )
 
     # -- persistence ----------------------------------------------------------
@@ -188,31 +220,344 @@ class DealSourcingAgent:
                 return deal
         return None
 
-    # -- sourcing (pluggable) -------------------------------------------------
+    # -- sourcing (multi-API + MCP) -------------------------------------------
 
     def source(self, raw_deals: Optional[list[dict]] = None, **kwargs: Any) -> list[Deal]:
-        """Run a sourcing cycle.
+        """Run a full sourcing cycle across all connected APIs and MCP servers.
 
-        If ``raw_deals`` is provided, they are ingested directly.  In a
-        production setup this method would call external APIs (e.g.
-        Handelsregister, Bundesanzeiger, news feeds, broker platforms).
+        Data flow:
+        1. Ingest any manually provided ``raw_deals``
+        2. Query OpenCorporates for German SMEs matching sector keywords
+        3. Query Handelsregister for registered companies
+        4. Query North Data for succession / ownership-change signals
+        5. Query DUB.de + nexxt-change.org for business-for-sale listings
+        6. Scan news APIs for M&A / succession deal signals
+        7. Scan RSS feeds for Mittelstand deal-flow intelligence
+        8. Call any connected MCP servers that provide deal-sourcing tools
         """
-        if raw_deals:
-            return self.ingest_deals(raw_deals)
+        all_new: list[Deal] = []
 
-        # Placeholder: in production, this would query external data sources
-        # such as:
-        #   - Bundesanzeiger (financial filings)
-        #   - Handelsregister (company registry)
-        #   - M&A broker platforms (CARL, DUB, Nachfolge.de)
-        #   - Industry news feeds
-        #   - LinkedIn / XING for succession signals
-        #   - Conference attendee lists (e.g. Deutsche Mittelstandstage)
+        # 0. Manual / direct ingest
+        if raw_deals:
+            all_new.extend(self.ingest_deals(raw_deals))
+
+        # 1. OpenCorporates – German company registry
+        all_new.extend(self._source_opencorporates())
+
+        # 2. Handelsregister – official German commercial register
+        all_new.extend(self._source_handelsregister())
+
+        # 3. North Data – company intelligence + succession signals
+        all_new.extend(self._source_north_data())
+
+        # 4. DUB.de + nexxt-change.org – business-for-sale platforms
+        all_new.extend(self._source_dub())
+
+        # 5. News APIs – M&A / succession news signals
+        all_new.extend(self._source_news())
+
+        # 6. RSS feeds – industry press
+        all_new.extend(self._source_rss())
+
+        # 7. MCP servers – any additional deal-sourcing tools
+        all_new.extend(self._source_mcp())
+
         logger.info(
-            "source() called without raw_deals – connect external feeds for "
-            "automated sourcing"
+            "DealSourcingAgent: sourcing cycle complete – %d new deals from all sources",
+            len(all_new),
         )
-        return []
+        return all_new
+
+    def _source_opencorporates(self) -> list[Deal]:
+        """Query OpenCorporates for German SMEs matching target sectors."""
+        sector_keywords = [s.lower() for s in self._criteria.target_sectors[:6]]
+        try:
+            companies = self._opencorporates.search_german_smes(
+                sector_keywords=sector_keywords,
+                regions=self._criteria.target_regions,
+                per_page=30,
+            )
+        except Exception as exc:
+            logger.warning("OpenCorporates sourcing failed: %s", exc)
+            return []
+
+        raw_deals: list[dict] = []
+        for company in companies:
+            name = company.get("name", "")
+            if not name:
+                continue
+            addr = company.get("registered_address_in_full", "") or ""
+            region = self._infer_region(addr)
+            city = self._infer_city(addr)
+            raw_deals.append({
+                "company_name": name,
+                "sector": self._infer_sector(name),
+                "region": region,
+                "city": city,
+                "source": "opencorporates",
+                "source_url": company.get("opencorporates_url", ""),
+                "description": f"Status: {company.get('current_status', 'unknown')}",
+            })
+
+        return self.ingest_deals(raw_deals) if raw_deals else []
+
+    def _source_handelsregister(self) -> list[Deal]:
+        """Query Handelsregister for companies matching target sectors."""
+        keywords = self._criteria.target_sectors[:4]
+        try:
+            results = self._handelsregister.lookup_gmbh_candidates(
+                keywords=keywords,
+                regions=self._criteria.target_regions[:3],
+            )
+        except Exception as exc:
+            logger.warning("Handelsregister sourcing failed: %s", exc)
+            return []
+
+        raw_deals: list[dict] = []
+        for r in results:
+            name = r.get("name", "")
+            if not name:
+                continue
+            raw_deals.append({
+                "company_name": name,
+                "sector": self._infer_sector(name),
+                "region": r.get("register_court", "Deutschland"),
+                "city": r.get("register_court", ""),
+                "source": "handelsregister",
+                "description": f"Register: {r.get('register_number', '')}",
+            })
+
+        return self.ingest_deals(raw_deals) if raw_deals else []
+
+    def _source_north_data(self) -> list[Deal]:
+        """Query North Data for companies with succession signals."""
+        if not self._north_data.is_configured:
+            logger.debug("NorthData: skipped (no API key)")
+            return []
+
+        keywords = self._criteria.target_sectors[:4]
+        try:
+            candidates = self._north_data.find_succession_candidates(
+                keywords=keywords,
+                country="DE",
+            )
+        except Exception as exc:
+            logger.warning("NorthData sourcing failed: %s", exc)
+            return []
+
+        raw_deals: list[dict] = []
+        for c in candidates:
+            name_data = c.get("name", {})
+            company_name = name_data.get("name", "") if isinstance(name_data, dict) else str(name_data)
+            if not company_name:
+                continue
+
+            city = ""
+            if isinstance(name_data, dict):
+                city = name_data.get("city", "")
+
+            signals = c.get("succession_signals", [])
+            desc = "; ".join(
+                e.get("type", "") for e in signals[:3]
+            ) if signals else "succession candidate"
+
+            raw_deals.append({
+                "company_name": company_name,
+                "sector": self._infer_sector(company_name),
+                "region": self._infer_region(city),
+                "city": city,
+                "is_succession": True,
+                "source": "north_data",
+                "description": f"Signals: {desc}",
+            })
+
+        return self.ingest_deals(raw_deals) if raw_deals else []
+
+    def _source_dub(self) -> list[Deal]:
+        """Scan DUB.de and nexxt-change.org for business-for-sale listings."""
+        try:
+            listings = self._dub.scan_all(
+                min_revenue=self._criteria.min_revenue_eur,
+                max_revenue=self._criteria.max_revenue_eur,
+            )
+        except Exception as exc:
+            logger.warning("DUB/nexxt-change sourcing failed: %s", exc)
+            return []
+
+        raw_deals: list[dict] = []
+        for listing in listings:
+            title = listing.get("title", "")
+            if not title:
+                continue
+            location = listing.get("location", "")
+            raw_deals.append({
+                "company_name": title,
+                "sector": self._infer_sector(title),
+                "region": self._infer_region(location),
+                "city": location,
+                "revenue_eur": listing.get("revenue_eur"),
+                "is_succession": listing.get("is_succession", True),
+                "source": listing.get("source", "dub.de"),
+                "source_url": listing.get("url", ""),
+                "description": "Business-for-sale listing",
+            })
+
+        return self.ingest_deals(raw_deals) if raw_deals else []
+
+    def _source_news(self) -> list[Deal]:
+        """Scan news APIs for M&A / succession signals in Germany."""
+        if not self._news.is_configured:
+            logger.debug("NewsAPI: skipped (no API key configured)")
+            return []
+
+        try:
+            articles = self._news.scan_deal_signals(max_per_keyword=5)
+        except Exception as exc:
+            logger.warning("News API sourcing failed: %s", exc)
+            return []
+
+        raw_deals: list[dict] = []
+        for article in articles:
+            title = article.get("title", "")
+            if not title:
+                continue
+            raw_deals.append({
+                "company_name": title[:80],
+                "sector": self._infer_sector(title),
+                "region": "Deutschland",
+                "city": "",
+                "source": "news_api",
+                "source_url": article.get("url", ""),
+                "description": article.get("description", "")[:200],
+            })
+
+        return self.ingest_deals(raw_deals) if raw_deals else []
+
+    def _source_rss(self) -> list[Deal]:
+        """Scan RSS feeds for deal-flow signals."""
+        try:
+            items = self._rss.scan_deal_feeds()
+        except Exception as exc:
+            logger.warning("RSS sourcing failed: %s", exc)
+            return []
+
+        raw_deals: list[dict] = []
+        for item in items:
+            title = item.get("title", "")
+            if not title:
+                continue
+            raw_deals.append({
+                "company_name": title[:80],
+                "sector": self._infer_sector(title),
+                "region": "Deutschland",
+                "city": "",
+                "source": f"rss:{item.get('feed_source', '')}",
+                "source_url": item.get("link", ""),
+                "description": item.get("description", "")[:200],
+            })
+
+        return self.ingest_deals(raw_deals) if raw_deals else []
+
+    def _source_mcp(self) -> list[Deal]:
+        """Call deal-sourcing tools on any connected MCP servers."""
+        if not self._mcp.connected_servers:
+            return []
+
+        all_raw: list[dict] = []
+        all_tools = self._mcp.all_tools()
+
+        for server_name, tools in all_tools.items():
+            for tool in tools:
+                # Look for tools whose names suggest deal/company sourcing
+                if any(kw in tool.name.lower() for kw in (
+                    "deal", "company", "search", "source", "find", "list",
+                    "mittelstand", "sme", "nachfolge",
+                )):
+                    logger.info("MCP: calling %s.%s", server_name, tool.name)
+                    result = self._mcp.call_tool_safe(
+                        tool.name,
+                        arguments={
+                            "sectors": self._criteria.target_sectors,
+                            "regions": self._criteria.target_regions,
+                            "min_revenue": self._criteria.min_revenue_eur,
+                            "max_revenue": self._criteria.max_revenue_eur,
+                        },
+                        server=server_name,
+                    )
+                    if isinstance(result, list):
+                        all_raw.extend(result)
+                    elif isinstance(result, str):
+                        # Try to parse as JSON
+                        import json
+                        try:
+                            parsed = json.loads(result)
+                            if isinstance(parsed, list):
+                                all_raw.extend(parsed)
+                        except json.JSONDecodeError:
+                            logger.debug("MCP tool %s returned non-JSON: %s", tool.name, result[:100])
+
+        return self.ingest_deals(all_raw) if all_raw else []
+
+    # -- helpers for normalising external data --------------------------------
+
+    _SECTOR_KEYWORDS = {
+        "Industrials": ["maschin", "industri", "fertigung", "manufactur", "produktion", "werkzeug"],
+        "Healthcare": ["medizin", "medical", "health", "pharma", "klinik", "pflege", "med"],
+        "Technology": ["software", "it-", "tech", "digital", "daten", "cyber", "cloud", "saas"],
+        "Business Services": ["dienstleist", "service", "beratung", "consult", "logistik", "personal"],
+        "Consumer Goods": ["konsum", "consumer", "verpackung", "nahrung", "food", "einzelhandel"],
+        "Automotive Suppliers": ["automobil", "automotive", "fahrzeug", "kfz", "zulieferer"],
+    }
+
+    def _infer_sector(self, text: str) -> str:
+        """Best-effort sector classification from company name / text."""
+        lower = text.lower()
+        for sector, keywords in self._SECTOR_KEYWORDS.items():
+            if any(kw in lower for kw in keywords):
+                return sector
+        return "Industrials"  # default for Mittelstand
+
+    _REGION_MAP = {
+        "stuttgart": "Baden-Württemberg", "mannheim": "Baden-Württemberg",
+        "freiburg": "Baden-Württemberg", "karlsruhe": "Baden-Württemberg",
+        "heidelberg": "Baden-Württemberg", "ulm": "Baden-Württemberg",
+        "münchen": "Bayern", "munich": "Bayern", "nürnberg": "Bayern",
+        "augsburg": "Bayern", "regensburg": "Bayern", "würzburg": "Bayern",
+        "berlin": "Berlin",
+        "hamburg": "Hamburg",
+        "frankfurt": "Hessen", "darmstadt": "Hessen", "wiesbaden": "Hessen",
+        "kassel": "Hessen",
+        "hannover": "Niedersachsen", "braunschweig": "Niedersachsen",
+        "oldenburg": "Niedersachsen", "osnabrück": "Niedersachsen",
+        "düsseldorf": "Nordrhein-Westfalen", "köln": "Nordrhein-Westfalen",
+        "cologne": "Nordrhein-Westfalen", "dortmund": "Nordrhein-Westfalen",
+        "essen": "Nordrhein-Westfalen", "bielefeld": "Nordrhein-Westfalen",
+        "bonn": "Nordrhein-Westfalen", "aachen": "Nordrhein-Westfalen",
+        "dresden": "Sachsen", "leipzig": "Sachsen", "chemnitz": "Sachsen",
+        "kiel": "Schleswig-Holstein", "lübeck": "Schleswig-Holstein",
+        "baden-württemberg": "Baden-Württemberg", "bayern": "Bayern",
+        "hessen": "Hessen", "niedersachsen": "Niedersachsen",
+        "nordrhein-westfalen": "Nordrhein-Westfalen",
+    }
+
+    def _infer_region(self, text: str) -> str:
+        lower = text.lower()
+        for keyword, region in self._REGION_MAP.items():
+            if keyword in lower:
+                return region
+        return "Deutschland"
+
+    def _infer_city(self, text: str) -> str:
+        lower = text.lower()
+        cities = [
+            "stuttgart", "münchen", "nürnberg", "frankfurt", "düsseldorf",
+            "köln", "hamburg", "berlin", "hannover", "dortmund", "essen",
+            "dresden", "leipzig", "karlsruhe", "mannheim", "augsburg",
+        ]
+        for city in cities:
+            if city in lower:
+                return city.capitalize()
+        return ""
 
     # -- scoring --------------------------------------------------------------
 

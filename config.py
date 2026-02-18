@@ -1,5 +1,12 @@
-"""Central configuration for the sourcing agents."""
+"""Central configuration for the sourcing agents.
 
+API keys can be set via environment variables or directly in this file.
+Environment variables take precedence.
+"""
+
+from __future__ import annotations
+
+import os
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -7,6 +14,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_ROOT / "data"
+MCP_CONFIG_PATH = PROJECT_ROOT / "mcp_servers.json"
 
 # ---------------------------------------------------------------------------
 # Deal Sourcing Agent – defaults
@@ -42,7 +50,15 @@ FUNDRAISING_MIN_TICKET_EUR = 500_000
 FUNDRAISING_MAX_TICKET_EUR = 50_000_000
 
 # ---------------------------------------------------------------------------
+# API Keys (set via env vars or override here)
+# ---------------------------------------------------------------------------
+OPENCORPORATES_TOKEN = os.environ.get("OPENCORPORATES_TOKEN", "")
+NORTH_DATA_API_KEY = os.environ.get("NORTH_DATA_API_KEY", "")
+NEWSAPI_KEY = os.environ.get("NEWSAPI_KEY", "")
+GNEWS_KEY = os.environ.get("GNEWS_KEY", "")
+
+# ---------------------------------------------------------------------------
 # Logging
 # ---------------------------------------------------------------------------
-LOG_LEVEL = "INFO"
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 LOG_FORMAT = "%(asctime)s | %(name)-28s | %(levelname)-7s | %(message)s"

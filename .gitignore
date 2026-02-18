@@ -7,9 +7,12 @@ build/
 *.egg
 
 data/*.json
+data/.api_cache/
+
+mcp_servers.json
 
 .env
-.env.*
+.env.local
 
 .venv/
 venv/
