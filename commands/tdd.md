@@ -1,41 +1,42 @@
 ---
-description: Enforce test-driven development workflow. Scaffold interfaces, generate tests FIRST, then implement minimal code to pass. Ensure 80%+ coverage.
+description: 强制执行测试驱动开发工作流。首先搭建接口，生成测试，然后实现最小化代码以通过测试。确保 80%+ 覆盖率。
 ---
 
-# TDD Command
+# TDD 命令
 
-This command invokes the **tdd-guide** agent to enforce test-driven development methodology.
+此命令调用 **tdd-guide** 代理来强制执行测试驱动开发方法。
 
-## What This Command Does
+## 此命令的作用
 
-1. **Scaffold Interfaces** - Define types/interfaces first
-2. **Generate Tests First** - Write failing tests (RED)
-3. **Implement Minimal Code** - Write just enough to pass (GREEN)
-4. **Refactor** - Improve code while keeping tests green (REFACTOR)
-5. **Verify Coverage** - Ensure 80%+ test coverage
+1. **搭建接口** - 首先定义类型/接口
+2. **首先生成测试** - 编写失败的测试（红）
+3. **实现最小化代码** - 编写刚好足够的代码以通过测试（绿）
+4. **重构** - 改进代码，同时保持测试通过（重构）
+5. **验证覆盖率** - 确保 80%+ 的测试覆盖率
 
-## When to Use
+## 何时使用
 
-Use `/tdd` when:
-- Implementing new features
-- Adding new functions/components
-- Fixing bugs (write test that reproduces bug first)
-- Refactoring existing code
-- Building critical business logic
+在以下情况下使用 `/tdd`：
 
-## How It Works
+* 实现新功能时
+* 添加新函数/组件时
+* 修复错误时（首先编写重现错误的测试）
+* 重构现有代码时
+* 构建关键业务逻辑时
 
-The tdd-guide agent will:
+## 工作原理
 
-1. **Define interfaces** for inputs/outputs
-2. **Write tests that will FAIL** (because code doesn't exist yet)
-3. **Run tests** and verify they fail for the right reason
-4. **Write minimal implementation** to make tests pass
-5. **Run tests** and verify they pass
-6. **Refactor** code while keeping tests green
-7. **Check coverage** and add more tests if below 80%
+tdd-guide 代理将：
 
-## TDD Cycle
+1. 为输入/输出**定义接口**
+2. **编写将会失败的测试**（因为代码尚不存在）
+3. **运行测试**并验证它们因正确的原因而失败
+4. **编写最小化实现**以使测试通过
+5. **运行测试**并验证它们通过
+6. **重构**代码，同时保持测试通过
+7. **检查覆盖率**，如果低于 80% 则添加更多测试
+
+## TDD 循环
 
 ```
 RED → GREEN → REFACTOR → REPEAT
@@ -46,9 +47,9 @@ REFACTOR: Improve code, keep tests passing
 REPEAT:   Next feature/scenario
 ```
 
-## Example Usage
+## 使用示例
 
-```
+````
 User: /tdd I need a function to calculate market liquidity score
 
 Agent (tdd-guide):
@@ -69,9 +70,9 @@ export function calculateLiquidityScore(market: MarketData): number {
   // TODO: Implementation
   throw new Error('Not implemented')
 }
-```
+````
 
-## Step 2: Write Failing Test (RED)
+## 步骤 2：编写失败的测试（红）
 
 ```typescript
 // lib/liquidity.test.ts
@@ -121,7 +122,7 @@ describe('calculateLiquidityScore', () => {
 })
 ```
 
-## Step 3: Run Tests - Verify FAIL
+## 步骤 3：运行测试 - 验证失败
 
 ```bash
 npm test lib/liquidity.test.ts
@@ -133,9 +134,9 @@ FAIL lib/liquidity.test.ts
 1 test failed, 0 passed
 ```
 
-✅ Tests fail as expected. Ready to implement.
+✅ 测试按预期失败。准备实施。
 
-## Step 4: Implement Minimal Code (GREEN)
+## 步骤 4：实现最小化代码（绿）
 
 ```typescript
 // lib/liquidity.ts
@@ -166,7 +167,7 @@ export function calculateLiquidityScore(market: MarketData): number {
 }
 ```
 
-## Step 5: Run Tests - Verify PASS
+## 步骤 5：运行测试 - 验证通过
 
 ```bash
 npm test lib/liquidity.test.ts
@@ -179,9 +180,9 @@ PASS lib/liquidity.test.ts
 3 tests passed
 ```
 
-✅ All tests passing!
+✅ 所有测试通过！
 
-## Step 6: Refactor (IMPROVE)
+## 步骤 6：重构（改进）
 
 ```typescript
 // lib/liquidity.ts - Refactored with constants and better readability
@@ -223,7 +224,7 @@ export function calculateLiquidityScore(market: MarketData): number {
 }
 ```
 
-## Step 7: Verify Tests Still Pass
+## 步骤 7：验证测试仍然通过
 
 ```bash
 npm test lib/liquidity.test.ts
@@ -236,9 +237,9 @@ PASS lib/liquidity.test.ts
 3 tests passed
 ```
 
-✅ Refactoring complete, tests still passing!
+✅ 重构完成，测试仍然通过！
 
-## Step 8: Check Coverage
+## 步骤 8：检查覆盖率
 
 ```bash
 npm test -- --coverage lib/liquidity.test.ts
@@ -250,7 +251,8 @@ liquidity.ts   |   100   |   100    |   100   |   100
 Coverage: 100% ✅ (Target: 80%)
 ```
 
-✅ TDD session complete!
+✅ TDD 会话完成！
+
 ```
 
 ## TDD Best Practices
@@ -324,3 +326,5 @@ This command invokes the `tdd-guide` agent located at:
 
 And can reference the `tdd-workflow` skill at:
 `~/.claude/skills/tdd-workflow/`
+
+```

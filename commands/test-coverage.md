@@ -1,69 +1,28 @@
-# Test Coverage
+# 测试覆盖率
 
-Analyze test coverage, identify gaps, and generate missing tests to reach 80%+ coverage.
+分析测试覆盖率并生成缺失的测试：
 
-## Step 1: Detect Test Framework
+1. 运行带有覆盖率的测试：npm test --coverage 或 pnpm test --coverage
 
-| Indicator | Coverage Command |
-|-----------|-----------------|
-| `jest.config.*` or `package.json` jest | `npx jest --coverage --coverageReporters=json-summary` |
-| `vitest.config.*` | `npx vitest run --coverage` |
-| `pytest.ini` / `pyproject.toml` pytest | `pytest --cov=src --cov-report=json` |
-| `Cargo.toml` | `cargo llvm-cov --json` |
-| `pom.xml` with JaCoCo | `mvn test jacoco:report` |
-| `go.mod` | `go test -coverprofile=coverage.out ./...` |
+2. 分析覆盖率报告 (coverage/coverage-summary.json)
 
-## Step 2: Analyze Coverage Report
+3. 识别覆盖率低于 80% 阈值的文件
 
-1. Run the coverage command
-2. Parse the output (JSON summary or terminal output)
-3. List files **below 80% coverage**, sorted worst-first
-4. For each under-covered file, identify:
-   - Untested functions or methods
-   - Missing branch coverage (if/else, switch, error paths)
-   - Dead code that inflates the denominator
+4. 对于每个覆盖率不足的文件：
+   * 分析未测试的代码路径
+   * 为函数生成单元测试
+   * 为 API 生成集成测试
+   * 为关键流程生成端到端测试
 
-## Step 3: Generate Missing Tests
+5. 验证新测试通过
 
-For each under-covered file, generate tests following this priority:
+6. 显示覆盖率指标的前后对比
 
-1. **Happy path** — Core functionality with valid inputs
-2. **Error handling** — Invalid inputs, missing data, network failures
-3. **Edge cases** — Empty arrays, null/undefined, boundary values (0, -1, MAX_INT)
-4. **Branch coverage** — Each if/else, switch case, ternary
+7. 确保项目整体覆盖率超过 80%
 
-### Test Generation Rules
+重点关注：
 
-- Place tests adjacent to source: `foo.ts` → `foo.test.ts` (or project convention)
-- Use existing test patterns from the project (import style, assertion library, mocking approach)
-- Mock external dependencies (database, APIs, file system)
-- Each test should be independent — no shared mutable state between tests
-- Name tests descriptively: `test_create_user_with_duplicate_email_returns_409`
-
-## Step 4: Verify
-
-1. Run the full test suite — all tests must pass
-2. Re-run coverage — verify improvement
-3. If still below 80%, repeat Step 3 for remaining gaps
-
-## Step 5: Report
-
-Show before/after comparison:
-
-```
-Coverage Report
-──────────────────────────────
-File                   Before  After
-src/services/auth.ts   45%     88%
-src/utils/validation.ts 32%    82%
-──────────────────────────────
-Overall:               67%     84%  ✅
-```
-
-## Focus Areas
-
-- Functions with complex branching (high cyclomatic complexity)
-- Error handlers and catch blocks
-- Utility functions used across the codebase
-- API endpoint handlers (request → response flow)
-- Edge cases: null, undefined, empty string, empty array, zero, negative numbers
+* 正常路径场景
+* 错误处理
+* 边界情况（null、undefined、空值）
+* 边界条件

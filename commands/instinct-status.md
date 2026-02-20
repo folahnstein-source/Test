@@ -1,28 +1,28 @@
 ---
 name: instinct-status
-description: Show all learned instincts with their confidence levels
+description: 显示所有已学习的本能及其置信水平
 command: true
 ---
 
-# Instinct Status Command
+# 本能状态命令
 
-Shows all learned instincts with their confidence scores, grouped by domain.
+显示所有已学习的本能及其置信度分数，按领域分组。
 
-## Implementation
+## 实现
 
-Run the instinct CLI using the plugin root path:
+使用插件根路径运行本能 CLI：
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" status
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation), use:
+或者，如果未设置 `CLAUDE_PLUGIN_ROOT`（手动安装），则使用：
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status
 ```
 
-## Usage
+## 用法
 
 ```
 /instinct-status
@@ -30,13 +30,13 @@ python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py status
 /instinct-status --low-confidence
 ```
 
-## What to Do
+## 操作步骤
 
-1. Read all instinct files from `~/.claude/homunculus/instincts/personal/`
-2. Read inherited instincts from `~/.claude/homunculus/instincts/inherited/`
-3. Display them grouped by domain with confidence bars
+1. 从 `~/.claude/homunculus/instincts/personal/` 读取所有本能文件
+2. 从 `~/.claude/homunculus/instincts/inherited/` 读取继承的本能
+3. 按领域分组显示它们，并带有置信度条
 
-## Output Format
+## 输出格式
 
 ```
 📊 Instinct Status
@@ -77,10 +77,10 @@ Total: 9 instincts (4 personal, 5 inherited)
 Observer: Running (last analysis: 5 min ago)
 ```
 
-## Flags
+## 标志
 
-- `--domain <name>`: Filter by domain (code-style, testing, git, etc.)
-- `--low-confidence`: Show only instincts with confidence < 0.5
-- `--high-confidence`: Show only instincts with confidence >= 0.7
-- `--source <type>`: Filter by source (session-observation, repo-analysis, inherited)
-- `--json`: Output as JSON for programmatic use
+* `--domain <name>`：按领域过滤（code-style、testing、git 等）
+* `--low-confidence`：仅显示置信度 < 0.5 的本能
+* `--high-confidence`：仅显示置信度 >= 0.7 的本能
+* `--source <type>`：按来源过滤（session-observation、repo-analysis、inherited）
+* `--json`：以 JSON 格式输出，供编程使用

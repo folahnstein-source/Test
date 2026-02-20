@@ -1,55 +1,59 @@
 ---
-description: Comprehensive Go code review for idiomatic patterns, concurrency safety, error handling, and security. Invokes the go-reviewer agent.
+description: 全面的Go代码审查，涵盖惯用模式、并发安全性、错误处理和安全性。调用go-reviewer代理。
 ---
 
-# Go Code Review
+# Go 代码审查
 
-This command invokes the **go-reviewer** agent for comprehensive Go-specific code review.
+此命令调用 **go-reviewer** 代理进行全面的 Go 语言特定代码审查。
 
-## What This Command Does
+## 此命令的作用
 
-1. **Identify Go Changes**: Find modified `.go` files via `git diff`
-2. **Run Static Analysis**: Execute `go vet`, `staticcheck`, and `golangci-lint`
-3. **Security Scan**: Check for SQL injection, command injection, race conditions
-4. **Concurrency Review**: Analyze goroutine safety, channel usage, mutex patterns
-5. **Idiomatic Go Check**: Verify code follows Go conventions and best practices
-6. **Generate Report**: Categorize issues by severity
+1. **识别 Go 变更**：通过 `git diff` 查找修改过的 `.go` 文件
+2. **运行静态分析**：执行 `go vet`、`staticcheck` 和 `golangci-lint`
+3. **安全扫描**：检查 SQL 注入、命令注入、竞态条件
+4. **并发性审查**：分析 goroutine 安全性、通道使用、互斥锁模式
+5. **惯用 Go 检查**：验证代码是否遵循 Go 约定和最佳实践
+6. **生成报告**：按严重程度分类问题
 
-## When to Use
+## 使用时机
 
-Use `/go-review` when:
-- After writing or modifying Go code
-- Before committing Go changes
-- Reviewing pull requests with Go code
-- Onboarding to a new Go codebase
-- Learning idiomatic Go patterns
+在以下情况使用 `/go-review`：
 
-## Review Categories
+* 编写或修改 Go 代码之后
+* 提交 Go 变更之前
+* 审查包含 Go 代码的拉取请求时
+* 接手新的 Go 代码库时
+* 学习惯用 Go 模式时
 
-### CRITICAL (Must Fix)
-- SQL/Command injection vulnerabilities
-- Race conditions without synchronization
-- Goroutine leaks
-- Hardcoded credentials
-- Unsafe pointer usage
-- Ignored errors in critical paths
+## 审查类别
 
-### HIGH (Should Fix)
-- Missing error wrapping with context
-- Panic instead of error returns
-- Context not propagated
-- Unbuffered channels causing deadlocks
-- Interface not satisfied errors
-- Missing mutex protection
+### 严重（必须修复）
 
-### MEDIUM (Consider)
-- Non-idiomatic code patterns
-- Missing godoc comments on exports
-- Inefficient string concatenation
-- Slice not preallocated
-- Table-driven tests not used
+* SQL/命令注入漏洞
+* 无同步的竞态条件
+* Goroutine 泄漏
+* 硬编码凭证
+* 不安全的指针使用
+* 关键路径中忽略的错误
 
-## Automated Checks Run
+### 高（应该修复）
+
+* 缺少带上下文的错误包装
+* 使用 panic 而非返回错误
+* 上下文未传播
+* 无缓冲通道导致死锁
+* 接口未满足错误
+* 缺少互斥锁保护
+
+### 中（考虑修复）
+
+* 非惯用代码模式
+* 导出项缺少 godoc 注释
+* 低效的字符串拼接
+* 切片未预分配
+* 未使用表格驱动测试
+
+## 运行的自动化检查
 
 ```bash
 # Static analysis
@@ -66,9 +70,9 @@ go build -race ./...
 govulncheck ./...
 ```
 
-## Example Usage
+## 使用示例
 
-```text
+````text
 User: /go-review
 
 Agent:
@@ -93,8 +97,10 @@ var cache = map[string]*Session{}  // Concurrent access!
 func GetSession(id string) *Session {
     return cache[id]  // Race condition
 }
-```
-Fix: Use sync.RWMutex or sync.Map
+````
+
+修复：使用 sync.RWMutex 或 sync.Map
+
 ```go
 var (
     cache   = map[string]*Session{}
@@ -108,23 +114,28 @@ func GetSession(id string) *Session {
 }
 ```
 
-[HIGH] Missing Error Context
-File: internal/handler/user.go:28
-Issue: Error returned without context
+\[高] 缺少错误上下文
+文件：internal/handler/user.go:28
+问题：返回的错误缺少上下文
+
 ```go
 return err  // No context
 ```
-Fix: Wrap with context
+
+修复：使用上下文包装
+
 ```go
 return fmt.Errorf("get user %s: %w", userID, err)
 ```
 
-## Summary
-- CRITICAL: 1
-- HIGH: 1
-- MEDIUM: 0
+## 摘要
 
-Recommendation: ❌ Block merge until CRITICAL issue is fixed
+* 严重：1
+* 高：1
+* 中：0
+
+建议：❌ 在严重问题修复前阻止合并
+
 ```
 
 ## Approval Criteria
@@ -146,3 +157,5 @@ Recommendation: ❌ Block merge until CRITICAL issue is fixed
 
 - Agent: `agents/go-reviewer.md`
 - Skills: `skills/golang-patterns/`, `skills/golang-testing/`
+
+```

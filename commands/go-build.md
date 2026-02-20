@@ -1,29 +1,30 @@
 ---
-description: Fix Go build errors, go vet warnings, and linter issues incrementally. Invokes the go-build-resolver agent for minimal, surgical fixes.
+description: 逐步修复Go构建错误、go vet警告和linter问题。调用go-build-resolver代理进行最小化、精确的修复。
 ---
 
-# Go Build and Fix
+# Go 构建与修复
 
-This command invokes the **go-build-resolver** agent to incrementally fix Go build errors with minimal changes.
+此命令调用 **go-build-resolver** 代理，以最小的更改增量修复 Go 构建错误。
 
-## What This Command Does
+## 此命令的作用
 
-1. **Run Diagnostics**: Execute `go build`, `go vet`, `staticcheck`
-2. **Parse Errors**: Group by file and sort by severity
-3. **Fix Incrementally**: One error at a time
-4. **Verify Each Fix**: Re-run build after each change
-5. **Report Summary**: Show what was fixed and what remains
+1. **运行诊断**：执行 `go build`、`go vet`、`staticcheck`
+2. **解析错误**：按文件分组并按严重性排序
+3. **增量修复**：一次修复一个错误
+4. **验证每次修复**：每次更改后重新运行构建
+5. **报告摘要**：显示已修复的内容和剩余问题
 
-## When to Use
+## 何时使用
 
-Use `/go-build` when:
-- `go build ./...` fails with errors
-- `go vet ./...` reports issues
-- `golangci-lint run` shows warnings
-- Module dependencies are broken
-- After pulling changes that break the build
+在以下情况使用 `/go-build`：
 
-## Diagnostic Commands Run
+* `go build ./...` 因错误而失败
+* `go vet ./...` 报告问题
+* `golangci-lint run` 显示警告
+* 模块依赖关系损坏
+* 拉取更改后导致构建失败
+
+## 运行的诊断命令
 
 ```bash
 # Primary build check
@@ -41,9 +42,9 @@ go mod verify
 go mod tidy -v
 ```
 
-## Example Session
+## 示例会话
 
-```text
+````text
 User: /go-build
 
 Agent:
@@ -56,15 +57,15 @@ $ go build ./...
 internal/service/user.go:25:15: undefined: UserRepository
 internal/handler/api.go:42:9: cannot use x (type string) as type int
 internal/handler/api.go:58:2: missing return at end of function
-```
+````
 
-Errors found: 3
+发现错误：3
 
-## Fix 1: Undefined Identifier
+## 修复 1：未定义的标识符
 
-File: internal/service/user.go:25
-Error: undefined: UserRepository
-Cause: Missing import
+文件：internal/service/user.go:25
+错误：undefined: UserRepository
+原因：缺少导入
 
 ```go
 // Added import
@@ -81,10 +82,10 @@ $ go build ./...
 # 2 errors remaining
 ```
 
-## Fix 2: Type Mismatch
+## 修复 2：类型不匹配
 
-File: internal/handler/api.go:42
-Error: cannot use x (type string) as type int
+文件：internal/handler/api.go:42
+错误：cannot use x (type string) as type int
 
 ```go
 // Changed
@@ -99,10 +100,10 @@ $ go build ./...
 # 1 error remaining
 ```
 
-## Fix 3: Missing Return
+## 修复 3：缺少返回
 
-File: internal/handler/api.go:58
-Error: missing return at end of function
+文件：internal/handler/api.go:58
+错误：missing return at end of function
 
 ```go
 func GetUser(id string) (*User, error) {
@@ -120,7 +121,7 @@ $ go build ./...
 # Build successful!
 ```
 
-## Final Verification
+## 最终验证
 
 ```bash
 $ go vet ./...
@@ -131,16 +132,17 @@ ok      project/internal/service   0.015s
 ok      project/internal/handler   0.023s
 ```
 
-## Summary
+## 摘要
 
-| Metric | Count |
+| 指标 | 数量 |
 |--------|-------|
-| Build errors fixed | 3 |
-| Vet warnings fixed | 0 |
-| Files modified | 2 |
-| Remaining issues | 0 |
+| 已修复的构建错误 | 3 |
+| 已修复的 Vet 警告 | 0 |
+| 已修改的文件 | 2 |
+| 剩余问题 | 0 |
 
-Build Status: ✅ SUCCESS
+构建状态：✅ 成功
+
 ```
 
 ## Common Errors Fixed
@@ -181,3 +183,5 @@ The agent will stop and report if:
 
 - Agent: `agents/go-build-resolver.md`
 - Skill: `skills/golang-patterns/`
+
+```

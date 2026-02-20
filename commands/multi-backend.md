@@ -1,33 +1,34 @@
-# Backend - Backend-Focused Development
+# 后端 - 后端导向开发
 
-Backend-focused workflow (Research → Ideation → Plan → Execute → Optimize → Review), Codex-led.
+后端导向的工作流程（研究 → 构思 → 规划 → 执行 → 优化 → 评审），由 Codex 主导。
 
-## Usage
+## 使用方法
 
 ```bash
 /backend <backend task description>
 ```
 
-## Context
+## 上下文
 
-- Backend task: $ARGUMENTS
-- Codex-led, Gemini for auxiliary reference
-- Applicable: API design, algorithm implementation, database optimization, business logic
+* 后端任务：$ARGUMENTS
+* Codex 主导，Gemini 作为辅助参考
+* 适用场景：API 设计、算法实现、数据库优化、业务逻辑
 
-## Your Role
+## 你的角色
 
-You are the **Backend Orchestrator**, coordinating multi-model collaboration for server-side tasks (Research → Ideation → Plan → Execute → Optimize → Review).
+你是 **后端协调者**，为服务器端任务协调多模型协作（研究 → 构思 → 规划 → 执行 → 优化 → 评审）。
 
-**Collaborative Models**:
-- **Codex** – Backend logic, algorithms (**Backend authority, trustworthy**)
-- **Gemini** – Frontend perspective (**Backend opinions for reference only**)
-- **Claude (self)** – Orchestration, planning, execution, delivery
+**协作模型**：
 
----
+* **Codex** – 后端逻辑、算法（**后端权威，可信赖**）
+* **Gemini** – 前端视角（**后端意见仅供参考**）
+* **Claude (自身)** – 协调、规划、执行、交付
 
-## Multi-Model Call Specification
+***
 
-**Call Syntax**:
+## 多模型调用规范
+
+**调用语法**：
 
 ```
 # New session call
@@ -61,98 +62,101 @@ EOF",
 })
 ```
 
-**Role Prompts**:
+**角色提示词**：
 
-| Phase | Codex |
+| 阶段 | Codex |
 |-------|-------|
-| Analysis | `~/.claude/.ccg/prompts/codex/analyzer.md` |
-| Planning | `~/.claude/.ccg/prompts/codex/architect.md` |
-| Review | `~/.claude/.ccg/prompts/codex/reviewer.md` |
+| 分析 | `~/.claude/.ccg/prompts/codex/analyzer.md` |
+| 规划 | `~/.claude/.ccg/prompts/codex/architect.md` |
+| 评审 | `~/.claude/.ccg/prompts/codex/reviewer.md` |
 
-**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` for subsequent phases. Save `CODEX_SESSION` in Phase 2, use `resume` in Phases 3 and 5.
+**会话复用**：每次调用返回 `SESSION_ID: xxx`，在后续阶段使用 `resume xxx`。在第 2 阶段保存 `CODEX_SESSION`，在第 3 和第 5 阶段使用 `resume`。
 
----
+***
 
-## Communication Guidelines
+## 沟通准则
 
-1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`
-2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`
-3. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval)
+1. 在回复开头使用模式标签 `[Mode: X]`，初始值为 `[Mode: Research]`
+2. 遵循严格序列：`Research → Ideation → Plan → Execute → Optimize → Review`
+3. 需要时（例如确认/选择/批准）使用 `AskUserQuestion` 工具进行用户交互
 
----
+***
 
-## Core Workflow
+## 核心工作流程
 
-### Phase 0: Prompt Enhancement (Optional)
+### 阶段 0：提示词增强（可选）
 
-`[Mode: Prepare]` - If ace-tool MCP available, call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for subsequent Codex calls**
+`[Mode: Prepare]` - 如果 ace-tool MCP 可用，调用 `mcp__ace-tool__enhance_prompt`，**用增强后的结果替换原始的 $ARGUMENTS，用于后续的 Codex 调用**
 
-### Phase 1: Research
+### 阶段 1：研究
 
-`[Mode: Research]` - Understand requirements and gather context
+`[Mode: Research]` - 理解需求并收集上下文
 
-1. **Code Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context` to retrieve existing APIs, data models, service architecture
-2. Requirement completeness score (0-10): >=7 continue, <7 stop and supplement
+1. **代码检索**（如果 ace-tool MCP 可用）：调用 `mcp__ace-tool__search_context` 以检索现有的 API、数据模型、服务架构
+2. 需求完整性评分（0-10）：>=7 继续，<7 停止并补充
 
-### Phase 2: Ideation
+### 阶段 2：构思
 
-`[Mode: Ideation]` - Codex-led analysis
+`[Mode: Ideation]` - Codex 主导的分析
 
-**MUST call Codex** (follow call specification above):
-- ROLE_FILE: `~/.claude/.ccg/prompts/codex/analyzer.md`
-- Requirement: Enhanced requirement (or $ARGUMENTS if not enhanced)
-- Context: Project context from Phase 1
-- OUTPUT: Technical feasibility analysis, recommended solutions (at least 2), risk assessment
+**必须调用 Codex**（遵循上述调用规范）：
 
-**Save SESSION_ID** (`CODEX_SESSION`) for subsequent phase reuse.
+* ROLE\_FILE：`~/.claude/.ccg/prompts/codex/analyzer.md`
+* 需求：增强后的需求（或未增强时的 $ARGUMENTS）
+* 上下文：来自阶段 1 的项目上下文
+* 输出：技术可行性分析、推荐解决方案（至少 2 个）、风险评估
 
-Output solutions (at least 2), wait for user selection.
+**保存 SESSION\_ID**（`CODEX_SESSION`）以供后续阶段复用。
 
-### Phase 3: Planning
+输出解决方案（至少 2 个），等待用户选择。
 
-`[Mode: Plan]` - Codex-led planning
+### 阶段 3：规划
 
-**MUST call Codex** (use `resume <CODEX_SESSION>` to reuse session):
-- ROLE_FILE: `~/.claude/.ccg/prompts/codex/architect.md`
-- Requirement: User's selected solution
-- Context: Analysis results from Phase 2
-- OUTPUT: File structure, function/class design, dependency relationships
+`[Mode: Plan]` - Codex 主导的规划
 
-Claude synthesizes plan, save to `.claude/plan/task-name.md` after user approval.
+**必须调用 Codex**（使用 `resume <CODEX_SESSION>` 以复用会话）：
 
-### Phase 4: Implementation
+* ROLE\_FILE：`~/.claude/.ccg/prompts/codex/architect.md`
+* 需求：用户选择的解决方案
+* 上下文：阶段 2 的分析结果
+* 输出：文件结构、函数/类设计、依赖关系
 
-`[Mode: Execute]` - Code development
+Claude 综合规划，在用户批准后保存到 `.claude/plan/task-name.md`。
 
-- Strictly follow approved plan
-- Follow existing project code standards
-- Ensure error handling, security, performance optimization
+### 阶段 4：实施
 
-### Phase 5: Optimization
+`[Mode: Execute]` - 代码开发
 
-`[Mode: Optimize]` - Codex-led review
+* 严格遵循已批准的规划
+* 遵循现有项目的代码规范
+* 确保错误处理、安全性、性能优化
 
-**MUST call Codex** (follow call specification above):
-- ROLE_FILE: `~/.claude/.ccg/prompts/codex/reviewer.md`
-- Requirement: Review the following backend code changes
-- Context: git diff or code content
-- OUTPUT: Security, performance, error handling, API compliance issues list
+### 阶段 5：优化
 
-Integrate review feedback, execute optimization after user confirmation.
+`[Mode: Optimize]` - Codex 主导的评审
 
-### Phase 6: Quality Review
+**必须调用 Codex**（遵循上述调用规范）：
 
-`[Mode: Review]` - Final evaluation
+* ROLE\_FILE：`~/.claude/.ccg/prompts/codex/reviewer.md`
+* 需求：评审以下后端代码变更
+* 上下文：git diff 或代码内容
+* 输出：安全性、性能、错误处理、API 合规性问题列表
 
-- Check completion against plan
-- Run tests to verify functionality
-- Report issues and recommendations
+整合评审反馈，在用户确认后执行优化。
 
----
+### 阶段 6：质量评审
 
-## Key Rules
+`[Mode: Review]` - 最终评估
 
-1. **Codex backend opinions are trustworthy**
-2. **Gemini backend opinions for reference only**
-3. External models have **zero filesystem write access**
-4. Claude handles all code writes and file operations
+* 对照规划检查完成情况
+* 运行测试以验证功能
+* 报告问题和建议
+
+***
+
+## 关键规则
+
+1. **Codex 的后端意见是可信赖的**
+2. **Gemini 的后端意见仅供参考**
+3. 外部模型**对文件系统零写入权限**
+4. Claude 处理所有代码写入和文件操作

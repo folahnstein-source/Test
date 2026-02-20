@@ -1,16 +1,16 @@
-# Sessions Command
+# Sessions 命令
 
-Manage Claude Code session history - list, load, alias, and edit sessions stored in `~/.claude/sessions/`.
+管理 Claude Code 会话历史 - 列出、加载、设置别名和编辑存储在 `~/.claude/sessions/` 中的会话。
 
-## Usage
+## 用法
 
 `/sessions [list|load|alias|info|help] [options]`
 
-## Actions
+## 操作
 
-### List Sessions
+### 列出会话
 
-Display all sessions with metadata, filtering, and pagination.
+显示所有会话及其元数据，支持筛选和分页。
 
 ```bash
 /sessions                              # List all sessions (default)
@@ -20,7 +20,8 @@ Display all sessions with metadata, filtering, and pagination.
 /sessions list --search abc            # Search by session ID
 ```
 
-**Script:**
+**脚本：**
+
 ```bash
 node -e "
 const sm = require((process.env.CLAUDE_PLUGIN_ROOT||require('path').join(require('os').homedir(),'.claude'))+'/scripts/lib/session-manager');
@@ -48,9 +49,9 @@ for (const s of result.sessions) {
 "
 ```
 
-### Load Session
+### 加载会话
 
-Load and display a session's content (by ID or alias).
+加载并显示会话内容（通过 ID 或别名）。
 
 ```bash
 /sessions load <id|alias>             # Load session
@@ -59,7 +60,8 @@ Load and display a session's content (by ID or alias).
 /sessions load my-alias               # By alias name
 ```
 
-**Script:**
+**脚本：**
+
 ```bash
 node -e "
 const sm = require((process.env.CLAUDE_PLUGIN_ROOT||require('path').join(require('os').homedir(),'.claude'))+'/scripts/lib/session-manager');
@@ -111,16 +113,17 @@ if (session.metadata.lastUpdated) {
 " "$ARGUMENTS"
 ```
 
-### Create Alias
+### 创建别名
 
-Create a memorable alias for a session.
+为会话创建一个易记的别名。
 
 ```bash
 /sessions alias <id> <name>           # Create alias
 /sessions alias 2026-02-01 today-work # Create alias named "today-work"
 ```
 
-**Script:**
+**脚本：**
+
 ```bash
 node -e "
 const sm = require((process.env.CLAUDE_PLUGIN_ROOT||require('path').join(require('os').homedir(),'.claude'))+'/scripts/lib/session-manager');
@@ -151,16 +154,17 @@ if (result.success) {
 " "$ARGUMENTS"
 ```
 
-### Remove Alias
+### 移除别名
 
-Delete an existing alias.
+删除现有的别名。
 
 ```bash
 /sessions alias --remove <name>        # Remove alias
 /sessions unalias <name>               # Same as above
 ```
 
-**Script:**
+**脚本：**
+
 ```bash
 node -e "
 const aa = require((process.env.CLAUDE_PLUGIN_ROOT||require('path').join(require('os').homedir(),'.claude'))+'/scripts/lib/session-aliases');
@@ -181,15 +185,16 @@ if (result.success) {
 " "$ARGUMENTS"
 ```
 
-### Session Info
+### 会话信息
 
-Show detailed information about a session.
+显示会话的详细信息。
 
 ```bash
 /sessions info <id|alias>              # Show session details
 ```
 
-**Script:**
+**脚本：**
+
 ```bash
 node -e "
 const sm = require((process.env.CLAUDE_PLUGIN_ROOT||require('path').join(require('os').homedir(),'.claude'))+'/scripts/lib/session-manager');
@@ -228,15 +233,16 @@ if (aliases.length > 0) {
 " "$ARGUMENTS"
 ```
 
-### List Aliases
+### 列出别名
 
-Show all session aliases.
+显示所有会话别名。
 
 ```bash
 /sessions aliases                      # List all aliases
 ```
 
-**Script:**
+**脚本：**
+
 ```bash
 node -e "
 const aa = require((process.env.CLAUDE_PLUGIN_ROOT||require('path').join(require('os').homedir(),'.claude'))+'/scripts/lib/session-aliases');
@@ -260,22 +266,23 @@ if (aliases.length === 0) {
 "
 ```
 
-## Arguments
+## 参数
 
 $ARGUMENTS:
-- `list [options]` - List sessions
-  - `--limit <n>` - Max sessions to show (default: 50)
-  - `--date <YYYY-MM-DD>` - Filter by date
-  - `--search <pattern>` - Search in session ID
-- `load <id|alias>` - Load session content
-- `alias <id> <name>` - Create alias for session
-- `alias --remove <name>` - Remove alias
-- `unalias <name>` - Same as `--remove`
-- `info <id|alias>` - Show session statistics
-- `aliases` - List all aliases
-- `help` - Show this help
 
-## Examples
+* `list [options]` - 列出会话
+  * `--limit <n>` - 最大显示会话数（默认：50）
+  * `--date <YYYY-MM-DD>` - 按日期筛选
+  * `--search <pattern>` - 在会话 ID 中搜索
+* `load <id|alias>` - 加载会话内容
+* `alias <id> <name>` - 为会话创建别名
+* `alias --remove <name>` - 移除别名
+* `unalias <name>` - 与 `--remove` 相同
+* `info <id|alias>` - 显示会话统计信息
+* `aliases` - 列出所有别名
+* `help` - 显示此帮助信息
+
+## 示例
 
 ```bash
 # List all sessions
@@ -297,9 +304,9 @@ $ARGUMENTS:
 /sessions aliases
 ```
 
-## Notes
+## 备注
 
-- Sessions are stored as markdown files in `~/.claude/sessions/`
-- Aliases are stored in `~/.claude/session-aliases.json`
-- Session IDs can be shortened (first 4-8 characters usually unique enough)
-- Use aliases for frequently referenced sessions
+* 会话以 Markdown 文件形式存储在 `~/.claude/sessions/`
+* 别名存储在 `~/.claude/session-aliases.json`
+* 会话 ID 可以缩短（通常前 4-8 个字符就足够唯一）
+* 为经常引用的会话使用别名

@@ -1,62 +1,29 @@
-# Build and Fix
+# 构建与修复
 
-Incrementally fix build and type errors with minimal, safe changes.
+逐步修复 TypeScript 和构建错误：
 
-## Step 1: Detect Build System
+1. 运行构建：npm run build 或 pnpm build
 
-Identify the project's build tool and run the build:
+2. 解析错误输出：
+   * 按文件分组
+   * 按严重性排序
 
-| Indicator | Build Command |
-|-----------|---------------|
-| `package.json` with `build` script | `npm run build` or `pnpm build` |
-| `tsconfig.json` (TypeScript only) | `npx tsc --noEmit` |
-| `Cargo.toml` | `cargo build 2>&1` |
-| `pom.xml` | `mvn compile` |
-| `build.gradle` | `./gradlew compileJava` |
-| `go.mod` | `go build ./...` |
-| `pyproject.toml` | `python -m py_compile` or `mypy .` |
+3. 对于每个错误：
+   * 显示错误上下文（前后 5 行）
+   * 解释问题
+   * 提出修复方案
+   * 应用修复
+   * 重新运行构建
+   * 验证错误是否已解决
 
-## Step 2: Parse and Group Errors
+4. 在以下情况停止：
+   * 修复引入了新的错误
+   * 同一错误在 3 次尝试后仍然存在
+   * 用户请求暂停
 
-1. Run the build command and capture stderr
-2. Group errors by file path
-3. Sort by dependency order (fix imports/types before logic errors)
-4. Count total errors for progress tracking
+5. 显示摘要：
+   * 已修复的错误
+   * 剩余的错误
+   * 新引入的错误
 
-## Step 3: Fix Loop (One Error at a Time)
-
-For each error:
-
-1. **Read the file** — Use Read tool to see error context (10 lines around the error)
-2. **Diagnose** — Identify root cause (missing import, wrong type, syntax error)
-3. **Fix minimally** — Use Edit tool for the smallest change that resolves the error
-4. **Re-run build** — Verify the error is gone and no new errors introduced
-5. **Move to next** — Continue with remaining errors
-
-## Step 4: Guardrails
-
-Stop and ask the user if:
-- A fix introduces **more errors than it resolves**
-- The **same error persists after 3 attempts** (likely a deeper issue)
-- The fix requires **architectural changes** (not just a build fix)
-- Build errors stem from **missing dependencies** (need `npm install`, `cargo add`, etc.)
-
-## Step 5: Summary
-
-Show results:
-- Errors fixed (with file paths)
-- Errors remaining (if any)
-- New errors introduced (should be zero)
-- Suggested next steps for unresolved issues
-
-## Recovery Strategies
-
-| Situation | Action |
-|-----------|--------|
-| Missing module/import | Check if package is installed; suggest install command |
-| Type mismatch | Read both type definitions; fix the narrower type |
-| Circular dependency | Identify cycle with import graph; suggest extraction |
-| Version conflict | Check `package.json` / `Cargo.toml` for version constraints |
-| Build tool misconfiguration | Read config file; compare with working defaults |
-
-Fix one error at a time for safety. Prefer minimal diffs over refactoring.
+为了安全起见，一次只修复一个错误！

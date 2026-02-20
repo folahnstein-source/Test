@@ -1,31 +1,32 @@
 ---
 name: evolve
-description: Cluster related instincts into skills, commands, or agents
+description: 将相关本能聚类为技能、命令或代理
 command: true
 ---
 
-# Evolve Command
+# Evolve 命令
 
-## Implementation
+## 实现方式
 
-Run the instinct CLI using the plugin root path:
+使用插件根路径运行 instinct CLI：
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" evolve [--generate]
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+或者如果 `CLAUDE_PLUGIN_ROOT` 未设置（手动安装）：
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]
 ```
 
-Analyzes instincts and clusters related ones into higher-level structures:
-- **Commands**: When instincts describe user-invoked actions
-- **Skills**: When instincts describe auto-triggered behaviors
-- **Agents**: When instincts describe complex, multi-step processes
+分析本能并将相关的本能聚合成更高层次的结构：
 
-## Usage
+* **命令**：当本能描述用户调用的操作时
+* **技能**：当本能描述自动触发的行为时
+* **代理**：当本能描述复杂的、多步骤的流程时
+
+## 使用方法
 
 ```
 /evolve                    # Analyze all instincts and suggest evolutions
@@ -34,62 +35,71 @@ Analyzes instincts and clusters related ones into higher-level structures:
 /evolve --threshold 5      # Require 5+ related instincts to cluster
 ```
 
-## Evolution Rules
+## 演化规则
 
-### → Command (User-Invoked)
-When instincts describe actions a user would explicitly request:
-- Multiple instincts about "when user asks to..."
-- Instincts with triggers like "when creating a new X"
-- Instincts that follow a repeatable sequence
+### → 命令（用户调用）
 
-Example:
-- `new-table-step1`: "when adding a database table, create migration"
-- `new-table-step2`: "when adding a database table, update schema"
-- `new-table-step3`: "when adding a database table, regenerate types"
+当本能描述用户会明确请求的操作时：
 
-→ Creates: **new-table** command
+* 多个关于“当用户要求...”的本能
+* 触发器类似“当创建新的 X 时”的本能
+* 遵循可重复序列的本能
 
-### → Skill (Auto-Triggered)
-When instincts describe behaviors that should happen automatically:
-- Pattern-matching triggers
-- Error handling responses
-- Code style enforcement
+示例：
 
-Example:
-- `prefer-functional`: "when writing functions, prefer functional style"
-- `use-immutable`: "when modifying state, use immutable patterns"
-- `avoid-classes`: "when designing modules, avoid class-based design"
+* `new-table-step1`: "当添加数据库表时，创建迁移"
+* `new-table-step2`: "当添加数据库表时，更新模式"
+* `new-table-step3`: "当添加数据库表时，重新生成类型"
 
-→ Creates: `functional-patterns` skill
+→ 创建：`/new-table` 命令
 
-### → Agent (Needs Depth/Isolation)
-When instincts describe complex, multi-step processes that benefit from isolation:
-- Debugging workflows
-- Refactoring sequences
-- Research tasks
+### → 技能（自动触发）
 
-Example:
-- `debug-step1`: "when debugging, first check logs"
-- `debug-step2`: "when debugging, isolate the failing component"
-- `debug-step3`: "when debugging, create minimal reproduction"
-- `debug-step4`: "when debugging, verify fix with test"
+当本能描述应该自动发生的行为时：
 
-→ Creates: **debugger** agent
+* 模式匹配触发器
+* 错误处理响应
+* 代码风格强制执行
 
-## What to Do
+示例：
 
-1. Read all instincts from `~/.claude/homunculus/instincts/`
-2. Group instincts by:
-   - Domain similarity
-   - Trigger pattern overlap
-   - Action sequence relationship
-3. For each cluster of 3+ related instincts:
-   - Determine evolution type (command/skill/agent)
-   - Generate the appropriate file
-   - Save to `~/.claude/homunculus/evolved/{commands,skills,agents}/`
-4. Link evolved structure back to source instincts
+* `prefer-functional`: "当编写函数时，优先使用函数式风格"
+* `use-immutable`: "当修改状态时，使用不可变模式"
+* `avoid-classes`: "当设计模块时，避免基于类的设计"
 
-## Output Format
+→ 创建：`functional-patterns` 技能
+
+### → 代理（需要深度/隔离）
+
+当本能描述复杂的、多步骤的、受益于隔离的流程时：
+
+* 调试工作流
+* 重构序列
+* 研究任务
+
+示例：
+
+* `debug-step1`: "当调试时，首先检查日志"
+* `debug-step2`: "当调试时，隔离故障组件"
+* `debug-step3`: "当调试时，创建最小复现"
+* `debug-step4`: "当调试时，用测试验证修复"
+
+→ 创建：`debugger` 代理
+
+## 操作步骤
+
+1. 从 `~/.claude/homunculus/instincts/` 读取所有本能
+2. 按以下方式对本能进行分组：
+   * 领域相似性
+   * 触发器模式重叠
+   * 操作序列关联性
+3. 对于每个包含 3 个以上相关本能的集群：
+   * 确定演化类型（命令/技能/代理）
+   * 生成相应的文件
+   * 保存到 `~/.claude/homunculus/evolved/{commands,skills,agents}/`
+4. 将演化后的结构链接回源本能
+
+## 输出格式
 
 ```
 🧬 Evolve Analysis
@@ -128,17 +138,18 @@ Files:
 Run `/evolve --execute` to create these files.
 ```
 
-## Flags
+## 标志
 
-- `--execute`: Actually create the evolved structures (default is preview)
-- `--dry-run`: Preview without creating
-- `--domain <name>`: Only evolve instincts in specified domain
-- `--threshold <n>`: Minimum instincts required to form cluster (default: 3)
-- `--type <command|skill|agent>`: Only create specified type
+* `--execute`: 实际创建演化后的结构（默认为预览）
+* `--dry-run`: 仅预览而不创建
+* `--domain <name>`: 仅演化指定领域的本能
+* `--threshold <n>`: 形成集群所需的最小本能数（默认：3）
+* `--type <command|skill|agent>`: 仅创建指定类型
 
-## Generated File Format
+## 生成的文件格式
 
-### Command
+### 命令
+
 ```markdown
 ---
 name: new-table
@@ -150,36 +161,40 @@ evolved_from:
   - regenerate-types
 ---
 
-# New Table Command
+# 新建数据表命令
 
-[Generated content based on clustered instincts]
+[基于集群本能生成的内容]
 
-## Steps
+## 步骤
 1. ...
 2. ...
+
 ```
 
-### Skill
+### 技能
+
 ```markdown
 ---
 name: functional-patterns
-description: Enforce functional programming patterns
+description: 强制执行函数式编程模式
 evolved_from:
   - prefer-functional
   - use-immutable
   - avoid-classes
 ---
 
-# Functional Patterns Skill
+# 函数式模式技能
 
-[Generated content based on clustered instincts]
+[基于聚类本能生成的内容]
+
 ```
 
-### Agent
+### 代理
+
 ```markdown
 ---
 name: debugger
-description: Systematic debugging agent
+description: 系统性调试代理
 model: sonnet
 evolved_from:
   - debug-check-logs
@@ -187,7 +202,8 @@ evolved_from:
   - debug-reproduce
 ---
 
-# Debugger Agent
+# 调试器代理
 
-[Generated content based on clustered instincts]
+[基于聚类本能生成的内容]
+
 ```

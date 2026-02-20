@@ -1,39 +1,40 @@
 ---
-description: Restate requirements, assess risks, and create step-by-step implementation plan. WAIT for user CONFIRM before touching any code.
+description: 重新阐述需求、评估风险并创建分步实施计划。在接触任何代码之前，等待用户确认。
 ---
 
-# Plan Command
+# 计划命令
 
-This command invokes the **planner** agent to create a comprehensive implementation plan before writing any code.
+此命令调用 **planner** 代理，在编写任何代码之前创建一个全面的实施计划。
 
-## What This Command Does
+## 此命令的作用
 
-1. **Restate Requirements** - Clarify what needs to be built
-2. **Identify Risks** - Surface potential issues and blockers
-3. **Create Step Plan** - Break down implementation into phases
-4. **Wait for Confirmation** - MUST receive user approval before proceeding
+1. **重新阐述需求** - 明确需要构建什么
+2. **识别风险** - 揭示潜在问题和阻碍
+3. **创建分步计划** - 将实施分解为多个阶段
+4. **等待确认** - 必须获得用户批准才能继续
 
-## When to Use
+## 何时使用
 
-Use `/plan` when:
-- Starting a new feature
-- Making significant architectural changes
-- Working on complex refactoring
-- Multiple files/components will be affected
-- Requirements are unclear or ambiguous
+在以下情况下使用 `/plan`：
 
-## How It Works
+* 开始新功能时
+* 进行重大架构变更时
+* 处理复杂重构时
+* 多个文件/组件将受到影响时
+* 需求不明确或存在歧义时
 
-The planner agent will:
+## 工作原理
 
-1. **Analyze the request** and restate requirements in clear terms
-2. **Break down into phases** with specific, actionable steps
-3. **Identify dependencies** between components
-4. **Assess risks** and potential blockers
-5. **Estimate complexity** (High/Medium/Low)
-6. **Present the plan** and WAIT for your explicit confirmation
+planner 代理将：
 
-## Example Usage
+1. **分析请求** 并用清晰的术语重新阐述需求
+2. **分解为多个阶段**，每个阶段包含具体、可操作的步骤
+3. **识别组件之间的依赖关系**
+4. **评估风险和潜在阻碍**
+5. **估算复杂度**（高/中/低）
+6. **展示计划**并等待您明确的确认
+
+## 使用示例
 
 ```
 User: /plan I need to add real-time notifications when markets resolve
@@ -91,23 +92,24 @@ Agent (planner):
 **WAITING FOR CONFIRMATION**: Proceed with this plan? (yes/no/modify)
 ```
 
-## Important Notes
+## 重要说明
 
-**CRITICAL**: The planner agent will **NOT** write any code until you explicitly confirm the plan with "yes" or "proceed" or similar affirmative response.
+**关键**：planner 代理在您明确用“是”、“继续”或类似的肯定性答复确认计划之前，**不会**编写任何代码。
 
-If you want changes, respond with:
-- "modify: [your changes]"
-- "different approach: [alternative]"
-- "skip phase 2 and do phase 3 first"
+如果您希望修改，请回复：
 
-## Integration with Other Commands
+* "修改：\[您的修改内容]"
+* "不同方法：\[替代方案]"
+* "跳过阶段 2，先执行阶段 3"
 
-After planning:
-- Use `/tdd` to implement with test-driven development
-- Use `/build-fix` if build errors occur
-- Use `/code-review` to review completed implementation
+## 与其他命令的集成
 
-## Related Agents
+计划之后：
 
-This command invokes the `planner` agent located at:
-`~/.claude/agents/planner.md`
+* 使用 `/tdd` 以测试驱动开发的方式实施
+* 如果出现构建错误，使用 `/build-fix`
+* 使用 `/code-review` 审查已完成的实施
+
+## 相关代理
+
+此命令调用位于 `~/.claude/agents/planner.md` 的 `planner` 代理。

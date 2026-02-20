@@ -1,33 +1,34 @@
-# Frontend - Frontend-Focused Development
+# 前端 - 前端聚焦开发
 
-Frontend-focused workflow (Research → Ideation → Plan → Execute → Optimize → Review), Gemini-led.
+前端聚焦的工作流（研究 → 构思 → 规划 → 执行 → 优化 → 评审），由 Gemini 主导。
 
-## Usage
+## 使用方法
 
 ```bash
 /frontend <UI task description>
 ```
 
-## Context
+## 上下文
 
-- Frontend task: $ARGUMENTS
-- Gemini-led, Codex for auxiliary reference
-- Applicable: Component design, responsive layout, UI animations, style optimization
+* 前端任务: $ARGUMENTS
+* Gemini 主导，Codex 作为辅助参考
+* 适用场景: 组件设计、响应式布局、UI 动画、样式优化
 
-## Your Role
+## 您的角色
 
-You are the **Frontend Orchestrator**, coordinating multi-model collaboration for UI/UX tasks (Research → Ideation → Plan → Execute → Optimize → Review).
+您是 **前端协调器**，为 UI/UX 任务协调多模型协作（研究 → 构思 → 规划 → 执行 → 优化 → 评审）。
 
-**Collaborative Models**:
-- **Gemini** – Frontend UI/UX (**Frontend authority, trustworthy**)
-- **Codex** – Backend perspective (**Frontend opinions for reference only**)
-- **Claude (self)** – Orchestration, planning, execution, delivery
+**协作模型**:
 
----
+* **Gemini** – 前端 UI/UX（**前端权威，可信赖**）
+* **Codex** – 后端视角（**前端意见仅供参考**）
+* **Claude（自身）** – 协调、规划、执行、交付
 
-## Multi-Model Call Specification
+***
 
-**Call Syntax**:
+## 多模型调用规范
+
+**调用语法**:
 
 ```
 # New session call
@@ -61,98 +62,101 @@ EOF",
 })
 ```
 
-**Role Prompts**:
+**角色提示词**:
 
-| Phase | Gemini |
+| 阶段 | Gemini |
 |-------|--------|
-| Analysis | `~/.claude/.ccg/prompts/gemini/analyzer.md` |
-| Planning | `~/.claude/.ccg/prompts/gemini/architect.md` |
-| Review | `~/.claude/.ccg/prompts/gemini/reviewer.md` |
+| 分析 | `~/.claude/.ccg/prompts/gemini/analyzer.md` |
+| 规划 | `~/.claude/.ccg/prompts/gemini/architect.md` |
+| 评审 | `~/.claude/.ccg/prompts/gemini/reviewer.md` |
 
-**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` for subsequent phases. Save `GEMINI_SESSION` in Phase 2, use `resume` in Phases 3 and 5.
+**会话重用**: 每次调用返回 `SESSION_ID: xxx`，在后续阶段使用 `resume xxx`。在阶段 2 保存 `GEMINI_SESSION`，在阶段 3 和 5 使用 `resume`。
 
----
+***
 
-## Communication Guidelines
+## 沟通指南
 
-1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`
-2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`
-3. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval)
+1. 以模式标签 `[Mode: X]` 开始响应，初始为 `[Mode: Research]`
+2. 遵循严格顺序: `Research → Ideation → Plan → Execute → Optimize → Review`
+3. 需要时（例如确认/选择/批准）使用 `AskUserQuestion` 工具进行用户交互
 
----
+***
 
-## Core Workflow
+## 核心工作流
 
-### Phase 0: Prompt Enhancement (Optional)
+### 阶段 0: 提示词增强（可选）
 
-`[Mode: Prepare]` - If ace-tool MCP available, call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for subsequent Gemini calls**
+`[Mode: Prepare]` - 如果 ace-tool MCP 可用，调用 `mcp__ace-tool__enhance_prompt`，**将原始的 $ARGUMENTS 替换为增强后的结果，用于后续的 Gemini 调用**
 
-### Phase 1: Research
+### 阶段 1: 研究
 
-`[Mode: Research]` - Understand requirements and gather context
+`[Mode: Research]` - 理解需求并收集上下文
 
-1. **Code Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context` to retrieve existing components, styles, design system
-2. Requirement completeness score (0-10): >=7 continue, <7 stop and supplement
+1. **代码检索**（如果 ace-tool MCP 可用）: 调用 `mcp__ace-tool__search_context` 来检索现有的组件、样式、设计系统
+2. 需求完整性评分（0-10）: >=7 继续，<7 停止并补充
 
-### Phase 2: Ideation
+### 阶段 2: 构思
 
-`[Mode: Ideation]` - Gemini-led analysis
+`[Mode: Ideation]` - Gemini 主导的分析
 
-**MUST call Gemini** (follow call specification above):
-- ROLE_FILE: `~/.claude/.ccg/prompts/gemini/analyzer.md`
-- Requirement: Enhanced requirement (or $ARGUMENTS if not enhanced)
-- Context: Project context from Phase 1
-- OUTPUT: UI feasibility analysis, recommended solutions (at least 2), UX evaluation
+**必须调用 Gemini**（遵循上述调用规范）:
 
-**Save SESSION_ID** (`GEMINI_SESSION`) for subsequent phase reuse.
+* ROLE\_FILE: `~/.claude/.ccg/prompts/gemini/analyzer.md`
+* 需求: 增强后的需求（或未经增强的 $ARGUMENTS）
+* 上下文: 来自阶段 1 的项目上下文
+* 输出: UI 可行性分析、推荐解决方案（至少 2 个）、UX 评估
 
-Output solutions (at least 2), wait for user selection.
+**保存 SESSION\_ID**（`GEMINI_SESSION`）以供后续阶段重用。
 
-### Phase 3: Planning
+输出解决方案（至少 2 个），等待用户选择。
 
-`[Mode: Plan]` - Gemini-led planning
+### 阶段 3: 规划
 
-**MUST call Gemini** (use `resume <GEMINI_SESSION>` to reuse session):
-- ROLE_FILE: `~/.claude/.ccg/prompts/gemini/architect.md`
-- Requirement: User's selected solution
-- Context: Analysis results from Phase 2
-- OUTPUT: Component structure, UI flow, styling approach
+`[Mode: Plan]` - Gemini 主导的规划
 
-Claude synthesizes plan, save to `.claude/plan/task-name.md` after user approval.
+**必须调用 Gemini**（使用 `resume <GEMINI_SESSION>` 来重用会话）:
 
-### Phase 4: Implementation
+* ROLE\_FILE: `~/.claude/.ccg/prompts/gemini/architect.md`
+* 需求: 用户选择的解决方案
+* 上下文: 阶段 2 的分析结果
+* 输出: 组件结构、UI 流程、样式方案
 
-`[Mode: Execute]` - Code development
+Claude 综合规划，在用户批准后保存到 `.claude/plan/task-name.md`。
 
-- Strictly follow approved plan
-- Follow existing project design system and code standards
-- Ensure responsiveness, accessibility
+### 阶段 4: 实现
 
-### Phase 5: Optimization
+`[Mode: Execute]` - 代码开发
 
-`[Mode: Optimize]` - Gemini-led review
+* 严格遵循批准的规划
+* 遵循现有项目设计系统和代码标准
+* 确保响应式设计、可访问性
 
-**MUST call Gemini** (follow call specification above):
-- ROLE_FILE: `~/.claude/.ccg/prompts/gemini/reviewer.md`
-- Requirement: Review the following frontend code changes
-- Context: git diff or code content
-- OUTPUT: Accessibility, responsiveness, performance, design consistency issues list
+### 阶段 5: 优化
 
-Integrate review feedback, execute optimization after user confirmation.
+`[Mode: Optimize]` - Gemini 主导的评审
 
-### Phase 6: Quality Review
+**必须调用 Gemini**（遵循上述调用规范）:
 
-`[Mode: Review]` - Final evaluation
+* ROLE\_FILE: `~/.claude/.ccg/prompts/gemini/reviewer.md`
+* 需求: 评审以下前端代码变更
+* 上下文: git diff 或代码内容
+* 输出: 可访问性、响应式设计、性能、设计一致性等问题列表
 
-- Check completion against plan
-- Verify responsiveness and accessibility
-- Report issues and recommendations
+整合评审反馈，在用户确认后执行优化。
 
----
+### 阶段 6: 质量评审
 
-## Key Rules
+`[Mode: Review]` - 最终评估
 
-1. **Gemini frontend opinions are trustworthy**
-2. **Codex frontend opinions for reference only**
-3. External models have **zero filesystem write access**
-4. Claude handles all code writes and file operations
+* 对照规划检查完成情况
+* 验证响应式设计和可访问性
+* 报告问题与建议
+
+***
+
+## 关键规则
+
+1. **Gemini 的前端意见是可信赖的**
+2. **Codex 的前端意见仅供参考**
+3. 外部模型**没有文件系统写入权限**
+4. Claude 处理所有代码写入和文件操作

@@ -1,58 +1,62 @@
 ---
-description: Comprehensive Python code review for PEP 8 compliance, type hints, security, and Pythonic idioms. Invokes the python-reviewer agent.
+description: 全面的Python代码审查，确保符合PEP 8标准、类型提示、安全性以及Pythonic惯用法。调用python-reviewer代理。
 ---
 
-# Python Code Review
+# Python 代码审查
 
-This command invokes the **python-reviewer** agent for comprehensive Python-specific code review.
+此命令调用 **python-reviewer** 代理进行全面的 Python 专项代码审查。
 
-## What This Command Does
+## 此命令的功能
 
-1. **Identify Python Changes**: Find modified `.py` files via `git diff`
-2. **Run Static Analysis**: Execute `ruff`, `mypy`, `pylint`, `black --check`
-3. **Security Scan**: Check for SQL injection, command injection, unsafe deserialization
-4. **Type Safety Review**: Analyze type hints and mypy errors
-5. **Pythonic Code Check**: Verify code follows PEP 8 and Python best practices
-6. **Generate Report**: Categorize issues by severity
+1. **识别 Python 变更**：通过 `git diff` 查找修改过的 `.py` 文件
+2. **运行静态分析**：执行 `ruff`、`mypy`、`pylint`、`black --check`
+3. **安全扫描**：检查 SQL 注入、命令注入、不安全的反序列化
+4. **类型安全审查**：分析类型提示和 mypy 错误
+5. **Pythonic 代码检查**：验证代码是否遵循 PEP 8 和 Python 最佳实践
+6. **生成报告**：按严重程度对问题进行归类
 
-## When to Use
+## 使用时机
 
-Use `/python-review` when:
-- After writing or modifying Python code
-- Before committing Python changes
-- Reviewing pull requests with Python code
-- Onboarding to a new Python codebase
-- Learning Pythonic patterns and idioms
+在以下情况使用 `/python-review`：
 
-## Review Categories
+* 编写或修改 Python 代码后
+* 提交 Python 变更前
+* 审查包含 Python 代码的拉取请求时
+* 接手新的 Python 代码库时
+* 学习 Pythonic 模式和惯用法时
 
-### CRITICAL (Must Fix)
-- SQL/Command injection vulnerabilities
-- Unsafe eval/exec usage
-- Pickle unsafe deserialization
-- Hardcoded credentials
-- YAML unsafe load
-- Bare except clauses hiding errors
+## 审查类别
 
-### HIGH (Should Fix)
-- Missing type hints on public functions
-- Mutable default arguments
-- Swallowing exceptions silently
-- Not using context managers for resources
-- C-style looping instead of comprehensions
-- Using type() instead of isinstance()
-- Race conditions without locks
+### 关键 (必须修复)
 
-### MEDIUM (Consider)
-- PEP 8 formatting violations
-- Missing docstrings on public functions
-- Print statements instead of logging
-- Inefficient string operations
-- Magic numbers without named constants
-- Not using f-strings for formatting
-- Unnecessary list creation
+* SQL/命令注入漏洞
+* 不安全的 eval/exec 使用
+* Pickle 不安全反序列化
+* 硬编码的凭证
+* YAML 不安全加载
+* 隐藏错误的裸 except 子句
 
-## Automated Checks Run
+### 高 (应该修复)
+
+* 公共函数缺少类型提示
+* 可变默认参数
+* 静默吞掉异常
+* 未对资源使用上下文管理器
+* 使用 C 风格循环而非推导式
+* 使用 type() 而非 isinstance()
+* 无锁的竞态条件
+
+### 中 (考虑)
+
+* 违反 PEP 8 格式规范
+* 公共函数缺少文档字符串
+* 使用 print 语句而非 logging
+* 低效的字符串操作
+* 未使用命名常量的魔法数字
+* 未使用 f-strings 进行格式化
+* 不必要的列表创建
+
+## 运行的自动化检查
 
 ```bash
 # Type checking
@@ -74,9 +78,9 @@ safety check
 pytest --cov=app --cov-report=term-missing
 ```
 
-## Example Usage
+## 使用示例
 
-```text
+````text
 User: /python-review
 
 Agent:
@@ -99,22 +103,27 @@ File: app/routes/user.py:42
 Issue: User input directly interpolated into SQL query
 ```python
 query = f"SELECT * FROM users WHERE id = {user_id}"  # Bad
-```
-Fix: Use parameterized query
+````
+
+修复：使用参数化查询
+
 ```python
 query = "SELECT * FROM users WHERE id = %s"  # Good
 cursor.execute(query, (user_id,))
 ```
 
-[HIGH] Mutable default argument
-File: app/services/auth.py:18
-Issue: Mutable default argument causes shared state
+\[高] 可变默认参数
+文件：app/services/auth.py:18
+问题：可变默认参数导致共享状态
+
 ```python
 def process_items(items=[]):  # Bad
     items.append("new")
     return items
 ```
-Fix: Use None as default
+
+修复：使用 None 作为默认值
+
 ```python
 def process_items(items=None):  # Good
     if items is None:
@@ -123,43 +132,52 @@ def process_items(items=None):  # Good
     return items
 ```
 
-[MEDIUM] Missing type hints
-File: app/services/auth.py:25
-Issue: Public function without type annotations
+\[中] 缺少类型提示
+文件：app/services/auth.py:25
+问题：公共函数缺少类型注解
+
 ```python
 def get_user(user_id):  # Bad
     return db.find(user_id)
 ```
-Fix: Add type hints
+
+修复：添加类型提示
+
 ```python
 def get_user(user_id: str) -> Optional[User]:  # Good
     return db.find(user_id)
 ```
 
-[MEDIUM] Not using context manager
-File: app/routes/user.py:55
-Issue: File not closed on exception
+\[中] 未使用上下文管理器
+文件：app/routes/user.py:55
+问题：异常时文件未关闭
+
 ```python
 f = open("config.json")  # Bad
 data = f.read()
 f.close()
 ```
-Fix: Use context manager
+
+修复：使用上下文管理器
+
 ```python
 with open("config.json") as f:  # Good
     data = f.read()
 ```
 
-## Summary
-- CRITICAL: 1
-- HIGH: 1
-- MEDIUM: 2
+## 摘要
 
-Recommendation: ❌ Block merge until CRITICAL issue is fixed
+* 关键：1
+* 高：1
+* 中：2
 
-## Formatting Required
-Run: `black app/routes/user.py app/services/auth.py`
-```
+建议：❌ 在关键问题修复前阻止合并
+
+## 所需的格式化
+
+运行：`black app/routes/user.py app/services/auth.py`
+
+````
 
 ## Approval Criteria
 
@@ -218,9 +236,10 @@ from typing import Union
 
 def calculate(x: Union[int, float], y: Union[int, float]) -> Union[int, float]:
     return x + y
-```
+````
 
-### Use Context Managers
+### 使用上下文管理器
+
 ```python
 # Before
 f = open("file.txt")
@@ -232,7 +251,8 @@ with open("file.txt") as f:
     data = f.read()
 ```
 
-### Use List Comprehensions
+### 使用列表推导式
+
 ```python
 # Before
 result = []
@@ -244,7 +264,8 @@ for item in items:
 result = [item.name for item in items if item.active]
 ```
 
-### Fix Mutable Defaults
+### 修复可变默认参数
+
 ```python
 # Before
 def append(value, items=[]):
@@ -259,7 +280,8 @@ def append(value, items=None):
     return items
 ```
 
-### Use f-strings (Python 3.6+)
+### 使用 f-strings (Python 3.6+)
+
 ```python
 # Before
 name = "Alice"
@@ -270,7 +292,8 @@ greeting2 = "Hello, {}".format(name)
 greeting = f"Hello, {name}!"
 ```
 
-### Fix String Concatenation in Loops
+### 修复循环中的字符串连接
+
 ```python
 # Before
 result = ""
@@ -281,17 +304,17 @@ for item in items:
 result = "".join(str(item) for item in items)
 ```
 
-## Python Version Compatibility
+## Python 版本兼容性
 
-The reviewer notes when code uses features from newer Python versions:
+审查者会指出代码何时使用了新 Python 版本的功能：
 
-| Feature | Minimum Python |
+| 功能 | 最低 Python 版本 |
 |---------|----------------|
-| Type hints | 3.5+ |
+| 类型提示 | 3.5+ |
 | f-strings | 3.6+ |
-| Walrus operator (`:=`) | 3.8+ |
-| Position-only parameters | 3.8+ |
-| Match statements | 3.10+ |
-| Type unions (&#96;x &#124; None&#96;) | 3.10+ |
+| 海象运算符 (`:=`) | 3.8+ |
+| 仅限位置参数 | 3.8+ |
+| Match 语句 | 3.10+ |
+| 类型联合 (\`x | None\`) | 3.10+ |
 
-Ensure your project's `pyproject.toml` or `setup.py` specifies the correct minimum Python version.
+确保你的项目 `pyproject.toml` 或 `setup.py` 指定了正确的最低 Python 版本。

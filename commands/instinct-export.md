@@ -1,17 +1,18 @@
 ---
 name: instinct-export
-description: Export instincts for sharing with teammates or other projects
+description: 导出本能，与团队成员或其他项目共享
 command: /instinct-export
 ---
 
-# Instinct Export Command
+# 本能导出命令
 
-Exports instincts to a shareable format. Perfect for:
-- Sharing with teammates
-- Transferring to a new machine
-- Contributing to project conventions
+将本能导出为可共享的格式。非常适合：
 
-## Usage
+* 与团队成员分享
+* 转移到新机器
+* 贡献给项目约定
+
+## 用法
 
 ```
 /instinct-export                           # Export all personal instincts
@@ -20,19 +21,19 @@ Exports instincts to a shareable format. Perfect for:
 /instinct-export --output team-instincts.yaml
 ```
 
-## What to Do
+## 操作步骤
 
-1. Read instincts from `~/.claude/homunculus/instincts/personal/`
-2. Filter based on flags
-3. Strip sensitive information:
-   - Remove session IDs
-   - Remove file paths (keep only patterns)
-   - Remove timestamps older than "last week"
-4. Generate export file
+1. 从 `~/.claude/homunculus/instincts/personal/` 读取本能
+2. 根据标志进行筛选
+3. 剥离敏感信息：
+   * 移除会话 ID
+   * 移除文件路径（仅保留模式）
+   * 移除早于“上周”的时间戳
+4. 生成导出文件
 
-## Output Format
+## 输出格式
 
-Creates a YAML file:
+创建一个 YAML 文件：
 
 ```yaml
 # Instincts Export
@@ -67,25 +68,27 @@ instincts:
     observations: 6
 ```
 
-## Privacy Considerations
+## 隐私考虑
 
-Exports include:
-- ✅ Trigger patterns
-- ✅ Actions
-- ✅ Confidence scores
-- ✅ Domains
-- ✅ Observation counts
+导出内容包括：
 
-Exports do NOT include:
-- ❌ Actual code snippets
-- ❌ File paths
-- ❌ Session transcripts
-- ❌ Personal identifiers
+* ✅ 触发模式
+* ✅ 操作
+* ✅ 置信度分数
+* ✅ 领域
+* ✅ 观察计数
 
-## Flags
+导出内容不包括：
 
-- `--domain <name>`: Export only specified domain
-- `--min-confidence <n>`: Minimum confidence threshold (default: 0.3)
-- `--output <file>`: Output file path (default: instincts-export-YYYYMMDD.yaml)
-- `--format <yaml|json|md>`: Output format (default: yaml)
-- `--include-evidence`: Include evidence text (default: excluded)
+* ❌ 实际代码片段
+* ❌ 文件路径
+* ❌ 会话记录
+* ❌ 个人标识符
+
+## 标志
+
+* `--domain <name>`：仅导出指定领域
+* `--min-confidence <n>`：最低置信度阈值（默认：0.3）
+* `--output <file>`：输出文件路径（默认：instincts-export-YYYYMMDD.yaml）
+* `--format <yaml|json|md>`：输出格式（默认：yaml）
+* `--include-evidence`：包含证据文本（默认：排除）

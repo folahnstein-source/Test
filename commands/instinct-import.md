@@ -1,32 +1,33 @@
 ---
 name: instinct-import
-description: Import instincts from teammates, Skill Creator, or other sources
+description: 从队友、技能创建者或其他来源导入本能
 command: true
 ---
 
-# Instinct Import Command
+# 本能导入命令
 
-## Implementation
+## 实现
 
-Run the instinct CLI using the plugin root path:
+使用插件根路径运行本能 CLI：
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" import <file-or-url> [--dry-run] [--force] [--min-confidence 0.7]
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+或者，如果 `CLAUDE_PLUGIN_ROOT` 未设置（手动安装）：
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py import <file-or-url>
 ```
 
-Import instincts from:
-- Teammates' exports
-- Skill Creator (repo analysis)
-- Community collections
-- Previous machine backups
+从以下来源导入本能：
 
-## Usage
+* 队友的导出
+* 技能创建器（仓库分析）
+* 社区集合
+* 之前的机器备份
+
+## 用法
 
 ```
 /instinct-import team-instincts.yaml
@@ -34,15 +35,15 @@ Import instincts from:
 /instinct-import --from-skill-creator acme/webapp
 ```
 
-## What to Do
+## 执行步骤
 
-1. Fetch the instinct file (local path or URL)
-2. Parse and validate the format
-3. Check for duplicates with existing instincts
-4. Merge or add new instincts
-5. Save to `~/.claude/homunculus/instincts/inherited/`
+1. 获取本能文件（本地路径或 URL）
+2. 解析并验证格式
+3. 检查与现有本能的重复项
+4. 合并或添加新本能
+5. 保存到 `~/.claude/homunculus/instincts/inherited/`
 
-## Import Process
+## 导入过程
 
 ```
 📥 Importing instincts from: team-instincts.yaml
@@ -81,23 +82,28 @@ These contradict local instincts:
 Import 8 new, update 1, skip 3?
 ```
 
-## Merge Strategies
+## 合并策略
 
-### For Duplicates
-When importing an instinct that matches an existing one:
-- **Higher confidence wins**: Keep the one with higher confidence
-- **Merge evidence**: Combine observation counts
-- **Update timestamp**: Mark as recently validated
+### 针对重复项
 
-### For Conflicts
-When importing an instinct that contradicts an existing one:
-- **Skip by default**: Don't import conflicting instincts
-- **Flag for review**: Mark both as needing attention
-- **Manual resolution**: User decides which to keep
+当导入一个与现有本能匹配的本能时：
 
-## Source Tracking
+* **置信度高的胜出**：保留置信度更高的那个
+* **合并证据**：合并观察计数
+* **更新时间戳**：标记为最近已验证
 
-Imported instincts are marked with:
+### 针对冲突
+
+当导入一个与现有本能相矛盾的本能时：
+
+* **默认跳过**：不导入冲突的本能
+* **标记待审**：将两者都标记为需要注意
+* **手动解决**：由用户决定保留哪个
+
+## 来源追踪
+
+导入的本能被标记为：
+
 ```yaml
 source: "inherited"
 imported_from: "team-instincts.yaml"
@@ -105,30 +111,32 @@ imported_at: "2025-01-22T10:30:00Z"
 original_source: "session-observation"  # or "repo-analysis"
 ```
 
-## Skill Creator Integration
+## 技能创建器集成
 
-When importing from Skill Creator:
+从技能创建器导入时：
 
 ```
 /instinct-import --from-skill-creator acme/webapp
 ```
 
-This fetches instincts generated from repo analysis:
-- Source: `repo-analysis`
-- Higher initial confidence (0.7+)
-- Linked to source repository
+这会获取从仓库分析生成的本能：
 
-## Flags
+* 来源：`repo-analysis`
+* 更高的初始置信度（0.7+）
+* 链接到源仓库
 
-- `--dry-run`: Preview without importing
-- `--force`: Import even if conflicts exist
-- `--merge-strategy <higher|local|import>`: How to handle duplicates
-- `--from-skill-creator <owner/repo>`: Import from Skill Creator analysis
-- `--min-confidence <n>`: Only import instincts above threshold
+## 标志
 
-## Output
+* `--dry-run`：预览而不导入
+* `--force`：即使存在冲突也导入
+* `--merge-strategy <higher|local|import>`：如何处理重复项
+* `--from-skill-creator <owner/repo>`：从技能创建器分析导入
+* `--min-confidence <n>`：仅导入高于阈值的本能
 
-After import:
+## 输出
+
+导入后：
+
 ```
 ✅ Import complete!
 

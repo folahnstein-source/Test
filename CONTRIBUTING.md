@@ -1,51 +1,59 @@
-# Contributing to Everything Claude Code
+# 为 Everything Claude Code 做贡献
 
-Thanks for wanting to contribute! This repo is a community resource for Claude Code users.
+感谢您想要贡献！这个仓库是 Claude Code 用户的社区资源。
 
-## Table of Contents
+## 目录
 
-- [What We're Looking For](#what-were-looking-for)
-- [Quick Start](#quick-start)
-- [Contributing Skills](#contributing-skills)
-- [Contributing Agents](#contributing-agents)
-- [Contributing Hooks](#contributing-hooks)
-- [Contributing Commands](#contributing-commands)
-- [Pull Request Process](#pull-request-process)
+* [我们正在寻找的内容](#我们寻找什么)
+* [快速开始](#快速开始)
+* [贡献技能](#贡献技能)
+* [贡献智能体](#贡献智能体)
+* [贡献钩子](#贡献钩子)
+* [贡献命令](#贡献命令)
+* [拉取请求流程](#拉取请求流程)
 
----
+***
 
-## What We're Looking For
+## 我们寻找什么
 
-### Agents
-New agents that handle specific tasks well:
-- Language-specific reviewers (Python, Go, Rust)
-- Framework experts (Django, Rails, Laravel, Spring)
-- DevOps specialists (Kubernetes, Terraform, CI/CD)
-- Domain experts (ML pipelines, data engineering, mobile)
+### 智能体
 
-### Skills
-Workflow definitions and domain knowledge:
-- Language best practices
-- Framework patterns
-- Testing strategies
-- Architecture guides
+能够很好地处理特定任务的新智能体：
 
-### Hooks
-Useful automations:
-- Linting/formatting hooks
-- Security checks
-- Validation hooks
-- Notification hooks
+* 语言特定的审查员（Python、Go、Rust）
+* 框架专家（Django、Rails、Laravel、Spring）
+* DevOps 专家（Kubernetes、Terraform、CI/CD）
+* 领域专家（ML 流水线、数据工程、移动端）
 
-### Commands
-Slash commands that invoke useful workflows:
-- Deployment commands
-- Testing commands
-- Code generation commands
+### 技能
 
----
+工作流定义和领域知识：
 
-## Quick Start
+* 语言最佳实践
+* 框架模式
+* 测试策略
+* 架构指南
+
+### 钩子
+
+有用的自动化：
+
+* 代码检查/格式化钩子
+* 安全检查
+* 验证钩子
+* 通知钩子
+
+### 命令
+
+调用有用工作流的斜杠命令：
+
+* 部署命令
+* 测试命令
+* 代码生成命令
+
+***
+
+## 快速开始
 
 ```bash
 # 1. Fork and clone
@@ -65,13 +73,13 @@ cp -r skills/my-skill ~/.claude/skills/  # for skills
 git add . && git commit -m "feat: add my-skill" && git push
 ```
 
----
+***
 
-## Contributing Skills
+## 贡献技能
 
-Skills are knowledge modules that Claude Code loads based on context.
+技能是 Claude Code 根据上下文加载的知识模块。
 
-### Directory Structure
+### 目录结构
 
 ```
 skills/
@@ -79,7 +87,7 @@ skills/
     └── SKILL.md
 ```
 
-### SKILL.md Template
+### SKILL.md 模板
 
 ```markdown
 ---
@@ -87,144 +95,148 @@ name: your-skill-name
 description: Brief description shown in skill list
 ---
 
-# Your Skill Title
+# 你的技能标题
 
-Brief overview of what this skill covers.
+简要概述此技能涵盖的内容。
 
-## Core Concepts
+## 核心概念
 
-Explain key patterns and guidelines.
+解释关键模式和准则。
 
-## Code Examples
+## 代码示例
 
-\`\`\`typescript
-// Include practical, tested examples
+`​`​`typescript
+
+// 包含实用、经过测试的示例
 function example() {
-  // Well-commented code
+  // 注释良好的代码
 }
-\`\`\`
+`​`​`
 
-## Best Practices
 
-- Actionable guidelines
-- Do's and don'ts
-- Common pitfalls to avoid
+## 最佳实践
 
-## When to Use
+- 可操作的指导原则
+- 该做与不该做的事项
+- 需要避免的常见陷阱
 
-Describe scenarios where this skill applies.
+## 适用场景
+
+描述此技能适用的场景。
+
 ```
 
-### Skill Checklist
+### 技能清单
 
-- [ ] Focused on one domain/technology
-- [ ] Includes practical code examples
-- [ ] Under 500 lines
-- [ ] Uses clear section headers
-- [ ] Tested with Claude Code
+* \[ ] 专注于一个领域/技术
+* \[ ] 包含实用的代码示例
+* \[ ] 少于 500 行
+* \[ ] 使用清晰的章节标题
+* \[ ] 已通过 Claude Code 测试
 
-### Example Skills
+### 技能示例
 
-| Skill | Purpose |
+| 技能 | 目的 |
 |-------|---------|
-| `coding-standards/` | TypeScript/JavaScript patterns |
-| `frontend-patterns/` | React and Next.js best practices |
-| `backend-patterns/` | API and database patterns |
-| `security-review/` | Security checklist |
+| `coding-standards/` | TypeScript/JavaScript 模式 |
+| `frontend-patterns/` | React 和 Next.js 最佳实践 |
+| `backend-patterns/` | API 和数据库模式 |
+| `security-review/` | 安全检查清单 |
 
----
+***
 
-## Contributing Agents
+## 贡献智能体
 
-Agents are specialized assistants invoked via the Task tool.
+智能体是通过任务工具调用的专业助手。
 
-### File Location
+### 文件位置
 
 ```
 agents/your-agent-name.md
 ```
 
-### Agent Template
+### 智能体模板
 
 ```markdown
 ---
-name: your-agent-name
-description: What this agent does and when Claude should invoke it. Be specific!
+name: 你的代理名称
+description: 该代理的作用以及 Claude 应在何时调用它。请具体说明！
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 ---
 
-You are a [role] specialist.
+你是一名 [角色] 专家。
 
-## Your Role
+## 你的角色
 
-- Primary responsibility
-- Secondary responsibility
-- What you DO NOT do (boundaries)
+-   主要职责
+-   次要职责
+-   你不做的事情（界限）
 
-## Workflow
+## 工作流程
 
-### Step 1: Understand
-How you approach the task.
+### 步骤 1：理解
+你如何着手处理任务。
 
-### Step 2: Execute
-How you perform the work.
+### 步骤 2：执行
+你如何开展工作。
 
-### Step 3: Verify
-How you validate results.
+### 步骤 3：验证
+你如何验证结果。
 
-## Output Format
+## 输出格式
 
-What you return to the user.
+你返回给用户的内容。
 
-## Examples
+## 示例
 
-### Example: [Scenario]
-Input: [what user provides]
-Action: [what you do]
-Output: [what you return]
+### 示例：[场景]
+输入：[用户提供的内容]
+操作：[你做了什么]
+输出：[你返回的内容]
+
 ```
 
-### Agent Fields
+### 智能体字段
 
-| Field | Description | Options |
+| 字段 | 描述 | 选项 |
 |-------|-------------|---------|
-| `name` | Lowercase, hyphenated | `code-reviewer` |
-| `description` | Used to decide when to invoke | Be specific! |
-| `tools` | Only what's needed | `Read, Write, Edit, Bash, Grep, Glob, WebFetch, Task` |
-| `model` | Complexity level | `haiku` (simple), `sonnet` (coding), `opus` (complex) |
+| `name` | 小写，用连字符连接 | `code-reviewer` |
+| `description` | 用于决定何时调用 | 要具体！ |
+| `tools` | 仅包含必要的内容 | `Read, Write, Edit, Bash, Grep, Glob, WebFetch, Task` |
+| `model` | 复杂度级别 | `haiku` (简单), `sonnet` (编码), `opus` (复杂) |
 
-### Example Agents
+### 智能体示例
 
-| Agent | Purpose |
+| 智能体 | 目的 |
 |-------|---------|
-| `tdd-guide.md` | Test-driven development |
-| `code-reviewer.md` | Code review |
-| `security-reviewer.md` | Security scanning |
-| `build-error-resolver.md` | Fix build errors |
+| `tdd-guide.md` | 测试驱动开发 |
+| `code-reviewer.md` | 代码审查 |
+| `security-reviewer.md` | 安全扫描 |
+| `build-error-resolver.md` | 修复构建错误 |
 
----
+***
 
-## Contributing Hooks
+## 贡献钩子
 
-Hooks are automatic behaviors triggered by Claude Code events.
+钩子是由 Claude Code 事件触发的自动行为。
 
-### File Location
+### 文件位置
 
 ```
 hooks/hooks.json
 ```
 
-### Hook Types
+### 钩子类型
 
-| Type | Trigger | Use Case |
+| 类型 | 触发条件 | 用例 |
 |------|---------|----------|
-| `PreToolUse` | Before tool runs | Validate, warn, block |
-| `PostToolUse` | After tool runs | Format, check, notify |
-| `SessionStart` | Session begins | Load context |
-| `Stop` | Session ends | Cleanup, audit |
+| `PreToolUse` | 工具运行前 | 验证、警告、阻止 |
+| `PostToolUse` | 工具运行后 | 格式化、检查、通知 |
+| `SessionStart` | 会话开始时 | 加载上下文 |
+| `Stop` | 会话结束时 | 清理、审计 |
 
-### Hook Format
+### 钩子格式
 
 ```json
 {
@@ -245,7 +257,7 @@ hooks/hooks.json
 }
 ```
 
-### Matcher Syntax
+### 匹配器语法
 
 ```javascript
 // Match specific tools
@@ -261,7 +273,7 @@ tool_input.file_path matches "\\.tsx?$"
 tool == "Bash" && tool_input.command matches "git push"
 ```
 
-### Hook Examples
+### 钩子示例
 
 ```json
 // Block dev servers outside tmux
@@ -286,70 +298,73 @@ tool == "Bash" && tool_input.command matches "git push"
 }
 ```
 
-### Hook Checklist
+### 钩子清单
 
-- [ ] Matcher is specific (not overly broad)
-- [ ] Includes clear error/info messages
-- [ ] Uses correct exit codes (`exit 1` blocks, `exit 0` allows)
-- [ ] Tested thoroughly
-- [ ] Has description
+* \[ ] 匹配器具体（不过于宽泛）
+* \[ ] 包含清晰的错误/信息消息
+* \[ ] 使用正确的退出代码 (`exit 1` 阻止, `exit 0` 允许)
+* \[ ] 经过充分测试
+* \[ ] 有描述
 
----
+***
 
-## Contributing Commands
+## 贡献命令
 
-Commands are user-invoked actions with `/command-name`.
+命令是用户通过 `/command-name` 调用的操作。
 
-### File Location
+### 文件位置
 
 ```
 commands/your-command.md
 ```
 
-### Command Template
+### 命令模板
 
 ```markdown
 ---
-description: Brief description shown in /help
+description: 在 /help 中显示的简要描述
 ---
 
-# Command Name
+# 命令名称
 
-## Purpose
+## 目的
 
-What this command does.
+此命令的功能。
 
-## Usage
+## 用法
 
-\`\`\`
+`​`​`
+
 /your-command [args]
-\`\`\`
+`​`​`
 
-## Workflow
 
-1. First step
-2. Second step
-3. Final step
+## 工作流程
 
-## Output
+1.  第一步
+2.  第二步
+3.  最后一步
 
-What the user receives.
+## 输出
+
+用户将收到的内容。
+
 ```
 
-### Example Commands
+### 命令示例
 
-| Command | Purpose |
+| 命令 | 目的 |
 |---------|---------|
-| `commit.md` | Create git commits |
-| `code-review.md` | Review code changes |
-| `tdd.md` | TDD workflow |
-| `e2e.md` | E2E testing |
+| `commit.md` | 创建 git 提交 |
+| `code-review.md` | 审查代码变更 |
+| `tdd.md` | TDD 工作流 |
+| `e2e.md` | E2E 测试 |
 
----
+***
 
-## Pull Request Process
+## 拉取请求流程
 
-### 1. PR Title Format
+### 1. PR 标题格式
 
 ```
 feat(skills): add rust-patterns skill
@@ -359,66 +374,69 @@ fix(skills): update React patterns
 docs: improve contributing guide
 ```
 
-### 2. PR Description
+### 2. PR 描述
 
 ```markdown
-## Summary
-What you're adding and why.
+## 摘要
+你正在添加什么以及为什么添加。
 
-## Type
-- [ ] Skill
-- [ ] Agent
-- [ ] Hook
-- [ ] Command
+## 类型
+- [ ] 技能
+- [ ] 代理
+- [ ] 钩子
+- [ ] 命令
 
-## Testing
-How you tested this.
+## 测试
+你是如何测试这个的。
 
-## Checklist
-- [ ] Follows format guidelines
-- [ ] Tested with Claude Code
-- [ ] No sensitive info (API keys, paths)
-- [ ] Clear descriptions
+## 检查清单
+- [ ] 遵循格式指南
+- [ ] 已使用 Claude Code 进行测试
+- [ ] 无敏感信息（API 密钥、路径）
+- [ ] 描述清晰
+
 ```
 
-### 3. Review Process
+### 3. 审查流程
 
-1. Maintainers review within 48 hours
-2. Address feedback if requested
-3. Once approved, merged to main
+1. 维护者在 48 小时内审查
+2. 如有要求，请处理反馈
+3. 一旦批准，合并到主分支
 
----
+***
 
-## Guidelines
+## 指导原则
 
-### Do
-- Keep contributions focused and modular
-- Include clear descriptions
-- Test before submitting
-- Follow existing patterns
-- Document dependencies
+### 应该做的
 
-### Don't
-- Include sensitive data (API keys, tokens, paths)
-- Add overly complex or niche configs
-- Submit untested contributions
-- Create duplicates of existing functionality
+* 保持贡献内容专注和模块化
+* 包含清晰的描述
+* 提交前进行测试
+* 遵循现有模式
+* 记录依赖项
 
----
+### 不应该做的
 
-## File Naming
+* 包含敏感数据（API 密钥、令牌、路径）
+* 添加过于复杂或小众的配置
+* 提交未经测试的贡献
+* 创建现有功能的重复项
 
-- Use lowercase with hyphens: `python-reviewer.md`
-- Be descriptive: `tdd-workflow.md` not `workflow.md`
-- Match name to filename
+***
 
----
+## 文件命名
 
-## Questions?
+* 使用小写和连字符：`python-reviewer.md`
+* 描述性要强：`tdd-workflow.md` 而不是 `workflow.md`
+* 名称与文件名匹配
 
-- **Issues:** [github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)
-- **X/Twitter:** [@affaanmustafa](https://x.com/affaanmustafa)
+***
 
----
+## 有问题吗？
 
-Thanks for contributing! Let's build a great resource together.
+* **问题：** [github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)
+* **X/Twitter：** [@affaanmustafa](https://x.com/affaanmustafa)
+
+***
+
+感谢您的贡献！让我们共同构建一个出色的资源。
