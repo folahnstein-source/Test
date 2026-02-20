@@ -1,47 +1,47 @@
-# 赞助者
+# Sponsors
 
-感谢所有赞助本项目的各位！你们的支持让 ECC 生态系统持续成长。
+Thank you to everyone who sponsors this project! Your support keeps the ECC ecosystem growing.
 
-## 企业赞助者
+## Enterprise Sponsors
 
-*成为 [企业赞助者](https://github.com/sponsors/affaan-m)，将您的名字展示在此处*
+*Become an [Enterprise sponsor](https://github.com/sponsors/affaan-m) to be featured here*
 
-## 商业赞助者
+## Business Sponsors
 
-*成为 [商业赞助者](https://github.com/sponsors/affaan-m)，将您的名字展示在此处*
+*Become a [Business sponsor](https://github.com/sponsors/affaan-m) to be featured here*
 
-## 团队赞助者
+## Team Sponsors
 
-*成为 [团队赞助者](https://github.com/sponsors/affaan-m)，将您的名字展示在此处*
+*Become a [Team sponsor](https://github.com/sponsors/affaan-m) to be featured here*
 
-## 个人赞助者
+## Individual Sponsors
 
-*成为 [赞助者](https://github.com/sponsors/affaan-m)，将您的名字列在此处*
+*Become a [sponsor](https://github.com/sponsors/affaan-m) to be listed here*
 
-***
+---
 
-## 为什么要赞助？
+## Why Sponsor?
 
-您的赞助将帮助我们：
+Your sponsorship helps:
 
-* **更快地交付** — 更多时间投入到工具和功能的开发上
-* **保持免费** — 高级功能为所有人的免费层级提供资金支持
-* **更好的支持** — 赞助者获得优先响应
-* **影响路线图** — Pro+ 赞助者可以对功能进行投票
+- **Ship faster** — More time dedicated to building tools and features
+- **Keep it free** — Premium features fund the free tier for everyone
+- **Better support** — Sponsors get priority responses
+- **Shape the roadmap** — Pro+ sponsors vote on features
 
-## 赞助等级
+## Sponsor Tiers
 
-| 等级 | 价格 | 权益 |
+| Tier | Price | Benefits |
 |------|-------|----------|
-| 支持者 | $5/月 | 名字出现在 README 中，早期访问 |
-| 建造者 | $10/月 | 高级工具访问权限 |
-| 专业版 | $25/月 | 优先支持，办公时间咨询 |
-| 团队 | $100/月 | 5个席位，团队配置 |
-| 商业 | $500/月 | 25个席位，咨询额度 |
-| 企业 | $2K/月 | 无限席位，定制工具 |
+| Supporter | $5/mo | Name in README, early access |
+| Builder | $10/mo | Premium tools access |
+| Pro | $25/mo | Priority support, office hours |
+| Team | $100/mo | 5 seats, team configs |
+| Business | $500/mo | 25 seats, consulting credit |
+| Enterprise | $2K/mo | Unlimited seats, custom tools |
 
 [**Become a Sponsor →**](https://github.com/sponsors/affaan-m)
 
-***
+---
 
-*自动更新。最后同步：2026年2月*
+*Updated automatically. Last sync: February 2026*
