@@ -1,0 +1,179 @@
+/* PE Sourcing Agents — Custom styles */
+
+:root {
+  --pe-blue: #4a90d9;
+  --pe-green: #27ae60;
+  --pe-orange: #f39c12;
+  --pe-red: #e74c3c;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Navbar */
+.navbar-brand {
+  color: var(--pe-blue) !important;
+  font-size: 1.15rem;
+}
+
+/* Stat cards */
+.stat-card {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: transform 0.15s;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 0.25rem;
+}
+.stat-card .stat-icon {
+  font-size: 1.5rem;
+  opacity: 0.5;
+}
+
+/* Stage badges */
+.badge-stage {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  border-radius: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.stage-identified     { background: #6c757d; }
+.stage-qualified      { background: #0d6efd; }
+.stage-contacted      { background: #6610f2; }
+.stage-in_review      { background: #fd7e14; }
+.stage-due_diligence  { background: #ffc107; color: #000; }
+.stage-negotiation    { background: #20c997; }
+.stage-closed         { background: #198754; }
+.stage-passed         { background: #dc3545; }
+
+/* Investor status badges */
+.status-identified    { background: #6c757d; }
+.status-researched    { background: #0dcaf0; color: #000; }
+.status-contacted     { background: #6610f2; }
+.status-in_dialogue   { background: #fd7e14; }
+.status-interested    { background: #ffc107; color: #000; }
+.status-committed     { background: #198754; }
+.status-declined      { background: #dc3545; }
+.status-dormant       { background: #495057; }
+
+/* Score bar */
+.score-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+  width: 80px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+.score-high   .score-bar-fill { background: var(--pe-green); }
+.score-medium .score-bar-fill { background: var(--pe-orange); }
+.score-low    .score-bar-fill { background: var(--pe-red); }
+
+/* Pipeline kanban */
+.kanban-col {
+  min-width: 220px;
+  max-width: 280px;
+}
+.kanban-card {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  transition: box-shadow 0.15s;
+}
+.kanban-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Table tweaks */
+.table-deals th,
+.table-investors th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+.table-deals td,
+.table-investors td {
+  vertical-align: middle;
+}
+
+/* Detail page */
+.detail-header {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+.detail-field {
+  margin-bottom: 0.75rem;
+}
+.detail-field .field-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+  margin-bottom: 0.15rem;
+}
+.detail-field .field-value {
+  font-size: 1rem;
+}
+
+/* Settings API status */
+.api-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.api-dot.connected    { background: var(--pe-green); }
+.api-dot.disconnected { background: var(--pe-red); }
+
+/* Outreach table */
+.outreach-rank {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.rank-top    { background: #198754; }
+.rank-mid    { background: #fd7e14; }
+.rank-bottom { background: #6c757d; }
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+.filter-bar .btn {
+  font-size: 0.82rem;
+}

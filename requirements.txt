@@ -1,6 +1,8 @@
-# Core: Python 3.10+ standard library only.
+# Web application
+flask>=3.0
+
+# Core agent functionality uses Python 3.10+ standard library only.
 # All API integrations (HTTP, JSON, XML, subprocess) use stdlib modules.
-# No external packages are required to run the agents.
 
 # Optional — install for enhanced functionality:
 #   requests          # More robust HTTP client (replaces urllib)

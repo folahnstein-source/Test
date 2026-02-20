@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}{{ deal.company_name }} — PE Sourcing Agents{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/deals">Deals</a></li>
+    <li class="breadcrumb-item active">{{ deal.company_name }}</li>
+  </ol>
+</nav>
+
+<div class="detail-header d-flex justify-content-between align-items-start">
+  <div>
+    <h4 class="mb-1">{{ deal.company_name }}</h4>
+    <div class="d-flex gap-2 align-items-center">
+      <span class="badge badge-stage stage-{{ deal.stage.value }}">{{ deal.stage.value.replace('_', ' ') }}</span>
+      <span class="badge bg-secondary">{{ deal.sector }}</span>
+      <span class="text-muted">{{ deal.city }}, {{ deal.region }}</span>
+    </div>
+  </div>
+  <div class="text-end">
+    <div class="stat-value {% if deal.score >= 70 %}text-success{% elif deal.score >= 40 %}text-warning{% else %}text-danger{% endif %}">
+      {{ "%.1f"|format(deal.score) }}
+    </div>
+    <div class="text-muted small">Deal Score</div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Financials -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Financials</h6></div>
+      <div class="card-body">
+        <div class="detail-field">
+          <div class="field-label">Revenue</div>
+          <div class="field-value fw-bold">{{ fmt_eur(deal.revenue_eur) }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">EBITDA</div>
+          <div class="field-value fw-bold">{{ fmt_eur(deal.ebitda_eur) }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">EBITDA Margin</div>
+          <div class="field-value">{{ deal.ebitda_margin|pct if deal.ebitda_margin else 'n/a' }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Employees</div>
+          <div class="field-value">{{ deal.employee_count or 'n/a' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Details</h6></div>
+      <div class="card-body">
+        <div class="detail-field">
+          <div class="field-label">Succession</div>
+          <div class="field-value">{{ "Yes" if deal.is_succession else "No" }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Carve-out</div>
+          <div class="field-value">{{ "Yes" if deal.is_carve_out else "No" }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Advisor</div>
+          <div class="field-value">{{ deal.advisor_name or ("Yes" if deal.has_advisor else "None") }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Source</div>
+          <div class="field-value">{{ deal.source }}</div>
+        </div>
+        {% if deal.source_url %}
+        <div class="detail-field">
+          <div class="field-label">Source URL</div>
+          <div class="field-value"><a href="{{ deal.source_url }}" target="_blank">{{ deal.source_url[:50] }}...</a></div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact & Actions -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-body-secondary mb-3">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Contact</h6></div>
+      <div class="card-body">
+        <div class="detail-field">
+          <div class="field-label">Name</div>
+          <div class="field-value">{{ deal.contact_name or 'n/a' }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Email</div>
+          <div class="field-value">{{ deal.contact_email or 'n/a' }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Phone</div>
+          <div class="field-value">{{ deal.contact_phone or 'n/a' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Actions</h6></div>
+      <div class="card-body">
+        <form method="post" action="/deals/{{ deal.id }}/advance" class="mb-3">
+          <label class="form-label small">Advance Stage</label>
+          <div class="d-flex gap-2">
+            <select name="stage" class="form-select form-select-sm">
+              <option value="identified">Identified</option>
+              <option value="qualified">Qualified</option>
+              <option value="contacted">Contacted</option>
+              <option value="in_review">In Review</option>
+              <option value="due_diligence">Due Diligence</option>
+              <option value="negotiation">Negotiation</option>
+              <option value="closed">Closed</option>
+              <option value="passed">Passed</option>
+            </select>
+            <button class="btn btn-sm btn-primary" type="submit">Set</button>
+          </div>
+        </form>
+
+        <a href="/deals/{{ deal.id }}/match" class="btn btn-sm btn-outline-success w-100 mb-2">
+          <i class="bi bi-people me-1"></i>Find Matching Investors
+        </a>
+
+        <form method="post" action="/deals/{{ deal.id }}/delete" onsubmit="return confirm('Delete this deal?')">
+          <button class="btn btn-sm btn-outline-danger w-100" type="submit">
+            <i class="bi bi-trash me-1"></i>Delete Deal
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if deal.description %}
+<div class="mt-4">
+  <h6>Description</h6>
+  <p class="text-muted">{{ deal.description }}</p>
+</div>
+{% endif %}
+
+{% if deal.notes %}
+<div class="mt-3">
+  <h6>Notes</h6>
+  <p class="text-muted" style="white-space: pre-line;">{{ deal.notes }}</p>
+</div>
+{% endif %}
+{% endblock %}

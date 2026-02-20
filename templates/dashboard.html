@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — PE Sourcing Agents{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col">
+    <h4 class="mb-1">Dashboard</h4>
+    <p class="text-muted mb-0">Deal sourcing &amp; fundraising overview — DACH region</p>
+  </div>
+</div>
+
+<!-- KPI Row -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-body-secondary">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="stat-value text-primary">{{ deal_report.total_deals }}</div>
+          <div class="stat-label">Total Deals</div>
+        </div>
+        <div class="stat-icon"><i class="bi bi-briefcase"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-body-secondary">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="stat-value text-success">{{ inv_report.total_investors }}</div>
+          <div class="stat-label">Total Investors</div>
+        </div>
+        <div class="stat-icon"><i class="bi bi-people"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-body-secondary">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="stat-value text-warning">{{ "%.1f"|format(deal_report.avg_score) }}</div>
+          <div class="stat-label">Avg Deal Score</div>
+        </div>
+        <div class="stat-icon"><i class="bi bi-star"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-body-secondary">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="stat-value text-info">{{ inv_report.independent_sponsor_friendly }}</div>
+          <div class="stat-label">Sponsor-Friendly</div>
+        </div>
+        <div class="stat-icon"><i class="bi bi-hand-thumbs-up"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Deal Pipeline -->
+  <div class="col-lg-6">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="bi bi-briefcase me-2"></i>Deal Pipeline</h6>
+        <a href="/deals" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+      <div class="card-body p-0">
+        <!-- Stage breakdown -->
+        <div class="px-3 pt-3 pb-2">
+          {% for stage, count in deal_report.by_stage.items() %}
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge badge-stage stage-{{ stage }}">{{ stage.replace('_', ' ') }}</span>
+            <span class="text-muted small">{{ count }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <hr class="my-0">
+        <!-- Top deals -->
+        <div class="px-3 py-2">
+          <h6 class="text-muted small mb-2">TOP DEALS BY SCORE</h6>
+          {% for deal in top_deals %}
+          <div class="d-flex justify-content-between align-items-center py-1">
+            <a href="/deals/{{ deal.id }}" class="text-decoration-none">
+              {{ deal.company_name }}
+            </a>
+            <div>
+              <span class="badge badge-stage stage-{{ deal.stage.value }} me-1">{{ deal.stage.value }}</span>
+              <span class="fw-bold {% if deal.score >= 70 %}text-success{% elif deal.score >= 40 %}text-warning{% else %}text-danger{% endif %}">
+                {{ "%.0f"|format(deal.score) }}
+              </span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Investor Database -->
+  <div class="col-lg-6">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="bi bi-people me-2"></i>Investor Database</h6>
+        <a href="/investors" class="btn btn-sm btn-outline-success">View All</a>
+      </div>
+      <div class="card-body p-0">
+        <!-- Type breakdown -->
+        <div class="px-3 pt-3 pb-2">
+          {% for itype, count in inv_report.by_type.items() %}
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-secondary">{{ itype.replace('_', ' ') }}</span>
+            <span class="text-muted small">{{ count }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <hr class="my-0">
+        <!-- Top investors -->
+        <div class="px-3 py-2">
+          <h6 class="text-muted small mb-2">TOP INVESTORS BY SCORE</h6>
+          {% for inv in top_investors %}
+          <div class="d-flex justify-content-between align-items-center py-1">
+            <a href="/investors/{{ inv.id }}" class="text-decoration-none">
+              {{ inv.name }}
+            </a>
+            <div>
+              <span class="badge bg-secondary me-1">{{ inv.country }}</span>
+              <span class="fw-bold {% if inv.relationship_score >= 70 %}text-success{% elif inv.relationship_score >= 40 %}text-warning{% else %}text-danger{% endif %}">
+                {{ "%.0f"|format(inv.relationship_score) }}
+              </span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- API Status -->
+<div class="row mt-4">
+  <div class="col-lg-6">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent">
+        <h6 class="mb-0"><i class="bi bi-cloud me-2"></i>API Connections</h6>
+      </div>
+      <div class="card-body">
+        {% for name, connected in api_status.items() %}
+        <div class="d-flex align-items-center mb-2">
+          <span class="api-dot {% if connected %}connected{% else %}disconnected{% endif %}"></span>
+          <span>{{ name }}</span>
+          <span class="ms-auto badge {% if connected %}bg-success{% else %}bg-secondary{% endif %}">
+            {{ "Connected" if connected else "No Key" }}
+          </span>
+        </div>
+        {% endfor %}
+        <a href="/settings" class="btn btn-sm btn-outline-light mt-2">Configure API Keys</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Country breakdown -->
+  <div class="col-lg-6">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent">
+        <h6 class="mb-0"><i class="bi bi-globe-europe-africa me-2"></i>DACH Coverage</h6>
+      </div>
+      <div class="card-body">
+        <div class="row text-center">
+          {% for country, count in inv_report.by_country.items() %}
+          <div class="col-4">
+            <div class="stat-value">{{ count }}</div>
+            <div class="stat-label">
+              {% if country == 'DE' %}Germany
+              {% elif country == 'AT' %}Austria
+              {% elif country == 'CH' %}Switzerland
+              {% else %}{{ country }}{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% if deal_report.succession_count is defined %}
+        <hr>
+        <div class="d-flex justify-content-between">
+          <span class="text-muted">Succession deals</span>
+          <span class="fw-bold">{{ deal_report.succession_count }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

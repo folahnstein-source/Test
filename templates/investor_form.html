@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Add Investor — PE Sourcing Agents{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/investors">Investors</a></li>
+    <li class="breadcrumb-item active">Add Investor</li>
+  </ol>
+</nav>
+
+<h4 class="mb-4">Add New Investor</h4>
+
+<form method="post" action="/investors/add">
+  <div class="row g-4">
+    <!-- Basic info -->
+    <div class="col-md-6">
+      <div class="card border-0 bg-body-secondary mb-3">
+        <div class="card-header bg-transparent"><h6 class="mb-0">Investor Information</h6></div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Investor Name *</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">Type</label>
+              <select name="investor_type" class="form-select">
+                {% for t in types %}
+                <option value="{{ t }}">{{ t.replace('_', ' ') }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label">Country</label>
+              <select name="country" class="form-select">
+                <option value="DE">Germany</option>
+                <option value="AT">Austria</option>
+                <option value="CH">Switzerland</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">City</label>
+            <input type="text" name="city" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Website</label>
+            <input type="url" name="website" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Sector Preferences (comma-separated)</label>
+            <input type="text" name="sector_preferences" class="form-control" placeholder="e.g. Industrials, Healthcare, Technology">
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 bg-body-secondary">
+        <div class="card-header bg-transparent"><h6 class="mb-0">Behaviour</h6></div>
+        <div class="card-body">
+          <div class="form-check mb-2">
+            <input type="checkbox" name="co_invest_appetite" class="form-check-input" id="chkCo" checked>
+            <label class="form-check-label" for="chkCo">Co-invest appetite</label>
+          </div>
+          <div class="form-check mb-2">
+            <input type="checkbox" name="independent_sponsor_friendly" class="form-check-input" id="chkIS" checked>
+            <label class="form-check-label" for="chkIS">Independent sponsor friendly</label>
+          </div>
+          <div class="mb-3 mt-3">
+            <label class="form-label">Notes</label>
+            <textarea name="notes" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket & Contact -->
+    <div class="col-md-6">
+      <div class="card border-0 bg-body-secondary mb-3">
+        <div class="card-header bg-transparent"><h6 class="mb-0">Ticket Size (EUR)</h6></div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">Min Ticket</label>
+              <input type="number" name="min_ticket_eur" class="form-control" step="100000">
+            </div>
+            <div class="col">
+              <label class="form-label">Max Ticket</label>
+              <input type="number" name="max_ticket_eur" class="form-control" step="100000">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Typical Ticket</label>
+            <input type="number" name="typical_ticket_eur" class="form-control" step="100000">
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 bg-body-secondary">
+        <div class="card-header bg-transparent"><h6 class="mb-0">Contact</h6></div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Contact Name</label>
+            <input type="text" name="contact_name" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Email</label>
+            <input type="email" name="contact_email" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Phone</label>
+            <input type="text" name="contact_phone" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-success">
+      <i class="bi bi-plus-lg me-1"></i>Add Investor
+    </button>
+    <a href="/investors" class="btn btn-outline-secondary ms-2">Cancel</a>
+  </div>
+</form>
+{% endblock %}

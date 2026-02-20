@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}{{ inv.name }} — PE Sourcing Agents{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/investors">Investors</a></li>
+    <li class="breadcrumb-item active">{{ inv.name }}</li>
+  </ol>
+</nav>
+
+<div class="detail-header d-flex justify-content-between align-items-start">
+  <div>
+    <h4 class="mb-1">{{ inv.name }}</h4>
+    <div class="d-flex gap-2 align-items-center">
+      <span class="badge badge-stage status-{{ inv.status.value }}">{{ inv.status.value.replace('_', ' ') }}</span>
+      <span class="badge bg-secondary">{{ inv.investor_type.value.replace('_', ' ') }}</span>
+      <span class="text-muted">{{ inv.city or '' }}{% if inv.city %}, {% endif %}{{ inv.country }}</span>
+    </div>
+  </div>
+  <div class="text-end">
+    <div class="stat-value {% if inv.relationship_score >= 70 %}text-success{% elif inv.relationship_score >= 40 %}text-warning{% else %}text-danger{% endif %}">
+      {{ "%.1f"|format(inv.relationship_score) }}
+    </div>
+    <div class="text-muted small">Relationship Score</div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Ticket & Preferences -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Investment Profile</h6></div>
+      <div class="card-body">
+        <div class="detail-field">
+          <div class="field-label">Ticket Range</div>
+          <div class="field-value fw-bold">{{ fmt_eur(inv.min_ticket_eur) }} – {{ fmt_eur(inv.max_ticket_eur) }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Typical Ticket</div>
+          <div class="field-value fw-bold">{{ fmt_eur(inv.typical_ticket_eur) }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">AUM</div>
+          <div class="field-value">{{ fmt_eur(inv.aum_eur) }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Sector Preferences</div>
+          <div class="field-value">
+            {% for s in inv.sector_preferences %}
+            <span class="badge bg-secondary me-1">{{ s }}</span>
+            {% endfor %}
+            {% if not inv.sector_preferences %}<span class="text-muted">Generalist</span>{% endif %}
+          </div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Geographic Focus</div>
+          <div class="field-value">
+            {% for g in inv.geographic_focus %}
+            <span class="badge bg-secondary me-1">{{ g }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flags & Source -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Details</h6></div>
+      <div class="card-body">
+        <div class="detail-field">
+          <div class="field-label">Co-Invest Appetite</div>
+          <div class="field-value">
+            {% if inv.co_invest_appetite %}
+            <span class="badge bg-success">Yes</span>
+            {% else %}
+            <span class="badge bg-danger">No</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Independent Sponsor Friendly</div>
+          <div class="field-value">
+            {% if inv.independent_sponsor_friendly %}
+            <span class="badge bg-success">Yes</span>
+            {% else %}
+            <span class="badge bg-danger">No</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Requires Lead</div>
+          <div class="field-value">{{ "Yes" if inv.requires_lead else "No" }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Requires Board Seat</div>
+          <div class="field-value">{{ "Yes" if inv.requires_board_seat else "No" }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Source</div>
+          <div class="field-value">{{ inv.source }}</div>
+        </div>
+        {% if inv.website %}
+        <div class="detail-field">
+          <div class="field-label">Website</div>
+          <div class="field-value"><a href="{{ inv.website }}" target="_blank">{{ inv.website[:50] }}</a></div>
+        </div>
+        {% endif %}
+        <div class="detail-field">
+          <div class="field-label">Last Interaction</div>
+          <div class="field-value">{{ inv.last_interaction or 'None' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact & Actions -->
+  <div class="col-md-4">
+    <div class="card border-0 bg-body-secondary mb-3">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Contact</h6></div>
+      <div class="card-body">
+        <div class="detail-field">
+          <div class="field-label">Name</div>
+          <div class="field-value">{{ inv.contact_name or 'n/a' }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Title</div>
+          <div class="field-value">{{ inv.contact_title or 'n/a' }}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Email</div>
+          <div class="field-value">
+            {% if inv.contact_email %}<a href="mailto:{{ inv.contact_email }}">{{ inv.contact_email }}</a>{% else %}n/a{% endif %}
+          </div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Phone</div>
+          <div class="field-value">{{ inv.contact_phone or 'n/a' }}</div>
+        </div>
+        {% if inv.contact_linkedin %}
+        <div class="detail-field">
+          <div class="field-label">LinkedIn</div>
+          <div class="field-value"><a href="{{ inv.contact_linkedin }}" target="_blank">Profile</a></div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent"><h6 class="mb-0">Actions</h6></div>
+      <div class="card-body">
+        <form method="post" action="/investors/{{ inv.id }}/status" class="mb-3">
+          <label class="form-label small">Update Status</label>
+          <div class="d-flex gap-2">
+            <select name="status" class="form-select form-select-sm">
+              <option value="identified">Identified</option>
+              <option value="researched">Researched</option>
+              <option value="contacted">Contacted</option>
+              <option value="in_dialogue">In Dialogue</option>
+              <option value="interested">Interested</option>
+              <option value="committed">Committed</option>
+              <option value="declined">Declined</option>
+              <option value="dormant">Dormant</option>
+            </select>
+            <button class="btn btn-sm btn-success" type="submit">Set</button>
+          </div>
+        </form>
+
+        <form method="post" action="/investors/{{ inv.id }}/interaction" class="mb-3">
+          <label class="form-label small">Log Interaction</label>
+          <div class="d-flex gap-2">
+            <input type="text" name="note" class="form-control form-control-sm" placeholder="Note...">
+            <button class="btn btn-sm btn-outline-light" type="submit">Log</button>
+          </div>
+        </form>
+
+        <form method="post" action="/investors/{{ inv.id }}/delete" onsubmit="return confirm('Delete this investor?')">
+          <button class="btn btn-sm btn-outline-danger w-100" type="submit">
+            <i class="bi bi-trash me-1"></i>Delete Investor
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if inv.notes %}
+<div class="mt-4">
+  <h6>Notes & Interaction History</h6>
+  <pre class="bg-body-secondary p-3 rounded" style="white-space: pre-wrap; font-size: 0.875rem;">{{ inv.notes }}</pre>
+</div>
+{% endif %}
+{% endblock %}

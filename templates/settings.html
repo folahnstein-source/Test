@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Settings — PE Sourcing Agents{% endblock %}
+
+{% block content %}
+<h4 class="mb-1">Settings</h4>
+<p class="text-muted mb-4">Configure API keys to connect to external data sources. Keys are stored in-memory for this session.</p>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <form method="post" action="/settings">
+      <div class="card border-0 bg-body-secondary mb-4">
+        <div class="card-header bg-transparent">
+          <h6 class="mb-0"><i class="bi bi-key me-2"></i>API Keys</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label mb-0 fw-semibold">OpenCorporates Token</label>
+              <span class="api-dot {% if api_keys.OPENCORPORATES_TOKEN %}connected{% else %}disconnected{% endif %}"></span>
+            </div>
+            <p class="text-muted small mb-2">Company registry data for DE/AT/CH. Free tier: 500 req/month.</p>
+            <input type="text" name="OPENCORPORATES_TOKEN" class="form-control"
+                   value="{{ api_keys.OPENCORPORATES_TOKEN }}" placeholder="Enter token...">
+          </div>
+
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label mb-0 fw-semibold">North Data API Key</label>
+              <span class="api-dot {% if api_keys.NORTH_DATA_API_KEY %}connected{% else %}disconnected{% endif %}"></span>
+            </div>
+            <p class="text-muted small mb-2">Company intelligence, financials, and succession signals. Paid API.</p>
+            <input type="text" name="NORTH_DATA_API_KEY" class="form-control"
+                   value="{{ api_keys.NORTH_DATA_API_KEY }}" placeholder="Enter API key...">
+          </div>
+
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label mb-0 fw-semibold">NewsAPI Key</label>
+              <span class="api-dot {% if api_keys.NEWSAPI_KEY %}connected{% else %}disconnected{% endif %}"></span>
+            </div>
+            <p class="text-muted small mb-2">M&A and investor signal scanning from news. Free: 100 req/day.</p>
+            <input type="text" name="NEWSAPI_KEY" class="form-control"
+                   value="{{ api_keys.NEWSAPI_KEY }}" placeholder="Enter API key...">
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label mb-0 fw-semibold">GNews Key</label>
+              <span class="api-dot {% if api_keys.GNEWS_KEY %}connected{% else %}disconnected{% endif %}"></span>
+            </div>
+            <p class="text-muted small mb-2">Alternative news source. Free: 100 req/day.</p>
+            <input type="text" name="GNEWS_KEY" class="form-control"
+                   value="{{ api_keys.GNEWS_KEY }}" placeholder="Enter API key...">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg me-1"></i>Save & Reconnect
+      </button>
+    </form>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card border-0 bg-body-secondary mb-4">
+      <div class="card-header bg-transparent">
+        <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Data Sources</h6>
+      </div>
+      <div class="card-body small">
+        <p class="fw-semibold mb-2">Deal Sourcing Agent uses:</p>
+        <ol class="ps-3 mb-3">
+          <li>Manual ingest</li>
+          <li>OpenCorporates (DE/AT/CH)</li>
+          <li>Handelsregister (DE)</li>
+          <li>North Data (succession)</li>
+          <li>DUB.de + nexxt-change.org</li>
+          <li>NewsAPI + GNews</li>
+          <li>RSS feeds (7 sources)</li>
+          <li>MCP servers</li>
+        </ol>
+
+        <p class="fw-semibold mb-2">Fundraising Agent uses:</p>
+        <ol class="ps-3 mb-3">
+          <li>Manual ingest</li>
+          <li>BaFin (DE regulator)</li>
+          <li>FMA (AT regulator)</li>
+          <li>FINMA (CH regulator)</li>
+          <li>OpenCorporates (DE/AT/CH)</li>
+          <li>NewsAPI + GNews</li>
+          <li>RSS feeds (3 sources)</li>
+          <li>MCP servers</li>
+        </ol>
+
+        <p class="text-muted">Sources without API keys (Handelsregister, BaFin, FMA, FINMA, DUB, RSS) work without configuration.</p>
+      </div>
+    </div>
+
+    <div class="card border-0 bg-body-secondary">
+      <div class="card-header bg-transparent">
+        <h6 class="mb-0"><i class="bi bi-terminal me-2"></i>REST API</h6>
+      </div>
+      <div class="card-body small">
+        <p class="text-muted mb-2">Programmatic access:</p>
+        <code class="d-block mb-1">GET /api/deals</code>
+        <code class="d-block mb-1">GET /api/deals/{id}</code>
+        <code class="d-block mb-1">GET /api/deals/report</code>
+        <code class="d-block mb-1">POST /api/deals/source</code>
+        <code class="d-block mb-1">GET /api/investors</code>
+        <code class="d-block mb-1">GET /api/investors/{id}</code>
+        <code class="d-block mb-1">GET /api/investors/report</code>
+        <code class="d-block mb-1">POST /api/investors/source</code>
+        <code class="d-block mb-1">GET /api/deals/{id}/match</code>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

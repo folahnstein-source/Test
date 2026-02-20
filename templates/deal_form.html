@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Add Deal — PE Sourcing Agents{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/deals">Deals</a></li>
+    <li class="breadcrumb-item active">Add Deal</li>
+  </ol>
+</nav>
+
+<h4 class="mb-4">Add New Deal</h4>
+
+<form method="post" action="/deals/add">
+  <div class="row g-4">
+    <!-- Company info -->
+    <div class="col-md-6">
+      <div class="card border-0 bg-body-secondary">
+        <div class="card-header bg-transparent"><h6 class="mb-0">Company Information</h6></div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Company Name *</label>
+            <input type="text" name="company_name" class="form-control" required>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">Sector</label>
+              <select name="sector" class="form-select">
+                {% for s in sectors %}
+                <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label">Region</label>
+              <select name="region" class="form-select">
+                {% for r in regions %}
+                <option value="{{ r }}">{{ r }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">City</label>
+            <input type="text" name="city" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Source</label>
+            <input type="text" name="source" class="form-control" value="manual">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financials & Contact -->
+    <div class="col-md-6">
+      <div class="card border-0 bg-body-secondary mb-3">
+        <div class="card-header bg-transparent"><h6 class="mb-0">Financials</h6></div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">Revenue (EUR)</label>
+              <input type="number" name="revenue_eur" class="form-control" step="100000">
+            </div>
+            <div class="col">
+              <label class="form-label">EBITDA (EUR)</label>
+              <input type="number" name="ebitda_eur" class="form-control" step="100000">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label">EBITDA Margin (0-1)</label>
+              <input type="number" name="ebitda_margin" class="form-control" step="0.01" min="0" max="1">
+            </div>
+            <div class="col">
+              <label class="form-label">Employees</label>
+              <input type="number" name="employee_count" class="form-control">
+            </div>
+          </div>
+          <div class="form-check mb-2">
+            <input type="checkbox" name="is_succession" class="form-check-input" id="chkSucc">
+            <label class="form-check-label" for="chkSucc">Succession case</label>
+          </div>
+          <div class="form-check mb-2">
+            <input type="checkbox" name="is_carve_out" class="form-check-input" id="chkCarve">
+            <label class="form-check-label" for="chkCarve">Carve-out</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 bg-body-secondary">
+        <div class="card-header bg-transparent"><h6 class="mb-0">Contact</h6></div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Contact Name</label>
+            <input type="text" name="contact_name" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Email</label>
+            <input type="email" name="contact_email" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Phone</label>
+            <input type="text" name="contact_phone" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-plus-lg me-1"></i>Add Deal
+    </button>
+    <a href="/deals" class="btn btn-outline-secondary ms-2">Cancel</a>
+  </div>
+</form>
+{% endblock %}
