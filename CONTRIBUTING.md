@@ -1,442 +1,185 @@
-# 为 Everything Claude Code 做贡献
+# Contributing to Awesome Claude Skills
 
-感谢您想要贡献！这个仓库是 Claude Code 用户的社区资源。
+Thank you for your interest in contributing to the premier collection of Claude Skills! This guide will help you add new skills that benefit the entire Claude community.
 
-## 目录
+## Before You Start
 
-* [我们正在寻找的内容](#我们寻找什么)
-* [快速开始](#快速开始)
-* [贡献技能](#贡献技能)
-* [贡献智能体](#贡献智能体)
-* [贡献钩子](#贡献钩子)
-* [贡献命令](#贡献命令)
-* [拉取请求流程](#拉取请求流程)
+- Ensure your skill is based on a **real use case**, not a hypothetical scenario.
+- Search existing skills to avoid duplicates.
+- If possible, attribute the use case to the original person or source.
 
-***
+## Skill Requirements
 
-## 我们寻找什么
+All skills must:
 
-### 智能体
+1. **Solve a real problem** - Based on actual usage, not theoretical applications.
+2. **Be well-documented** - Include clear instructions, examples, and use cases.
+3. **Be accessible** - Written for non-technical users when possible.
+4. **Include examples** - Show practical, real-world usage.
+5. **Be tested** - Verify the skill works across Claude.ai, Claude Code, and/or API.
+6. **Be safe** - Confirm before destructive operations.
+7. **Be portable** - Work across Claude platforms when applicable.
 
-能够很好地处理特定任务的新智能体：
+## Skill Structure
 
-* 语言特定的审查员（Python、Go、Rust）
-* 框架专家（Django、Rails、Laravel、Spring）
-* DevOps 专家（Kubernetes、Terraform、CI/CD）
-* 领域专家（ML 流水线、数据工程、移动端）
-
-### 技能
-
-工作流定义和领域知识：
-
-* 语言最佳实践
-* 框架模式
-* 测试策略
-* 架构指南
-
-### 钩子
-
-有用的自动化：
-
-* 代码检查/格式化钩子
-* 安全检查
-* 验证钩子
-* 通知钩子
-
-### 命令
-
-调用有用工作流的斜杠命令：
-
-* 部署命令
-* 测试命令
-* 代码生成命令
-
-***
-
-## 快速开始
-
-```bash
-# 1. Fork and clone
-gh repo fork affaan-m/everything-claude-code --clone
-cd everything-claude-code
-
-# 2. Create a branch
-git checkout -b feat/my-contribution
-
-# 3. Add your contribution (see sections below)
-
-# 4. Test locally
-cp -r skills/my-skill ~/.claude/skills/  # for skills
-# Then test with Claude Code
-
-# 5. Submit PR
-git add . && git commit -m "feat: add my-skill" && git push
-```
-
-***
-
-## 贡献技能
-
-技能是 Claude Code 根据上下文加载的知识模块。
-
-### 目录结构
+Create a new folder with your skill name (use lowercase and hyphens):
 
 ```
-skills/
-└── your-skill-name/
-    └── SKILL.md
+skill-name/
+└── SKILL.md
 ```
 
-### SKILL.md 模板
+## SKILL.md Template
+
+Use this template for your skill:
 
 ```markdown
 ---
-name: your-skill-name
-description: Brief description shown in skill list
+name: skill-name
+description: One-sentence description of what this skill does and when to use it.
 ---
 
-# 你的技能标题
+# Skill Name
 
-简要概述此技能涵盖的内容。
+Detailed description of the skill and what it helps users accomplish.
 
-## 核心概念
+## When to Use This Skill
 
-解释关键模式和准则。
+- Bullet point use case 1
+- Bullet point use case 2
+- Bullet point use case 3
 
-## 代码示例
+## What This Skill Does
 
-`​`​`typescript
+1. **Capability 1**: Description
+2. **Capability 2**: Description
+3. **Capability 3**: Description
 
-// 包含实用、经过测试的示例
-function example() {
-  // 注释良好的代码
-}
-`​`​`
+## How to Use
 
-
-## 最佳实践
-
-- 可操作的指导原则
-- 该做与不该做的事项
-- 需要避免的常见陷阱
-
-## 适用场景
-
-描述此技能适用的场景。
+### Basic Usage
 
 ```
-
-### 技能清单
-
-* \[ ] 专注于一个领域/技术
-* \[ ] 包含实用的代码示例
-* \[ ] 少于 500 行
-* \[ ] 使用清晰的章节标题
-* \[ ] 已通过 Claude Code 测试
-
-### 技能示例
-
-| 技能 | 目的 |
-|-------|---------|
-| `coding-standards/` | TypeScript/JavaScript 模式 |
-| `frontend-patterns/` | React 和 Next.js 最佳实践 |
-| `backend-patterns/` | API 和数据库模式 |
-| `security-review/` | 安全检查清单 |
-
-***
-
-## 贡献智能体
-
-智能体是通过任务工具调用的专业助手。
-
-### 文件位置
-
-```
-agents/your-agent-name.md
+Simple example prompt
 ```
 
-### 智能体模板
+### Advanced Usage
+
+```
+More complex example prompt with options
+```
+
+## Example
+
+**User**: "Example prompt"
+
+**Output**:
+```
+Show what the skill produces
+```
+
+**Inspired by:** [Attribution to original source, if applicable]
+
+## Tips
+
+- Tip 1
+- Tip 2
+- Tip 3
+
+## Common Use Cases
+
+- Use case 1
+- Use case 2
+- Use case 3
+```
+
+## Adding Your Skill to README
+
+1. Choose the appropriate category:
+   - Business & Marketing
+   - Communication & Writing
+   - Creative & Media
+   - Development
+   - Productivity & Organization
+
+2. Add your skill in alphabetical order within the category:
 
 ```markdown
----
-name: 你的代理名称
-description: 该代理的作用以及 Claude 应在何时调用它。请具体说明！
-tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
-model: sonnet
----
-
-你是一名 [角色] 专家。
-
-## 你的角色
-
--   主要职责
--   次要职责
--   你不做的事情（界限）
-
-## 工作流程
-
-### 步骤 1：理解
-你如何着手处理任务。
-
-### 步骤 2：执行
-你如何开展工作。
-
-### 步骤 3：验证
-你如何验证结果。
-
-## 输出格式
-
-你返回给用户的内容。
-
-## 示例
-
-### 示例：[场景]
-输入：[用户提供的内容]
-操作：[你做了什么]
-输出：[你返回的内容]
-
+- [Skill Name](./skill-name/) - One-sentence description. Inspired by [Person/Source].
 ```
 
-### 智能体字段
+3. Follow the existing format exactly - no emojis, consistent punctuation.
 
-| 字段 | 描述 | 选项 |
-|-------|-------------|---------|
-| `name` | 小写，用连字符连接 | `code-reviewer` |
-| `description` | 用于决定何时调用 | 要具体！ |
-| `tools` | 仅包含必要的内容 | `Read, Write, Edit, Bash, Grep, Glob, WebFetch, Task` |
-| `model` | 复杂度级别 | `haiku` (简单), `sonnet` (编码), `opus` (复杂) |
+## Pull Request Process
 
-### 智能体示例
+1. Fork the repository
+2. Create a branch: `git checkout -b add-skill-name`
+3. Add your skill folder with SKILL.md
+4. Update README.md with your skill in the appropriate category
+5. Commit your changes: `git commit -m "Add [Skill Name] skill"`
+6. Push to your fork: `git push origin add-skill-name`
+7. Open a Pull Request
 
-| 智能体 | 目的 |
-|-------|---------|
-| `tdd-guide.md` | 测试驱动开发 |
-| `code-reviewer.md` | 代码审查 |
-| `security-reviewer.md` | 安全扫描 |
-| `build-error-resolver.md` | 修复构建错误 |
+## Pull Request Guidelines
 
-***
+Your PR should:
 
-## 贡献钩子
+- **Title**: "Add [Skill Name] skill"
+- **Description**: Explain the real-world use case and include:
+  - What problem it solves
+  - Who uses this workflow
+  - Attribution/inspiration source
+  - Example of how it's used
 
-钩子是由 Claude Code 事件触发的自动行为。
+## Code of Conduct
 
-### 文件位置
+- Be respectful and constructive
+- Credit original sources and inspirations
+- Focus on practical, helpful skills
+- Write clear, accessible documentation
+- Test your skills before submitting
 
-```
-hooks/hooks.json
-```
+## Questions?
 
-### 钩子类型
+Open an issue if you have questions about contributing or need help structuring your skill.
 
-| 类型 | 触发条件 | 用例 |
-|------|---------|----------|
-| `PreToolUse` | 工具运行前 | 验证、警告、阻止 |
-| `PostToolUse` | 工具运行后 | 格式化、检查、通知 |
-| `SessionStart` | 会话开始时 | 加载上下文 |
-| `Stop` | 会话结束时 | 清理、审计 |
+## Attribution
 
-### 钩子格式
-
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "tool == \"Bash\" && tool_input.command matches \"rm -rf /\"",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '[Hook] BLOCKED: Dangerous command' && exit 1"
-          }
-        ],
-        "description": "Block dangerous rm commands"
-      }
-    ]
-  }
-}
-```
-
-### 匹配器语法
-
-```javascript
-// Match specific tools
-tool == "Bash"
-tool == "Edit"
-tool == "Write"
-
-// Match input patterns
-tool_input.command matches "npm install"
-tool_input.file_path matches "\\.tsx?$"
-
-// Combine conditions
-tool == "Bash" && tool_input.command matches "git push"
-```
-
-### 钩子示例
-
-```json
-// Block dev servers outside tmux
-{
-  "matcher": "tool == \"Bash\" && tool_input.command matches \"npm run dev\"",
-  "hooks": [{"type": "command", "command": "echo 'Use tmux for dev servers' && exit 1"}],
-  "description": "Ensure dev servers run in tmux"
-}
-
-// Auto-format after editing TypeScript
-{
-  "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\.tsx?$\"",
-  "hooks": [{"type": "command", "command": "npx prettier --write \"$file_path\""}],
-  "description": "Format TypeScript files after edit"
-}
-
-// Warn before git push
-{
-  "matcher": "tool == \"Bash\" && tool_input.command matches \"git push\"",
-  "hooks": [{"type": "command", "command": "echo '[Hook] Review changes before pushing'"}],
-  "description": "Reminder to review before push"
-}
-```
-
-### 钩子清单
-
-* \[ ] 匹配器具体（不过于宽泛）
-* \[ ] 包含清晰的错误/信息消息
-* \[ ] 使用正确的退出代码 (`exit 1` 阻止, `exit 0` 允许)
-* \[ ] 经过充分测试
-* \[ ] 有描述
-
-***
-
-## 贡献命令
-
-命令是用户通过 `/command-name` 调用的操作。
-
-### 文件位置
-
-```
-commands/your-command.md
-```
-
-### 命令模板
+When adding a skill based on someone's workflow or use case, include proper attribution:
 
 ```markdown
----
-description: 在 /help 中显示的简要描述
----
-
-# 命令名称
-
-## 目的
-
-此命令的功能。
-
-## 用法
-
-`​`​`
-
-/your-command [args]
-`​`​`
-
-
-## 工作流程
-
-1.  第一步
-2.  第二步
-3.  最后一步
-
-## 输出
-
-用户将收到的内容。
-
+**Inspired by:** [Person Name]'s workflow
 ```
 
-### 命令示例
-
-| 命令 | 目的 |
-|---------|---------|
-| `commit.md` | 创建 git 提交 |
-| `code-review.md` | 审查代码变更 |
-| `tdd.md` | TDD 工作流 |
-| `e2e.md` | E2E 测试 |
-
-***
-
-## 拉取请求流程
-
-### 1. PR 标题格式
-
-```
-feat(skills): add rust-patterns skill
-feat(agents): add api-designer agent
-feat(hooks): add auto-format hook
-fix(skills): update React patterns
-docs: improve contributing guide
-```
-
-### 2. PR 描述
+or
 
 ```markdown
-## 摘要
-你正在添加什么以及为什么添加。
-
-## 类型
-- [ ] 技能
-- [ ] 代理
-- [ ] 钩子
-- [ ] 命令
-
-## 测试
-你是如何测试这个的。
-
-## 检查清单
-- [ ] 遵循格式指南
-- [ ] 已使用 Claude Code 进行测试
-- [ ] 无敏感信息（API 密钥、路径）
-- [ ] 描述清晰
-
+**Credit:** Based on [Company/Team]'s process
 ```
 
-### 3. 审查流程
+Examples:
+- **Inspired by:** Dan Shipper's meeting analysis workflow
+- **Inspired by:** Teresa Torres's content research process
+- **Credit:** Based on Notion's documentation workflow
 
-1. 维护者在 48 小时内审查
-2. 如有要求，请处理反馈
-3. 一旦批准，合并到主分支
+## Skill Categories
 
-***
+### Business & Marketing
+Skills for lead generation, competitive research, branding, and business development.
 
-## 指导原则
+### Communication & Writing
+Skills for improving communication, analyzing conversations, and creating content.
 
-### 应该做的
+### Creative & Media
+Skills for working with images, videos, audio, and creative content.
 
-* 保持贡献内容专注和模块化
-* 包含清晰的描述
-* 提交前进行测试
-* 遵循现有模式
-* 记录依赖项
+### Development
+Skills for software development, documentation, and technical workflows.
 
-### 不应该做的
+### Productivity & Organization
+Skills for organizing files, managing tasks, and personal productivity.
 
-* 包含敏感数据（API 密钥、令牌、路径）
-* 添加过于复杂或小众的配置
-* 提交未经测试的贡献
-* 创建现有功能的重复项
+---
 
-***
+Thank you for contributing to Awesome Claude Skills!
 
-## 文件命名
-
-* 使用小写和连字符：`python-reviewer.md`
-* 描述性要强：`tdd-workflow.md` 而不是 `workflow.md`
-* 名称与文件名匹配
-
-***
-
-## 有问题吗？
-
-* **问题：** [github.com/affaan-m/everything-claude-code/issues](https://github.com/affaan-m/everything-claude-code/issues)
-* **X/Twitter：** [@affaanmustafa](https://x.com/affaanmustafa)
-
-***
-
-感谢您的贡献！让我们共同构建一个出色的资源。
