@@ -1,22 +1,22 @@
 ---
 name: django-tdd
-description: Django测试策略，包括pytest-django、TDD方法论、factory_boy、模拟、覆盖率以及测试Django REST Framework API。
+description: Django testing strategies with pytest-django, TDD methodology, factory_boy, mocking, coverage, and testing Django REST Framework APIs.
 ---
 
-# 使用 TDD 进行 Django 测试
+# Django Testing with TDD
 
-使用 pytest、factory\_boy 和 Django REST Framework 进行 Django 应用程序的测试驱动开发。
+Test-driven development for Django applications using pytest, factory_boy, and Django REST Framework.
 
-## 何时激活
+## When to Activate
 
-* 编写新的 Django 应用程序时
-* 实现 Django REST Framework API 时
-* 测试 Django 模型、视图和序列化器时
-* 为 Django 项目设置测试基础设施时
+- Writing new Django applications
+- Implementing Django REST Framework APIs
+- Testing Django models, views, and serializers
+- Setting up testing infrastructure for Django projects
 
-## Django 的 TDD 工作流
+## TDD Workflow for Django
 
-### 红-绿-重构循环
+### Red-Green-Refactor Cycle
 
 ```python
 # Step 1: RED - Write failing test
@@ -32,9 +32,9 @@ def test_user_creation():
 # Step 3: REFACTOR - Improve while keeping tests green
 ```
 
-## 设置
+## Setup
 
-### pytest 配置
+### pytest Configuration
 
 ```ini
 # pytest.ini
@@ -56,7 +56,7 @@ markers =
     integration: marks tests as integration tests
 ```
 
-### 测试设置
+### Test Settings
 
 ```python
 # config/settings/test.py
@@ -147,7 +147,7 @@ def authenticated_api_client(api_client, user):
 
 ## Factory Boy
 
-### 工厂设置
+### Factory Setup
 
 ```python
 # tests/factories.py
@@ -207,7 +207,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
                 self.tags.add(tag)
 ```
 
-### 使用工厂
+### Using Factories
 
 ```python
 # tests/test_models.py
@@ -233,9 +233,9 @@ def test_multiple_products():
     assert len(products) == 10
 ```
 
-## 模型测试
+## Model Testing
 
-### 模型测试
+### Model Tests
 
 ```python
 # tests/test_models.py
@@ -309,9 +309,9 @@ class TestProductModel:
             product.reduce_stock(10)  # Not enough stock
 ```
 
-## 视图测试
+## View Testing
 
-### Django 视图测试
+### Django View Testing
 
 ```python
 # tests/test_views.py
@@ -369,9 +369,9 @@ class TestProductViews:
         assert Product.objects.filter(name='Test Product').exists()
 ```
 
-## DRF API 测试
+## DRF API Testing
 
-### 序列化器测试
+### Serializer Testing
 
 ```python
 # tests/test_serializers.py
@@ -439,7 +439,7 @@ class TestProductSerializer:
         assert 'stock' in serializer.errors
 ```
 
-### API ViewSet 测试
+### API ViewSet Testing
 
 ```python
 # tests/test_api.py
@@ -545,9 +545,9 @@ class TestProductAPI:
         assert response.data['count'] == 1
 ```
 
-## 模拟与打补丁
+## Mocking and Patching
 
-### 模拟外部服务
+### Mocking External Services
 
 ```python
 # tests/test_views.py
@@ -591,7 +591,7 @@ class TestPaymentView:
         assert 'error' in response.url
 ```
 
-### 模拟邮件发送
+### Mocking Email Sending
 
 ```python
 # tests/test_email.py
@@ -608,9 +608,9 @@ def test_order_confirmation_email(db, order):
     assert 'Order Confirmation' in mail.outbox[0].subject
 ```
 
-## 集成测试
+## Integration Testing
 
-### 完整流程测试
+### Full Flow Testing
 
 ```python
 # tests/test_integration.py
@@ -664,32 +664,32 @@ class TestCheckoutFlow:
         assert Order.objects.filter(user__email='test@example.com').exists()
 ```
 
-## 测试最佳实践
+## Testing Best Practices
 
-### 应该做
+### DO
 
-* **使用工厂**：而不是手动创建对象
-* **每个测试一个断言**：保持测试聚焦
-* **描述性测试名称**：`test_user_cannot_delete_others_post`
-* **测试边界情况**：空输入、None 值、边界条件
-* **模拟外部服务**：不要依赖外部 API
-* **使用夹具**：消除重复
-* **测试权限**：确保授权有效
-* **保持测试快速**：使用 `--reuse-db` 和 `--nomigrations`
+- **Use factories**: Instead of manual object creation
+- **One assertion per test**: Keep tests focused
+- **Descriptive test names**: `test_user_cannot_delete_others_post`
+- **Test edge cases**: Empty inputs, None values, boundary conditions
+- **Mock external services**: Don't depend on external APIs
+- **Use fixtures**: Eliminate duplication
+- **Test permissions**: Ensure authorization works
+- **Keep tests fast**: Use `--reuse-db` and `--nomigrations`
 
-### 不应该做
+### DON'T
 
-* **不要测试 Django 内部**：相信 Django 能正常工作
-* **不要测试第三方代码**：相信库能正常工作
-* **不要忽略失败的测试**：所有测试必须通过
-* **不要让测试产生依赖**：测试应该能以任何顺序运行
-* **不要过度模拟**：只模拟外部依赖
-* **不要测试私有方法**：测试公共接口
-* **不要使用生产数据库**：始终使用测试数据库
+- **Don't test Django internals**: Trust Django to work
+- **Don't test third-party code**: Trust libraries to work
+- **Don't ignore failing tests**: All tests must pass
+- **Don't make tests dependent**: Tests should run in any order
+- **Don't over-mock**: Mock only external dependencies
+- **Don't test private methods**: Test public interface
+- **Don't use production database**: Always use test database
 
-## 覆盖率
+## Coverage
 
-### 覆盖率配置
+### Coverage Configuration
 
 ```bash
 # Run tests with coverage
@@ -699,30 +699,30 @@ pytest --cov=apps --cov-report=html --cov-report=term-missing
 open htmlcov/index.html
 ```
 
-### 覆盖率目标
+### Coverage Goals
 
-| 组件 | 目标覆盖率 |
+| Component | Target Coverage |
 |-----------|-----------------|
-| 模型 | 90%+ |
-| 序列化器 | 85%+ |
-| 视图 | 80%+ |
-| 服务 | 90%+ |
-| 工具 | 80%+ |
-| 总体 | 80%+ |
+| Models | 90%+ |
+| Serializers | 85%+ |
+| Views | 80%+ |
+| Services | 90%+ |
+| Utilities | 80%+ |
+| Overall | 80%+ |
 
-## 快速参考
+## Quick Reference
 
-| 模式 | 用途 |
+| Pattern | Usage |
 |---------|-------|
-| `@pytest.mark.django_db` | 启用数据库访问 |
-| `client` | Django 测试客户端 |
-| `api_client` | DRF API 客户端 |
-| `factory.create_batch(n)` | 创建多个对象 |
-| `patch('module.function')` | 模拟外部依赖 |
-| `override_settings` | 临时更改设置 |
-| `force_authenticate()` | 在测试中绕过身份验证 |
-| `assertRedirects` | 检查重定向 |
-| `assertTemplateUsed` | 验证模板使用 |
-| `mail.outbox` | 检查已发送的邮件 |
+| `@pytest.mark.django_db` | Enable database access |
+| `client` | Django test client |
+| `api_client` | DRF API client |
+| `factory.create_batch(n)` | Create multiple objects |
+| `patch('module.function')` | Mock external dependencies |
+| `override_settings` | Temporarily change settings |
+| `force_authenticate()` | Bypass authentication in tests |
+| `assertRedirects` | Check for redirects |
+| `assertTemplateUsed` | Verify template usage |
+| `mail.outbox` | Check sent emails |
 
-记住：测试即文档。好的测试解释了你的代码应如何工作。保持测试简单、可读和可维护。
+Remember: Tests are documentation. Good tests explain how your code should work. Keep them simple, readable, and maintainable.

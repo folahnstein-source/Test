@@ -1,13 +1,21 @@
 ---
 name: springboot-verification
-description: Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR.
+description: "Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR."
 ---
 
-# Spring Boot 验证循环
+# Spring Boot Verification Loop
 
-在提交 PR 前、重大变更后以及部署前运行。
+Run before PRs, after major changes, and pre-deploy.
 
-## 阶段 1：构建
+## When to Activate
+
+- Before opening a pull request for a Spring Boot service
+- After major refactoring or dependency upgrades
+- Pre-deployment verification for staging or production
+- Running full build → lint → test → security scan pipeline
+- Validating test coverage meets thresholds
+
+## Phase 1: Build
 
 ```bash
 mvn -T 4 clean verify -DskipTests
@@ -15,23 +23,21 @@ mvn -T 4 clean verify -DskipTests
 ./gradlew clean assemble -x test
 ```
 
-如果构建失败，停止并修复。
+If build fails, stop and fix.
 
-## 阶段 2：静态分析
+## Phase 2: Static Analysis
 
-Maven（常用插件）：
-
+Maven (common plugins):
 ```bash
 mvn -T 4 spotbugs:check pmd:check checkstyle:check
 ```
 
-Gradle（如果已配置）：
-
+Gradle (if configured):
 ```bash
 ./gradlew checkstyleMain pmdMain spotbugsMain
 ```
 
-## 阶段 3：测试 + 覆盖率
+## Phase 3: Tests + Coverage
 
 ```bash
 mvn -T 4 test
@@ -40,12 +46,116 @@ mvn jacoco:report   # verify 80%+ coverage
 ./gradlew test jacocoTestReport
 ```
 
-报告：
+Report:
+- Total tests, passed/failed
+- Coverage % (lines/branches)
 
-* 总测试数，通过/失败
-* 覆盖率百分比（行/分支）
+### Unit Tests
 
-## 阶段 4：安全扫描
+Test service logic in isolation with mocked dependencies:
+
+```java
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
+
+  @Mock private UserRepository userRepository;
+  @InjectMocks private UserService userService;
+
+  @Test
+  void createUser_validInput_returnsUser() {
+    var dto = new CreateUserDto("Alice", "alice@example.com");
+    var expected = new User(1L, "Alice", "alice@example.com");
+    when(userRepository.save(any(User.class))).thenReturn(expected);
+
+    var result = userService.create(dto);
+
+    assertThat(result.name()).isEqualTo("Alice");
+    verify(userRepository).save(any(User.class));
+  }
+
+  @Test
+  void createUser_duplicateEmail_throwsException() {
+    var dto = new CreateUserDto("Alice", "existing@example.com");
+    when(userRepository.existsByEmail(dto.email())).thenReturn(true);
+
+    assertThatThrownBy(() -> userService.create(dto))
+        .isInstanceOf(DuplicateEmailException.class);
+  }
+}
+```
+
+### Integration Tests with Testcontainers
+
+Test against a real database instead of H2:
+
+```java
+@SpringBootTest
+@Testcontainers
+class UserRepositoryIntegrationTest {
+
+  @Container
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+      .withDatabaseName("testdb");
+
+  @DynamicPropertySource
+  static void configureProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgres::getJdbcUrl);
+    registry.add("spring.datasource.username", postgres::getUsername);
+    registry.add("spring.datasource.password", postgres::getPassword);
+  }
+
+  @Autowired private UserRepository userRepository;
+
+  @Test
+  void findByEmail_existingUser_returnsUser() {
+    userRepository.save(new User("Alice", "alice@example.com"));
+
+    var found = userRepository.findByEmail("alice@example.com");
+
+    assertThat(found).isPresent();
+    assertThat(found.get().getName()).isEqualTo("Alice");
+  }
+}
+```
+
+### API Tests with MockMvc
+
+Test controller layer with full Spring context:
+
+```java
+@WebMvcTest(UserController.class)
+class UserControllerTest {
+
+  @Autowired private MockMvc mockMvc;
+  @MockBean private UserService userService;
+
+  @Test
+  void createUser_validInput_returns201() throws Exception {
+    var user = new UserDto(1L, "Alice", "alice@example.com");
+    when(userService.create(any())).thenReturn(user);
+
+    mockMvc.perform(post("/api/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": "Alice", "email": "alice@example.com"}
+                """))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.name").value("Alice"));
+  }
+
+  @Test
+  void createUser_invalidEmail_returns400() throws Exception {
+    mockMvc.perform(post("/api/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": "Alice", "email": "not-an-email"}
+                """))
+        .andExpect(status().isBadRequest());
+  }
+}
+```
+
+## Phase 4: Security Scan
 
 ```bash
 # Dependency CVEs
@@ -53,32 +163,48 @@ mvn org.owasp:dependency-check-maven:check
 # or
 ./gradlew dependencyCheckAnalyze
 
-# Secrets (git)
+# Secrets in source
+grep -rn "password\s*=\s*\"" src/ --include="*.java" --include="*.yml" --include="*.properties"
+grep -rn "sk-\|api_key\|secret" src/ --include="*.java" --include="*.yml"
+
+# Secrets (git history)
 git secrets --scan  # if configured
 ```
 
-## 阶段 5：代码检查/格式化（可选关卡）
+### Common Security Findings
+
+```
+# Check for System.out.println (use logger instead)
+grep -rn "System\.out\.print" src/main/ --include="*.java"
+
+# Check for raw exception messages in responses
+grep -rn "e\.getMessage()" src/main/ --include="*.java"
+
+# Check for wildcard CORS
+grep -rn "allowedOrigins.*\*" src/main/ --include="*.java"
+```
+
+## Phase 5: Lint/Format (optional gate)
 
 ```bash
 mvn spotless:apply   # if using Spotless plugin
 ./gradlew spotlessApply
 ```
 
-## 阶段 6：差异审查
+## Phase 6: Diff Review
 
 ```bash
 git diff --stat
 git diff
 ```
 
-检查清单：
+Checklist:
+- No debugging logs left (`System.out`, `log.debug` without guards)
+- Meaningful errors and HTTP statuses
+- Transactions and validation present where needed
+- Config changes documented
 
-* 没有遗留调试日志（`System.out`、`log.debug` 没有防护）
-* 有意义的错误信息和 HTTP 状态码
-* 在需要的地方有事务和验证
-* 配置变更已记录
-
-## 输出模板
+## Output Template
 
 ```
 VERIFICATION REPORT
@@ -96,9 +222,9 @@ Issues to Fix:
 2. ...
 ```
 
-## 持续模式
+## Continuous Mode
 
-* 在重大变更时或长时间会话中每 30–60 分钟重新运行各阶段
-* 保持短循环：`mvn -T 4 test` + spotbugs 以获取快速反馈
+- Re-run phases on significant changes or every 30–60 minutes in long sessions
+- Keep a short loop: `mvn -T 4 test` + spotbugs for quick feedback
 
-**记住**：快速反馈胜过意外惊喜。保持关卡严格——将警告视为生产系统中的缺陷。
+**Remember**: Fast feedback beats late surprises. Keep the gate strict—treat warnings as defects in production systems.

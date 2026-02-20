@@ -1,17 +1,27 @@
 ---
 name: springboot-security
-description: Java Spring Boot 服务中关于身份验证/授权、验证、CSRF、密钥、标头、速率限制和依赖安全的 Spring Security 最佳实践。
+description: Spring Security best practices for authn/authz, validation, CSRF, secrets, headers, rate limiting, and dependency security in Java Spring Boot services.
 ---
 
-# Spring Boot 安全审查
+# Spring Boot Security Review
 
-在添加身份验证、处理输入、创建端点或处理密钥时使用。
+Use when adding auth, handling input, creating endpoints, or dealing with secrets.
 
-## 身份验证
+## When to Activate
 
-* 优先使用无状态 JWT 或带有撤销列表的不透明令牌
-* 对于会话，使用 `httpOnly`、`Secure`、`SameSite=Strict` cookie
-* 使用 `OncePerRequestFilter` 或资源服务器验证令牌
+- Adding authentication (JWT, OAuth2, session-based)
+- Implementing authorization (@PreAuthorize, role-based access)
+- Validating user input (Bean Validation, custom validators)
+- Configuring CORS, CSRF, or security headers
+- Managing secrets (Vault, environment variables)
+- Adding rate limiting or brute-force protection
+- Scanning dependencies for CVEs
+
+## Authentication
+
+- Prefer stateless JWT or opaque tokens with revocation list
+- Use `httpOnly`, `Secure`, `SameSite=Strict` cookies for sessions
+- Validate tokens with `OncePerRequestFilter` or resource server
 
 ```java
 @Component
@@ -36,27 +46,98 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 }
 ```
 
-## 授权
+## Authorization
 
-* 启用方法安全：`@EnableMethodSecurity`
-* 使用 `@PreAuthorize("hasRole('ADMIN')")` 或 `@PreAuthorize("@authz.canEdit(#id)")`
-* 默认拒绝；仅公开必需的 scope
+- Enable method security: `@EnableMethodSecurity`
+- Use `@PreAuthorize("hasRole('ADMIN')")` or `@PreAuthorize("@authz.canEdit(#id)")`
+- Deny by default; expose only required scopes
 
-## 输入验证
+```java
+@RestController
+@RequestMapping("/api/admin")
+public class AdminController {
 
-* 在控制器上使用带有 `@Valid` 的 Bean 验证
-* 在 DTO 上应用约束：`@NotBlank`、`@Email`、`@Size`、自定义验证器
-* 在渲染之前使用白名单清理任何 HTML
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/users")
+  public List<UserDto> listUsers() {
+    return userService.findAll();
+  }
 
-## SQL 注入预防
+  @PreAuthorize("@authz.isOwner(#id, authentication)")
+  @DeleteMapping("/users/{id}")
+  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    userService.delete(id);
+    return ResponseEntity.noContent().build();
+  }
+}
+```
 
-* 使用 Spring Data 存储库或参数化查询
-* 对于原生查询，使用 `:param` 绑定；切勿拼接字符串
+## Input Validation
 
-## CSRF 保护
+- Use Bean Validation with `@Valid` on controllers
+- Apply constraints on DTOs: `@NotBlank`, `@Email`, `@Size`, custom validators
+- Sanitize any HTML with a whitelist before rendering
 
-* 对于浏览器会话应用程序，保持 CSRF 启用；在表单/头中包含令牌
-* 对于使用 Bearer 令牌的纯 API，禁用 CSRF 并依赖无状态身份验证
+```java
+// BAD: No validation
+@PostMapping("/users")
+public User createUser(@RequestBody UserDto dto) {
+  return userService.create(dto);
+}
+
+// GOOD: Validated DTO
+public record CreateUserDto(
+    @NotBlank @Size(max = 100) String name,
+    @NotBlank @Email String email,
+    @NotNull @Min(0) @Max(150) Integer age
+) {}
+
+@PostMapping("/users")
+public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto dto) {
+  return ResponseEntity.status(HttpStatus.CREATED)
+      .body(userService.create(dto));
+}
+```
+
+## SQL Injection Prevention
+
+- Use Spring Data repositories or parameterized queries
+- For native queries, use `:param` bindings; never concatenate strings
+
+```java
+// BAD: String concatenation in native query
+@Query(value = "SELECT * FROM users WHERE name = '" + name + "'", nativeQuery = true)
+
+// GOOD: Parameterized native query
+@Query(value = "SELECT * FROM users WHERE name = :name", nativeQuery = true)
+List<User> findByName(@Param("name") String name);
+
+// GOOD: Spring Data derived query (auto-parameterized)
+List<User> findByEmailAndActiveTrue(String email);
+```
+
+## Password Encoding
+
+- Always hash passwords with BCrypt or Argon2 — never store plaintext
+- Use `PasswordEncoder` bean, not manual hashing
+
+```java
+@Bean
+public PasswordEncoder passwordEncoder() {
+  return new BCryptPasswordEncoder(12); // cost factor 12
+}
+
+// In service
+public User register(CreateUserDto dto) {
+  String hashedPassword = passwordEncoder.encode(dto.password());
+  return userRepository.save(new User(dto.email(), hashedPassword));
+}
+```
+
+## CSRF Protection
+
+- For browser session apps, keep CSRF enabled; include token in forms/headers
+- For pure APIs with Bearer tokens, disable CSRF and rely on stateless auth
 
 ```java
 http
@@ -64,13 +145,32 @@ http
   .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 ```
 
-## 密钥管理
+## Secrets Management
 
-* 源代码中不包含密钥；从环境变量或 vault 加载
-* 保持 `application.yml` 不包含凭据；使用占位符
-* 定期轮换令牌和数据库凭据
+- No secrets in source; load from env or vault
+- Keep `application.yml` free of credentials; use placeholders
+- Rotate tokens and DB credentials regularly
 
-## 安全头
+```yaml
+# BAD: Hardcoded in application.yml
+spring:
+  datasource:
+    password: mySecretPassword123
+
+# GOOD: Environment variable placeholder
+spring:
+  datasource:
+    password: ${DB_PASSWORD}
+
+# GOOD: Spring Cloud Vault integration
+spring:
+  cloud:
+    vault:
+      uri: https://vault.example.com
+      token: ${VAULT_TOKEN}
+```
+
+## Security Headers
 
 ```java
 http
@@ -82,38 +182,90 @@ http
     .referrerPolicy(rp -> rp.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)));
 ```
 
-## 速率限制
+## CORS Configuration
 
-* 在昂贵的端点上应用 Bucket4j 或网关级限制
-* 记录突发流量并告警；返回 429 并提供重试提示
+- Configure CORS at the security filter level, not per-controller
+- Restrict allowed origins — never use `*` in production
 
-## 依赖项安全
+```java
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
+  CorsConfiguration config = new CorsConfiguration();
+  config.setAllowedOrigins(List.of("https://app.example.com"));
+  config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+  config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+  config.setAllowCredentials(true);
+  config.setMaxAge(3600L);
 
-* 在 CI 中运行 OWASP Dependency Check / Snyk
-* 保持 Spring Boot 和 Spring Security 在受支持的版本
-* 对已知 CVE 使构建失败
+  UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+  source.registerCorsConfiguration("/api/**", config);
+  return source;
+}
 
-## 日志记录和 PII
+// In SecurityFilterChain:
+http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+```
 
-* 切勿记录密钥、令牌、密码或完整的 PAN 数据
-* 擦除敏感字段；使用结构化 JSON 日志记录
+## Rate Limiting
 
-## 文件上传
+- Apply Bucket4j or gateway-level limits on expensive endpoints
+- Log and alert on bursts; return 429 with retry hints
 
-* 验证大小、内容类型和扩展名
-* 存储在 Web 根目录之外；如果需要则进行扫描
+```java
+// Using Bucket4j for per-endpoint rate limiting
+@Component
+public class RateLimitFilter extends OncePerRequestFilter {
+  private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
-## 发布前检查清单
+  private Bucket createBucket() {
+    return Bucket.builder()
+        .addLimit(Bandwidth.classic(100, Refill.intervally(100, Duration.ofMinutes(1))))
+        .build();
+  }
 
-* \[ ] 身份验证令牌已验证并正确过期
-* \[ ] 每个敏感路径都有授权守卫
-* \[ ] 所有输入都已验证和清理
-* \[ ] 没有字符串拼接的 SQL
-* \[ ] CSRF 策略适用于应用程序类型
-* \[ ] 密钥已外部化；未提交任何密钥
-* \[ ] 安全头已配置
-* \[ ] API 有速率限制
-* \[ ] 依赖项已扫描并保持最新
-* \[ ] 日志不包含敏感数据
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+      FilterChain chain) throws ServletException, IOException {
+    String clientIp = request.getRemoteAddr();
+    Bucket bucket = buckets.computeIfAbsent(clientIp, k -> createBucket());
 
-**记住**：默认拒绝、验证输入、最小权限、优先采用安全配置。
+    if (bucket.tryConsume(1)) {
+      chain.doFilter(request, response);
+    } else {
+      response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+      response.getWriter().write("{\"error\": \"Rate limit exceeded\"}");
+    }
+  }
+}
+```
+
+## Dependency Security
+
+- Run OWASP Dependency Check / Snyk in CI
+- Keep Spring Boot and Spring Security on supported versions
+- Fail builds on known CVEs
+
+## Logging and PII
+
+- Never log secrets, tokens, passwords, or full PAN data
+- Redact sensitive fields; use structured JSON logging
+
+## File Uploads
+
+- Validate size, content type, and extension
+- Store outside web root; scan if required
+
+## Checklist Before Release
+
+- [ ] Auth tokens validated and expired correctly
+- [ ] Authorization guards on every sensitive path
+- [ ] All inputs validated and sanitized
+- [ ] No string-concatenated SQL
+- [ ] CSRF posture correct for app type
+- [ ] Secrets externalized; none committed
+- [ ] Security headers configured
+- [ ] Rate limiting on APIs
+- [ ] Dependencies scanned and up to date
+- [ ] Logs free of sensitive data
+
+**Remember**: Deny by default, validate inputs, least privilege, and secure-by-configuration first.

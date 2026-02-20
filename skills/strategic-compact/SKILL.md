@@ -1,66 +1,102 @@
 ---
 name: strategic-compact
-description: 建议在逻辑间隔处进行手动上下文压缩，以在任务阶段中保留上下文，而非任意的自动压缩。
+description: Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction.
 ---
 
-# 战略精简技能
+# Strategic Compact Skill
 
-建议在你的工作流程中的战略节点手动执行 `/compact`，而不是依赖任意的自动精简。
+Suggests manual `/compact` at strategic points in your workflow rather than relying on arbitrary auto-compaction.
 
-## 为何采用战略精简？
+## When to Activate
 
-自动精简会在任意时间点触发：
+- Running long sessions that approach context limits (200K+ tokens)
+- Working on multi-phase tasks (research → plan → implement → test)
+- Switching between unrelated tasks within the same session
+- After completing a major milestone and starting new work
+- When responses slow down or become less coherent (context pressure)
 
-* 通常在任务中途，丢失重要上下文
-* 无法感知逻辑任务边界
-* 可能中断复杂的多步骤操作
+## Why Strategic Compaction?
 
-在逻辑边界进行战略精简：
+Auto-compaction triggers at arbitrary points:
+- Often mid-task, losing important context
+- No awareness of logical task boundaries
+- Can interrupt complex multi-step operations
 
-* **探索之后，执行之前** - 精简研究上下文，保留实施计划
-* **完成一个里程碑之后** - 为下一阶段全新开始
-* **主要上下文切换之前** - 在不同任务开始前清理探索上下文
+Strategic compaction at logical boundaries:
+- **After exploration, before execution** — Compact research context, keep implementation plan
+- **After completing a milestone** — Fresh start for next phase
+- **Before major context shifts** — Clear exploration context before different task
 
-## 工作原理
+## How It Works
 
-`suggest-compact.sh` 脚本在 PreToolUse（编辑/写入）时运行并执行：
+The `suggest-compact.js` script runs on PreToolUse (Edit/Write) and:
 
-1. **追踪工具调用** - 计算会话中的工具调用次数
-2. **阈值检测** - 在可配置的阈值（默认：50 次调用）处建议精简
-3. **定期提醒** - 在达到阈值后，每 25 次调用提醒一次
+1. **Tracks tool calls** — Counts tool invocations in session
+2. **Threshold detection** — Suggests at configurable threshold (default: 50 calls)
+3. **Periodic reminders** — Reminds every 25 calls after threshold
 
-## 钩子设置
+## Hook Setup
 
-添加到你的 `~/.claude/settings.json`：
+Add to your `~/.claude/settings.json`:
 
 ```json
 {
   "hooks": {
-    "PreToolUse": [{
-      "matcher": "tool == \"Edit\" || tool == \"Write\"",
-      "hooks": [{
-        "type": "command",
-        "command": "~/.claude/skills/strategic-compact/suggest-compact.sh"
-      }]
-    }]
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [{ "type": "command", "command": "node ~/.claude/skills/strategic-compact/suggest-compact.js" }]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [{ "type": "command", "command": "node ~/.claude/skills/strategic-compact/suggest-compact.js" }]
+      }
+    ]
   }
 }
 ```
 
-## 配置
+## Configuration
 
-环境变量：
+Environment variables:
+- `COMPACT_THRESHOLD` — Tool calls before first suggestion (default: 50)
 
-* `COMPACT_THRESHOLD` - 首次建议前的工具调用次数（默认：50）
+## Compaction Decision Guide
 
-## 最佳实践
+Use this table to decide when to compact:
 
-1. **规划后精简** - 一旦计划确定，精简以全新开始
-2. **调试后精简** - 在继续之前，清理错误解决上下文
-3. **不要在实施中途精简** - 保留相关更改的上下文
-4. **阅读建议** - 钩子告诉你*何时*，由你决定*是否*
+| Phase Transition | Compact? | Why |
+|-----------------|----------|-----|
+| Research → Planning | Yes | Research context is bulky; plan is the distilled output |
+| Planning → Implementation | Yes | Plan is in TodoWrite or a file; free up context for code |
+| Implementation → Testing | Maybe | Keep if tests reference recent code; compact if switching focus |
+| Debugging → Next feature | Yes | Debug traces pollute context for unrelated work |
+| Mid-implementation | No | Losing variable names, file paths, and partial state is costly |
+| After a failed approach | Yes | Clear the dead-end reasoning before trying a new approach |
 
-## 相关
+## What Survives Compaction
 
-* [长篇指南](https://x.com/affaanmustafa/status/2014040193557471352) - 令牌优化部分
-* 内存持久化钩子 - 用于在精简后保留的状态
+Understanding what persists helps you compact with confidence:
+
+| Persists | Lost |
+|----------|------|
+| CLAUDE.md instructions | Intermediate reasoning and analysis |
+| TodoWrite task list | File contents you previously read |
+| Memory files (`~/.claude/memory/`) | Multi-step conversation context |
+| Git state (commits, branches) | Tool call history and counts |
+| Files on disk | Nuanced user preferences stated verbally |
+
+## Best Practices
+
+1. **Compact after planning** — Once plan is finalized in TodoWrite, compact to start fresh
+2. **Compact after debugging** — Clear error-resolution context before continuing
+3. **Don't compact mid-implementation** — Preserve context for related changes
+4. **Read the suggestion** — The hook tells you *when*, you decide *if*
+5. **Write before compacting** — Save important context to files or memory before compacting
+6. **Use `/compact` with a summary** — Add a custom message: `/compact Focus on implementing auth middleware next`
+
+## Related
+
+- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) — Token optimization section
+- Memory persistence hooks — For state that survives compaction
+- `continuous-learning` skill — Extracts patterns before session ends

@@ -1,24 +1,24 @@
 ---
 name: golang-patterns
-description: 构建稳健、高效且可维护的Go应用程序的惯用Go模式、最佳实践和约定。
+description: Idiomatic Go patterns, best practices, and conventions for building robust, efficient, and maintainable Go applications.
 ---
 
-# Go 开发模式
+# Go Development Patterns
 
-用于构建健壮、高效和可维护应用程序的惯用 Go 模式与最佳实践。
+Idiomatic Go patterns and best practices for building robust, efficient, and maintainable applications.
 
-## 何时激活
+## When to Activate
 
-* 编写新的 Go 代码时
-* 审查 Go 代码时
-* 重构现有 Go 代码时
-* 设计 Go 包/模块时
+- Writing new Go code
+- Reviewing Go code
+- Refactoring existing Go code
+- Designing Go packages/modules
 
-## 核心原则
+## Core Principles
 
-### 1. 简洁与清晰
+### 1. Simplicity and Clarity
 
-Go 推崇简洁而非精巧。代码应该显而易见且易于阅读。
+Go favors simplicity over cleverness. Code should be obvious and easy to read.
 
 ```go
 // Good: Clear and direct
@@ -42,9 +42,9 @@ func GetUser(id string) (*User, error) {
 }
 ```
 
-### 2. 让零值变得有用
+### 2. Make the Zero Value Useful
 
-设计类型时，应使其零值无需初始化即可立即使用。
+Design types so their zero value is immediately usable without initialization.
 
 ```go
 // Good: Zero value is useful
@@ -69,9 +69,9 @@ type BadCounter struct {
 }
 ```
 
-### 3. 接受接口，返回结构体
+### 3. Accept Interfaces, Return Structs
 
-函数应该接受接口参数并返回具体类型。
+Functions should accept interface parameters and return concrete types.
 
 ```go
 // Good: Accepts interface, returns concrete type
@@ -89,9 +89,9 @@ func ProcessData(r io.Reader) (io.Reader, error) {
 }
 ```
 
-## 错误处理模式
+## Error Handling Patterns
 
-### 带上下文的错误包装
+### Error Wrapping with Context
 
 ```go
 // Good: Wrap errors with context
@@ -110,7 +110,7 @@ func LoadConfig(path string) (*Config, error) {
 }
 ```
 
-### 自定义错误类型
+### Custom Error Types
 
 ```go
 // Define domain-specific errors
@@ -131,7 +131,7 @@ var (
 )
 ```
 
-### 使用 errors.Is 和 errors.As 检查错误
+### Error Checking with errors.Is and errors.As
 
 ```go
 func HandleError(err error) {
@@ -154,7 +154,7 @@ func HandleError(err error) {
 }
 ```
 
-### 永不忽略错误
+### Never Ignore Errors
 
 ```go
 // Bad: Ignoring error with blank identifier
@@ -170,9 +170,9 @@ if err != nil {
 _ = writer.Close() // Best-effort cleanup, error logged elsewhere
 ```
 
-## 并发模式
+## Concurrency Patterns
 
-### 工作池
+### Worker Pool
 
 ```go
 func WorkerPool(jobs <-chan Job, results chan<- Result, numWorkers int) {
@@ -193,7 +193,7 @@ func WorkerPool(jobs <-chan Job, results chan<- Result, numWorkers int) {
 }
 ```
 
-### 用于取消和超时的 Context
+### Context for Cancellation and Timeouts
 
 ```go
 func FetchWithTimeout(ctx context.Context, url string) ([]byte, error) {
@@ -215,7 +215,7 @@ func FetchWithTimeout(ctx context.Context, url string) ([]byte, error) {
 }
 ```
 
-### 优雅关闭
+### Graceful Shutdown
 
 ```go
 func GracefulShutdown(server *http.Server) {
@@ -236,7 +236,7 @@ func GracefulShutdown(server *http.Server) {
 }
 ```
 
-### 用于协调 Goroutine 的 errgroup
+### errgroup for Coordinated Goroutines
 
 ```go
 import "golang.org/x/sync/errgroup"
@@ -264,7 +264,7 @@ func FetchAll(ctx context.Context, urls []string) ([][]byte, error) {
 }
 ```
 
-### 避免 Goroutine 泄漏
+### Avoiding Goroutine Leaks
 
 ```go
 // Bad: Goroutine leak if context is cancelled
@@ -294,9 +294,9 @@ func safeFetch(ctx context.Context, url string) <-chan []byte {
 }
 ```
 
-## 接口设计
+## Interface Design
 
-### 小而专注的接口
+### Small, Focused Interfaces
 
 ```go
 // Good: Single-method interfaces
@@ -320,7 +320,7 @@ type ReadWriteCloser interface {
 }
 ```
 
-### 在接口使用处定义接口
+### Define Interfaces Where They're Used
 
 ```go
 // In the consumer package, not the provider
@@ -340,7 +340,7 @@ type Service struct {
 // It doesn't need to know about this interface
 ```
 
-### 使用类型断言实现可选行为
+### Optional Behavior with Type Assertions
 
 ```go
 type Flusher interface {
@@ -360,9 +360,9 @@ func WriteAndFlush(w io.Writer, data []byte) error {
 }
 ```
 
-## 包组织
+## Package Organization
 
-### 标准项目布局
+### Standard Project Layout
 
 ```text
 myproject/
@@ -384,7 +384,7 @@ myproject/
 └── Makefile
 ```
 
-### 包命名
+### Package Naming
 
 ```go
 // Good: Short, lowercase, no underscores
@@ -398,7 +398,7 @@ package json_parser
 package userService // Redundant 'Service' suffix
 ```
 
-### 避免包级状态
+### Avoid Package-Level State
 
 ```go
 // Bad: Global mutable state
@@ -418,9 +418,9 @@ func NewServer(db *sql.DB) *Server {
 }
 ```
 
-## 结构体设计
+## Struct Design
 
-### 函数式选项模式
+### Functional Options Pattern
 
 ```go
 type Server struct {
@@ -462,7 +462,7 @@ server := NewServer(":8080",
 )
 ```
 
-### 使用嵌入实现组合
+### Embedding for Composition
 
 ```go
 type Logger struct {
@@ -490,9 +490,9 @@ s := NewServer(":8080")
 s.Log("Starting...") // Calls embedded Logger.Log
 ```
 
-## 内存与性能
+## Memory and Performance
 
-### 当大小已知时预分配切片
+### Preallocate Slices When Size is Known
 
 ```go
 // Bad: Grows slice multiple times
@@ -514,7 +514,7 @@ func processItems(items []Item) []Result {
 }
 ```
 
-### 为频繁分配使用 sync.Pool
+### Use sync.Pool for Frequent Allocations
 
 ```go
 var bufferPool = sync.Pool{
@@ -536,7 +536,7 @@ func ProcessRequest(data []byte) []byte {
 }
 ```
 
-### 避免在循环中进行字符串拼接
+### Avoid String Concatenation in Loops
 
 ```go
 // Bad: Creates many string allocations
@@ -566,9 +566,9 @@ func join(parts []string) string {
 }
 ```
 
-## Go 工具集成
+## Go Tooling Integration
 
-### 基本命令
+### Essential Commands
 
 ```bash
 # Build and run
@@ -594,7 +594,7 @@ gofmt -w .
 goimports -w .
 ```
 
-### 推荐的 Linter 配置 (.golangci.yml)
+### Recommended Linter Configuration (.golangci.yml)
 
 ```yaml
 linters:
@@ -621,20 +621,20 @@ issues:
   exclude-use-default: false
 ```
 
-## 快速参考：Go 惯用法
+## Quick Reference: Go Idioms
 
-| 惯用法 | 描述 |
+| Idiom | Description |
 |-------|-------------|
-| 接受接口，返回结构体 | 函数接受接口参数，返回具体类型 |
-| 错误即值 | 将错误视为一等值，而非异常 |
-| 不要通过共享内存来通信 | 使用通道在 goroutine 之间进行协调 |
-| 让零值变得有用 | 类型应无需显式初始化即可工作 |
-| 少量复制优于少量依赖 | 避免不必要的外部依赖 |
-| 清晰优于精巧 | 优先考虑可读性而非精巧性 |
-| gofmt 虽非最爱，但却是每个人的朋友 | 始终使用 gofmt/goimports 格式化代码 |
-| 提前返回 | 先处理错误，保持主逻辑路径无缩进 |
+| Accept interfaces, return structs | Functions accept interface params, return concrete types |
+| Errors are values | Treat errors as first-class values, not exceptions |
+| Don't communicate by sharing memory | Use channels for coordination between goroutines |
+| Make the zero value useful | Types should work without explicit initialization |
+| A little copying is better than a little dependency | Avoid unnecessary external dependencies |
+| Clear is better than clever | Prioritize readability over cleverness |
+| gofmt is no one's favorite but everyone's friend | Always format with gofmt/goimports |
+| Return early | Handle errors first, keep happy path unindented |
 
-## 应避免的反模式
+## Anti-Patterns to Avoid
 
 ```go
 // Bad: Naked returns in long functions
@@ -670,4 +670,4 @@ func (c *Counter) Increment() { c.n++ }        // Pointer receiver
 // Pick one style and be consistent
 ```
 
-**记住**：Go 代码应该以最好的方式显得“乏味”——可预测、一致且易于理解。如有疑问，保持简单。
+**Remember**: Go code should be boring in the best way - predictable, consistent, and easy to understand. When in doubt, keep it simple.

@@ -1,15 +1,25 @@
 ---
 name: backend-patterns
-description: 后端架构模式、API设计、数据库优化以及针对Node.js、Express和Next.js API路由的服务器端最佳实践。
+description: Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes.
 ---
 
-# 后端开发模式
+# Backend Development Patterns
 
-用于可扩展服务器端应用程序的后端架构模式和最佳实践。
+Backend architecture patterns and best practices for scalable server-side applications.
 
-## API 设计模式
+## When to Activate
 
-### RESTful API 结构
+- Designing REST or GraphQL API endpoints
+- Implementing repository, service, or controller layers
+- Optimizing database queries (N+1, indexing, connection pooling)
+- Adding caching (Redis, in-memory, HTTP cache headers)
+- Setting up background jobs or async processing
+- Structuring error handling and validation for APIs
+- Building middleware (auth, logging, rate limiting)
+
+## API Design Patterns
+
+### RESTful API Structure
 
 ```typescript
 // ✅ Resource-based URLs
@@ -24,7 +34,7 @@ DELETE /api/markets/:id             # Delete resource
 GET /api/markets?status=active&sort=volume&limit=20&offset=0
 ```
 
-### 仓储模式
+### Repository Pattern
 
 ```typescript
 // Abstract data access logic
@@ -58,7 +68,7 @@ class SupabaseMarketRepository implements MarketRepository {
 }
 ```
 
-### 服务层模式
+### Service Layer Pattern
 
 ```typescript
 // Business logic separated from data access
@@ -87,7 +97,7 @@ class MarketService {
 }
 ```
 
-### 中间件模式
+### Middleware Pattern
 
 ```typescript
 // Request/response processing pipeline
@@ -115,9 +125,9 @@ export default withAuth(async (req, res) => {
 })
 ```
 
-## 数据库模式
+## Database Patterns
 
-### 查询优化
+### Query Optimization
 
 ```typescript
 // ✅ GOOD: Select only needed columns
@@ -134,7 +144,7 @@ const { data } = await supabase
   .select('*')
 ```
 
-### N+1 查询预防
+### N+1 Query Prevention
 
 ```typescript
 // ❌ BAD: N+1 query problem
@@ -154,7 +164,7 @@ markets.forEach(market => {
 })
 ```
 
-### 事务模式
+### Transaction Pattern
 
 ```typescript
 async function createMarketWithPosition(
@@ -178,7 +188,7 @@ CREATE OR REPLACE FUNCTION create_market_with_position(
 )
 RETURNS jsonb
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
   -- Start transaction automatically
   INSERT INTO markets VALUES (market_data);
@@ -189,12 +199,12 @@ EXCEPTION
     -- Rollback happens automatically
     RETURN jsonb_build_object('success', false, 'error', SQLERRM);
 END;
-$;
+$$;
 ```
 
-## 缓存策略
+## Caching Strategies
 
-### Redis 缓存层
+### Redis Caching Layer
 
 ```typescript
 class CachedMarketRepository implements MarketRepository {
@@ -228,7 +238,7 @@ class CachedMarketRepository implements MarketRepository {
 }
 ```
 
-### 旁路缓存模式
+### Cache-Aside Pattern
 
 ```typescript
 async function getMarketWithCache(id: string): Promise<Market> {
@@ -250,9 +260,9 @@ async function getMarketWithCache(id: string): Promise<Market> {
 }
 ```
 
-## 错误处理模式
+## Error Handling Patterns
 
-### 集中式错误处理程序
+### Centralized Error Handler
 
 ```typescript
 class ApiError extends Error {
@@ -302,7 +312,7 @@ export async function GET(request: Request) {
 }
 ```
 
-### 指数退避重试
+### Retry with Exponential Backoff
 
 ```typescript
 async function fetchWithRetry<T>(
@@ -332,9 +342,9 @@ async function fetchWithRetry<T>(
 const data = await fetchWithRetry(() => fetchFromAPI())
 ```
 
-## 认证与授权
+## Authentication & Authorization
 
-### JWT 令牌验证
+### JWT Token Validation
 
 ```typescript
 import jwt from 'jsonwebtoken'
@@ -374,7 +384,7 @@ export async function GET(request: Request) {
 }
 ```
 
-### 基于角色的访问控制
+### Role-Based Access Control
 
 ```typescript
 type Permission = 'read' | 'write' | 'delete' | 'admin'
@@ -417,9 +427,9 @@ export const DELETE = requirePermission('delete')(
 )
 ```
 
-## 速率限制
+## Rate Limiting
 
-### 简单的内存速率限制器
+### Simple In-Memory Rate Limiter
 
 ```typescript
 class RateLimiter {
@@ -465,9 +475,9 @@ export async function GET(request: Request) {
 }
 ```
 
-## 后台作业与队列
+## Background Jobs & Queues
 
-### 简单队列模式
+### Simple Queue Pattern
 
 ```typescript
 class JobQueue<T> {
@@ -520,9 +530,9 @@ export async function POST(request: Request) {
 }
 ```
 
-## 日志记录与监控
+## Logging & Monitoring
 
-### 结构化日志记录
+### Structured Logging
 
 ```typescript
 interface LogContext {
@@ -584,4 +594,4 @@ export async function GET(request: Request) {
 }
 ```
 
-**记住**：后端模式支持可扩展、可维护的服务器端应用程序。选择适合你复杂程度的模式。
+**Remember**: Backend patterns enable scalable, maintainable server-side applications. Choose patterns that fit your complexity level.
