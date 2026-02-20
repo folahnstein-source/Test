@@ -1,1032 +1,477 @@
-**Language:** English | [繁體中文](docs/zh-TW/README.md)
+<h1 align="center">Awesome Claude Skills</h1>
 
-# Everything Claude Code
+<p align="center">
+<a href="https://platform.composio.dev/?utm_source=Github&utm_medium=Youtube&utm_campaign=2025-11&utm_content=AwesomeSkills">
+  <img width="1280" height="640" alt="Composio banner" src="https://github.com/user-attachments/assets/e91255af-e4ba-4d71-b1a8-bd081e8a234a">
+</a>
 
-[![Stars](https://img.shields.io/github/stars/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/stargazers)
-[![Forks](https://img.shields.io/github/forks/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/network/members)
-[![Contributors](https://img.shields.io/github/contributors/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/graphs/contributors)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Shell](https://img.shields.io/badge/-Shell-4EAA25?logo=gnu-bash&logoColor=white)
-![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white)
-![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)
-![Go](https://img.shields.io/badge/-Go-00ADD8?logo=go&logoColor=white)
-![Java](https://img.shields.io/badge/-Java-ED8B00?logo=openjdk&logoColor=white)
-![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown&logoColor=white)
 
-> **42K+ stars** | **5K+ forks** | **24 contributors** | **6 languages supported** | **Anthropic Hackathon Winner**
+</p>
 
----
-
-<div align="center">
-
-**🌐 Language / 语言 / 語言**
-
-[**English**](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](docs/zh-TW/README.md) | [日本語](docs/ja-JP/README.md)
-
+<p align="center">
+  <a href="https://awesome.re">
+    <img src="https://awesome.re/badge.svg" alt="Awesome" />
+  </a>
+  <a href="https://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" />
+  </a>
+  <a href="https://www.apache.org/licenses/LICENSE-2.0">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat-square" alt="License: Apache-2.0" />
+  </a>
+</p>
+<div>
+<p align="center">
+  <a href="https://twitter.com/composio">
+    <img src="https://img.shields.io/badge/Follow on X-000000?style=for-the-badge&logo=x&logoColor=white" alt="Follow on X" />
+  </a>
+  <a href="https://www.linkedin.com/company/composiohq/">
+    <img src="https://img.shields.io/badge/Follow on LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="Follow on LinkedIn" />
+  </a>
+  <a href="https://discord.com/invite/composio">
+    <img src="https://img.shields.io/badge/Join our Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join our Discord" />
+  </a>
+  </p>
 </div>
 
----
+A curated list of practical Claude Skills for enhancing productivity across Claude.ai, Claude Code, and the Claude API.
 
-**The complete collection of Claude Code configs from an Anthropic hackathon winner.**
 
-Production-ready agents, skills, hooks, commands, rules, and MCP configurations evolved over 10+ months of intensive daily use building real products.
-
----
-
-## The Guides
-
-This repo is the raw code only. The guides explain everything.
-
-<table>
-<tr>
-<td width="50%">
-<a href="https://x.com/affaanmustafa/status/2012378465664745795">
-<img src="https://github.com/user-attachments/assets/1a471488-59cc-425b-8345-5245c7efbcef" alt="The Shorthand Guide to Everything Claude Code" />
-</a>
-</td>
-<td width="50%">
-<a href="https://x.com/affaanmustafa/status/2014040193557471352">
-<img src="https://github.com/user-attachments/assets/c9ca43bc-b149-427f-b551-af6840c368f0" alt="The Longform Guide to Everything Claude Code" />
-</a>
-</td>
-</tr>
-<tr>
-<td align="center"><b>Shorthand Guide</b><br/>Setup, foundations, philosophy. <b>Read this first.</b></td>
-<td align="center"><b>Longform Guide</b><br/>Token optimization, memory persistence, evals, parallelization.</td>
-</tr>
-</table>
-
-| Topic | What You'll Learn |
-|-------|-------------------|
-| Token Optimization | Model selection, system prompt slimming, background processes |
-| Memory Persistence | Hooks that save/load context across sessions automatically |
-| Continuous Learning | Auto-extract patterns from sessions into reusable skills |
-| Verification Loops | Checkpoint vs continuous evals, grader types, pass@k metrics |
-| Parallelization | Git worktrees, cascade method, when to scale instances |
-| Subagent Orchestration | The context problem, iterative retrieval pattern |
+> **Want skills that do more than generate text?** Claude can send emails, create issues, post to Slack, and take actions across 1000+ apps. [See how →](./connect/)
 
 ---
 
-## What's New
+## Quickstart: Connect Claude to 500+ Apps
 
-### v1.4.1 — Bug Fix (Feb 2026)
+The **connect-apps** plugin lets Claude perform real actions - send emails, create issues, post to Slack. It handles auth and connects to 500+ apps using Composio under the hood.
 
-- **Fixed instinct import content loss** — `parse_instinct_file()` was silently dropping all content after frontmatter (Action, Evidence, Examples sections) during `/instinct-import`. Fixed by community contributor @ericcai0814 ([#148](https://github.com/affaan-m/everything-claude-code/issues/148), [#161](https://github.com/affaan-m/everything-claude-code/pull/161))
+### 1. Install the Plugin
 
-### v1.4.0 — Multi-Language Rules, Installation Wizard & PM2 (Feb 2026)
+```bash
+claude --plugin-dir ./connect-apps-plugin
+```
 
-- **Interactive installation wizard** — New `configure-ecc` skill provides guided setup with merge/overwrite detection
-- **PM2 & multi-agent orchestration** — 6 new commands (`/pm2`, `/multi-plan`, `/multi-execute`, `/multi-backend`, `/multi-frontend`, `/multi-workflow`) for managing complex multi-service workflows
-- **Multi-language rules architecture** — Rules restructured from flat files into `common/` + `typescript/` + `python/` + `golang/` directories. Install only the languages you need
-- **Chinese (zh-CN) translations** — Complete translation of all agents, commands, skills, and rules (80+ files)
-- **GitHub Sponsors support** — Sponsor the project via GitHub Sponsors
-- **Enhanced CONTRIBUTING.md** — Detailed PR templates for each contribution type
+### 2. Run Setup
 
-### v1.3.0 — OpenCode Plugin Support (Feb 2026)
+```
+/connect-apps:setup
+```
 
-- **Full OpenCode integration** — 12 agents, 24 commands, 16 skills with hook support via OpenCode's plugin system (20+ event types)
-- **3 native custom tools** — run-tests, check-coverage, security-audit
-- **LLM documentation** — `llms.txt` for comprehensive OpenCode docs
+Paste your API key when asked. (Get a free key at [platform.composio.dev](https://platform.composio.dev/?utm_source=Github&utm_content=AwesomeSkills))
 
-### v1.2.0 — Unified Commands & Skills (Feb 2026)
+### 3. Restart & Try It
 
-- **Python/Django support** — Django patterns, security, TDD, and verification skills
-- **Java Spring Boot skills** — Patterns, security, TDD, and verification for Spring Boot
-- **Session management** — `/sessions` command for session history
-- **Continuous learning v2** — Instinct-based learning with confidence scoring, import/export, evolution
+```bash
+exit
+claude
+```
 
-See the full changelog in [Releases](https://github.com/affaan-m/everything-claude-code/releases).
+> **Want skills that do more than generate text?** Claude can send emails, create issues, post to Slack, and take actions across 1000+ apps. [See how →](./connect/)
+
+If you receive the email, Claude is now connected to 500+ apps.
+
+**[See all supported apps →](https://composio.dev/toolkits)**
 
 ---
 
-## 🚀 Quick Start
+## Contents
 
-Get up and running in under 2 minutes:
+- [What Are Claude Skills?](#what-are-claude-skills)
+- [Skills](#skills)
+  - [Document Processing](#document-processing)
+  - [Development & Code Tools](#development--code-tools)
+  - [Data & Analysis](#data--analysis)
+  - [Business & Marketing](#business--marketing)
+  - [Communication & Writing](#communication--writing)
+  - [Creative & Media](#creative--media)
+  - [Productivity & Organization](#productivity--organization)
+  - [Collaboration & Project Management](#collaboration--project-management)
+  - [Security & Systems](#security--systems)
+  - [App Automation via Composio](#app-automation-via-composio)
+- [Getting Started](#getting-started)
+- [Creating Skills](#creating-skills)
+- [Contributing](#contributing)
+- [Resources](#resources)
+- [License](#license)
 
-### Step 1: Install the Plugin
+## What Are Claude Skills?
 
-```bash
-# Add marketplace
-/plugin marketplace add affaan-m/everything-claude-code
+Claude Skills are customizable workflows that teach Claude how to perform specific tasks according to your unique requirements. Skills enable Claude to execute tasks in a repeatable, standardized manner across all Claude platforms.
 
-# Install plugin
-/plugin install everything-claude-code@everything-claude-code
+## Skills
+
+### Document Processing
+
+- [docx](https://github.com/anthropics/skills/tree/main/skills/docx) - Create, edit, analyze Word docs with tracked changes, comments, formatting.
+- [pdf](https://github.com/anthropics/skills/tree/main/skills/pdf) - Extract text, tables, metadata, merge & annotate PDFs.
+- [pptx](https://github.com/anthropics/skills/tree/main/skills/pptx) - Read, generate, and adjust slides, layouts, templates.
+- [xlsx](https://github.com/anthropics/skills/tree/main/skills/xlsx) - Spreadsheet manipulation: formulas, charts, data transformations.
+- [Markdown to EPUB Converter](https://github.com/smerchek/claude-epub-skill) - Converts markdown documents and chat summaries into professional EPUB ebook files. *By [@smerchek](https://github.com/smerchek)*
+
+### Development & Code Tools
+
+- [artifacts-builder](https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder) - Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui).
+- [aws-skills](https://github.com/zxkane/aws-skills) - AWS development with CDK best practices, cost optimization MCP servers, and serverless/event-driven architecture patterns.
+- [Changelog Generator](./changelog-generator/) - Automatically creates user-facing changelogs from git commits by analyzing history and transforming technical commits into customer-friendly release notes.
+- [Claude Code Terminal Title](https://github.com/bluzername/claude-code-terminal-title) - Gives each Claud-Code terminal window a dynamic title that describes the work being done so you don't lose track of what window is doing what.
+- [D3.js Visualization](https://github.com/chrisvoncsefalvay/claude-d3js-skill) - Teaches Claude to produce D3 charts and interactive data visualizations. *By [@chrisvoncsefalvay](https://github.com/chrisvoncsefalvay)*
+- [FFUF Web Fuzzing](https://github.com/jthack/ffuf_claude_skill) - Integrates the ffuf web fuzzer so Claude can run fuzzing tasks and analyze results for vulnerabilities. *By [@jthack](https://github.com/jthack)*
+- [finishing-a-development-branch](https://github.com/obra/superpowers/tree/main/skills/finishing-a-development-branch) - Guides completion of development work by presenting clear options and handling chosen workflow.
+- [iOS Simulator](https://github.com/conorluddy/ios-simulator-skill) - Enables Claude to interact with iOS Simulator for testing and debugging iOS applications. *By [@conorluddy](https://github.com/conorluddy)*
+- [jules](https://github.com/sanjay3290/ai-skills/tree/main/skills/jules) - Delegate coding tasks to Google Jules AI agent for async bug fixes, documentation, tests, and feature implementation on GitHub repos. *By [@sanjay3290](https://github.com/sanjay3290)*
+- [LangSmith Fetch](./langsmith-fetch/) - Debug LangChain and LangGraph agents by automatically fetching and analyzing execution traces from LangSmith Studio. First AI observability skill for Claude Code. *By [@OthmanAdi](https://github.com/OthmanAdi)*
+- [MCP Builder](./mcp-builder/) - Guides creation of high-quality MCP (Model Context Protocol) servers for integrating external APIs and services with LLMs using Python or TypeScript.
+- [move-code-quality-skill](https://github.com/1NickPappas/move-code-quality-skill) - Analyzes Move language packages against the official Move Book Code Quality Checklist for Move 2024 Edition compliance and best practices.
+- [Playwright Browser Automation](https://github.com/lackeyjb/playwright-skill) - Model-invoked Playwright automation for testing and validating web applications. *By [@lackeyjb](https://github.com/lackeyjb)*
+- [prompt-engineering](https://github.com/NeoLabHQ/context-engineering-kit/tree/master/plugins/customaize-agent/skills/prompt-engineering) - Teaches well-known prompt engineering techniques and patterns, including Anthropic best practices and agent persuasion principles.
+- [pypict-claude-skill](https://github.com/omkamal/pypict-claude-skill) - Design comprehensive test cases using PICT (Pairwise Independent Combinatorial Testing) for requirements or code, generating optimized test suites with pairwise coverage.
+- [reddit-fetch](https://github.com/ykdojo/claude-code-tips/tree/main/skills/reddit-fetch) - Fetches Reddit content via Gemini CLI when WebFetch is blocked or returns 403 errors.
+- [Skill Creator](./skill-creator/) - Provides guidance for creating effective Claude Skills that extend capabilities with specialized knowledge, workflows, and tool integrations.
+- [Skill Seekers](https://github.com/yusufkaraaslan/Skill_Seekers) - Automatically converts any documentation website into a Claude AI skill in minutes. *By [@yusufkaraaslan](https://github.com/yusufkaraaslan)*
+- [software-architecture](https://github.com/NeoLabHQ/context-engineering-kit/tree/master/plugins/ddd/skills/software-architecture) - Implements design patterns including Clean Architecture, SOLID principles, and comprehensive software design best practices.
+- [subagent-driven-development](https://github.com/NeoLabHQ/context-engineering-kit/tree/master/plugins/sadd/skills/subagent-driven-development) - Dispatches independent subagents for individual tasks with code review checkpoints between iterations for rapid, controlled development.
+- [test-driven-development](https://github.com/obra/superpowers/tree/main/skills/test-driven-development) - Use when implementing any feature or bugfix, before writing implementation code.
+- [using-git-worktrees](https://github.com/obra/superpowers/blob/main/skills/using-git-worktrees/) - Creates isolated git worktrees with smart directory selection and safety verification.
+- [Connect](./connect/) - Connect Claude to any app. Send emails, create issues, post messages, update databases - take real actions across Gmail, Slack, GitHub, Notion, and 1000+ services.
+- [Webapp Testing](./webapp-testing/) - Tests local web applications using Playwright for verifying frontend functionality, debugging UI behavior, and capturing screenshots.
+
+### Data & Analysis
+
+- [CSV Data Summarizer](https://github.com/coffeefuelbump/csv-data-summarizer-claude-skill) - Automatically analyzes CSV files and generates comprehensive insights with visualizations without requiring user prompts. *By [@coffeefuelbump](https://github.com/coffeefuelbump)*
+- [deep-research](https://github.com/sanjay3290/ai-skills/tree/main/skills/deep-research) - Execute autonomous multi-step research using Gemini Deep Research Agent for market analysis, competitive landscaping, and literature reviews. *By [@sanjay3290](https://github.com/sanjay3290)*
+- [postgres](https://github.com/sanjay3290/ai-skills/tree/main/skills/postgres) - Execute safe read-only SQL queries against PostgreSQL databases with multi-connection support and defense-in-depth security. *By [@sanjay3290](https://github.com/sanjay3290)*
+- [root-cause-tracing](https://github.com/obra/superpowers/tree/main/skills/root-cause-tracing) - Use when errors occur deep in execution and you need to trace back to find the original trigger.
+
+### Business & Marketing
+
+- [Brand Guidelines](./brand-guidelines/) - Applies Anthropic's official brand colors and typography to artifacts for consistent visual identity and professional design standards.
+- [Competitive Ads Extractor](./competitive-ads-extractor/) - Extracts and analyzes competitors' ads from ad libraries to understand messaging and creative approaches that resonate.
+- [Domain Name Brainstormer](./domain-name-brainstormer/) - Generates creative domain name ideas and checks availability across multiple TLDs including .com, .io, .dev, and .ai extensions.
+- [Internal Comms](./internal-comms/) - Helps write internal communications including 3P updates, company newsletters, FAQs, status reports, and project updates using company-specific formats.
+- [Lead Research Assistant](./lead-research-assistant/) - Identifies and qualifies high-quality leads by analyzing your product, searching for target companies, and providing actionable outreach strategies.
+
+### Communication & Writing
+
+- [article-extractor](https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/article-extractor) - Extract full article text and metadata from web pages.
+- [brainstorming](https://github.com/obra/superpowers/tree/main/skills/brainstorming) - Transform rough ideas into fully-formed designs through structured questioning and alternative exploration.
+- [Content Research Writer](./content-research-writer/) - Assists in writing high-quality content by conducting research, adding citations, improving hooks, and providing section-by-section feedback.
+- [family-history-research](https://github.com/emaynard/claude-family-history-research-skill) - Provides assistance with planning family history and genealogy research projects.
+- [Meeting Insights Analyzer](./meeting-insights-analyzer/) - Analyzes meeting transcripts to uncover behavioral patterns including conflict avoidance, speaking ratios, filler words, and leadership style.
+- [NotebookLM Integration](https://github.com/PleasePrompto/notebooklm-skill) - Lets Claude Code chat directly with NotebookLM for source-grounded answers based exclusively on uploaded documents. *By [@PleasePrompto](https://github.com/PleasePrompto)*
+- [Twitter Algorithm Optimizer](./twitter-algorithm-optimizer/) - Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insights. Rewrite and edit tweets to improve engagement and visibility.
+
+### Creative & Media
+
+- [Canvas Design](./canvas-design/) - Creates beautiful visual art in PNG and PDF documents using design philosophy and aesthetic principles for posters, designs, and static pieces.
+- [imagen](https://github.com/sanjay3290/ai-skills/tree/main/skills/imagen) - Generate images using Google Gemini's image generation API for UI mockups, icons, illustrations, and visual assets. *By [@sanjay3290](https://github.com/sanjay3290)*
+- [Image Enhancer](./image-enhancer/) - Improves image and screenshot quality by enhancing resolution, sharpness, and clarity for professional presentations and documentation.
+- [Slack GIF Creator](./slack-gif-creator/) - Creates animated GIFs optimized for Slack with validators for size constraints and composable animation primitives.
+- [Theme Factory](./theme-factory/) - Applies professional font and color themes to artifacts including slides, docs, reports, and HTML landing pages with 10 pre-set themes.
+- [Video Downloader](./video-downloader/) - Downloads videos from YouTube and other platforms for offline viewing, editing, or archival with support for various formats and quality options.
+- [youtube-transcript](https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/youtube-transcript) - Fetch transcripts from YouTube videos and prepare summaries.
+
+### Productivity & Organization
+
+- [File Organizer](./file-organizer/) - Intelligently organizes files and folders by understanding context, finding duplicates, and suggesting better organizational structures.
+- [Invoice Organizer](./invoice-organizer/) - Automatically organizes invoices and receipts for tax preparation by reading files, extracting information, and renaming consistently.
+- [kaizen](https://github.com/NeoLabHQ/context-engineering-kit/tree/master/plugins/kaizen/skills/kaizen) - Applies continuous improvement methodology with multiple analytical approaches, based on Japanese Kaizen philosophy and Lean methodology.
+- [n8n-skills](https://github.com/haunchen/n8n-skills) - Enables AI assistants to directly understand and operate n8n workflows.
+- [Raffle Winner Picker](./raffle-winner-picker/) - Randomly selects winners from lists, spreadsheets, or Google Sheets for giveaways and contests with cryptographically secure randomness.
+- [Tailored Resume Generator](./tailored-resume-generator/) - Analyzes job descriptions and generates tailored resumes that highlight relevant experience, skills, and achievements to maximize interview chances.
+- [ship-learn-next](https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/ship-learn-next) - Skill to help iterate on what to build or learn next, based on feedback loops.
+- [tapestry](https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/tapestry) - Interlink and summarize related documents into knowledge networks.
+
+### Collaboration & Project Management
+
+- [git-pushing](https://github.com/mhattingpete/claude-skills-marketplace/tree/main/engineering-workflow-plugin/skills/git-pushing) - Automate git operations and repository interactions.
+- [google-workspace-skills](https://github.com/sanjay3290/ai-skills/tree/main/skills) - Suite of Google Workspace integrations: Gmail, Calendar, Chat, Docs, Sheets, Slides, and Drive with cross-platform OAuth. *By [@sanjay3290](https://github.com/sanjay3290)*
+- [outline](https://github.com/sanjay3290/ai-skills/tree/main/skills/outline) - Search, read, create, and manage documents in Outline wiki instances (cloud or self-hosted). *By [@sanjay3290](https://github.com/sanjay3290)*
+- [review-implementing](https://github.com/mhattingpete/claude-skills-marketplace/tree/main/engineering-workflow-plugin/skills/review-implementing) - Evaluate code implementation plans and align with specs.
+- [test-fixing](https://github.com/mhattingpete/claude-skills-marketplace/tree/main/engineering-workflow-plugin/skills/test-fixing) - Detect failing tests and propose patches or fixes.
+
+### Security & Systems
+
+- [computer-forensics](https://github.com/mhattingpete/claude-skills-marketplace/tree/main/computer-forensics-skills/skills/computer-forensics) - Digital forensics analysis and investigation techniques.
+- [file-deletion](https://github.com/mhattingpete/claude-skills-marketplace/tree/main/computer-forensics-skills/skills/file-deletion) - Secure file deletion and data sanitization methods.
+- [metadata-extraction](https://github.com/mhattingpete/claude-skills-marketplace/tree/main/computer-forensics-skills/skills/metadata-extraction) - Extract and analyze file metadata for forensic purposes.
+- [threat-hunting-with-sigma-rules](https://github.com/jthack/threat-hunting-with-sigma-rules-skill) - Use Sigma detection rules to hunt for threats and analyze security events.
+
+### App Automation via Composio
+
+Pre-built workflow skills for 78 SaaS apps via [Rube MCP (Composio)](https://composio.dev). Each skill includes tool sequences, parameter guidance, known pitfalls, and quick reference tables — all using real tool slugs discovered from Composio's API.
+
+**CRM & Sales**
+- [Close Automation](./close-automation/) - Automate Close CRM: leads, contacts, opportunities, activities, and pipelines.
+- [HubSpot Automation](./hubspot-automation/) - Automate HubSpot CRM: contacts, deals, companies, tickets, and email engagement.
+- [Pipedrive Automation](./pipedrive-automation/) - Automate Pipedrive: deals, contacts, organizations, activities, and pipelines.
+- [Salesforce Automation](./salesforce-automation/) - Automate Salesforce: objects, records, SOQL queries, and bulk operations.
+- [Zoho CRM Automation](./zoho-crm-automation/) - Automate Zoho CRM: leads, contacts, deals, accounts, and modules.
+
+**Project Management**
+- [Asana Automation](./asana-automation/) - Automate Asana: tasks, projects, sections, assignments, and workspaces.
+- [Basecamp Automation](./basecamp-automation/) - Automate Basecamp: to-do lists, messages, people, groups, and projects.
+- [ClickUp Automation](./clickup-automation/) - Automate ClickUp: tasks, lists, spaces, goals, and time tracking.
+- [Jira Automation](./jira-automation/) - Automate Jira: issues, projects, boards, sprints, and JQL queries.
+- [Linear Automation](./linear-automation/) - Automate Linear: issues, projects, cycles, teams, and workflows.
+- [Monday Automation](./monday-automation/) - Automate Monday.com: boards, items, columns, groups, and workspaces.
+- [Notion Automation](./notion-automation/) - Automate Notion: pages, databases, blocks, comments, and search.
+- [Todoist Automation](./todoist-automation/) - Automate Todoist: tasks, projects, sections, labels, and filters.
+- [Trello Automation](./trello-automation/) - Automate Trello: boards, cards, lists, members, and checklists.
+- [Wrike Automation](./wrike-automation/) - Automate Wrike: tasks, folders, projects, comments, and workflows.
+
+**Communication**
+- [Discord Automation](./discord-automation/) - Automate Discord: messages, channels, servers, roles, and reactions.
+- [Intercom Automation](./intercom-automation/) - Automate Intercom: conversations, contacts, companies, tickets, and articles.
+- [Microsoft Teams Automation](./microsoft-teams-automation/) - Automate Teams: messages, channels, teams, chats, and meetings.
+- [Slack Automation](./slack-automation/) - Automate Slack: messages, channels, search, reactions, threads, and scheduling.
+- [Telegram Automation](./telegram-automation/) - Automate Telegram: messages, chats, media, groups, and bots.
+- [WhatsApp Automation](./whatsapp-automation/) - Automate WhatsApp: messages, media, templates, groups, and business profiles.
+
+**Email**
+- [Gmail Automation](./gmail-automation/) - Automate Gmail: send/reply, search, labels, drafts, and attachments.
+- [Outlook Automation](./outlook-automation/) - Automate Outlook: emails, folders, contacts, and calendar integration.
+- [Postmark Automation](./postmark-automation/) - Automate Postmark: transactional emails, templates, servers, and delivery stats.
+- [SendGrid Automation](./sendgrid-automation/) - Automate SendGrid: emails, templates, contacts, lists, and campaign stats.
+
+**Code & DevOps**
+- [Bitbucket Automation](./bitbucket-automation/) - Automate Bitbucket: repos, PRs, branches, issues, and workspaces.
+- [CircleCI Automation](./circleci-automation/) - Automate CircleCI: pipelines, workflows, jobs, and project configuration.
+- [Datadog Automation](./datadog-automation/) - Automate Datadog: monitors, dashboards, metrics, incidents, and alerts.
+- [GitHub Automation](./github-automation/) - Automate GitHub: issues, PRs, repos, branches, actions, and code search.
+- [GitLab Automation](./gitlab-automation/) - Automate GitLab: issues, MRs, projects, pipelines, and branches.
+- [PagerDuty Automation](./pagerduty-automation/) - Automate PagerDuty: incidents, services, schedules, escalation policies, and on-call.
+- [Render Automation](./render-automation/) - Automate Render: services, deploys, and project management.
+- [Sentry Automation](./sentry-automation/) - Automate Sentry: issues, events, projects, releases, and alerts.
+- [Supabase Automation](./supabase-automation/) - Automate Supabase: SQL queries, table schemas, edge functions, and storage.
+- [Vercel Automation](./vercel-automation/) - Automate Vercel: deployments, projects, domains, environment variables, and logs.
+
+**Storage & Files**
+- [Box Automation](./box-automation/) - Automate Box: files, folders, search, sharing, collaborations, and sign requests.
+- [Dropbox Automation](./dropbox-automation/) - Automate Dropbox: files, folders, search, sharing, and batch operations.
+- [Google Drive Automation](./google-drive-automation/) - Automate Google Drive: upload, download, search, share, and organize files.
+- [OneDrive Automation](./one-drive-automation/) - Automate OneDrive: files, folders, search, sharing, permissions, and versioning.
+
+**Spreadsheets & Databases**
+- [Airtable Automation](./airtable-automation/) - Automate Airtable: records, tables, bases, views, and field management.
+- [Coda Automation](./coda-automation/) - Automate Coda: docs, tables, rows, formulas, and automations.
+- [Google Sheets Automation](./googlesheets-automation/) - Automate Google Sheets: read/write cells, formatting, formulas, and batch operations.
+
+**Calendar & Scheduling**
+- [Cal.com Automation](./cal-com-automation/) - Automate Cal.com: event types, bookings, availability, and scheduling.
+- [Calendly Automation](./calendly-automation/) - Automate Calendly: events, invitees, event types, scheduling links, and availability.
+- [Google Calendar Automation](./google-calendar-automation/) - Automate Google Calendar: events, attendees, free/busy, and recurring schedules.
+- [Outlook Calendar Automation](./outlook-calendar-automation/) - Automate Outlook Calendar: events, attendees, reminders, and recurring schedules.
+
+**Social Media**
+- [Instagram Automation](./instagram-automation/) - Automate Instagram: posts, stories, comments, media, and business insights.
+- [LinkedIn Automation](./linkedin-automation/) - Automate LinkedIn: posts, profiles, companies, images, and comments.
+- [Reddit Automation](./reddit-automation/) - Automate Reddit: posts, comments, subreddits, voting, and moderation.
+- [TikTok Automation](./tiktok-automation/) - Automate TikTok: video uploads, queries, and creator management.
+- [Twitter Automation](./twitter-automation/) - Automate Twitter/X: tweets, search, users, lists, and engagement.
+- [YouTube Automation](./youtube-automation/) - Automate YouTube: videos, channels, playlists, comments, and subscriptions.
+
+**Marketing & Email Marketing**
+- [ActiveCampaign Automation](./activecampaign-automation/) - Automate ActiveCampaign: contacts, deals, campaigns, lists, and automations.
+- [Brevo Automation](./brevo-automation/) - Automate Brevo: contacts, email campaigns, transactional emails, and lists.
+- [ConvertKit Automation](./convertkit-automation/) - Automate ConvertKit (Kit): subscribers, tags, sequences, broadcasts, and forms.
+- [Klaviyo Automation](./klaviyo-automation/) - Automate Klaviyo: profiles, lists, segments, campaigns, and events.
+- [Mailchimp Automation](./mailchimp-automation/) - Automate Mailchimp: audiences, campaigns, templates, segments, and reports.
+
+**Support & Helpdesk**
+- [Freshdesk Automation](./freshdesk-automation/) - Automate Freshdesk: tickets, contacts, agents, groups, and canned responses.
+- [Freshservice Automation](./freshservice-automation/) - Automate Freshservice: tickets, assets, changes, problems, and service catalog.
+- [Help Scout Automation](./helpdesk-automation/) - Automate Help Scout: conversations, customers, mailboxes, and tags.
+- [Zendesk Automation](./zendesk-automation/) - Automate Zendesk: tickets, users, organizations, search, and macros.
+
+**E-commerce & Payments**
+- [Shopify Automation](./shopify-automation/) - Automate Shopify: products, orders, customers, inventory, and GraphQL queries.
+- [Square Automation](./square-automation/) - Automate Square: payments, customers, catalog, orders, and locations.
+- [Stripe Automation](./stripe-automation/) - Automate Stripe: charges, customers, products, subscriptions, and refunds.
+
+**Design & Collaboration**
+- [Canva Automation](./canva-automation/) - Automate Canva: designs, templates, assets, folders, and brand kits.
+- [Confluence Automation](./confluence-automation/) - Automate Confluence: pages, spaces, search, CQL, labels, and versions.
+- [DocuSign Automation](./docusign-automation/) - Automate DocuSign: envelopes, templates, signing, and document management.
+- [Figma Automation](./figma-automation/) - Automate Figma: files, components, comments, projects, and team management.
+- [Miro Automation](./miro-automation/) - Automate Miro: boards, sticky notes, shapes, connectors, and items.
+- [Webflow Automation](./webflow-automation/) - Automate Webflow: CMS collections, items, sites, publishing, and assets.
+
+**Analytics & Data**
+- [Amplitude Automation](./amplitude-automation/) - Automate Amplitude: events, cohorts, user properties, and analytics queries.
+- [Google Analytics Automation](./google-analytics-automation/) - Automate Google Analytics: reports, dimensions, metrics, and property management.
+- [Mixpanel Automation](./mixpanel-automation/) - Automate Mixpanel: events, funnels, cohorts, annotations, and JQL queries.
+- [PostHog Automation](./posthog-automation/) - Automate PostHog: events, persons, feature flags, insights, and annotations.
+- [Segment Automation](./segment-automation/) - Automate Segment: sources, destinations, tracking, and warehouse connections.
+
+**HR & People**
+- [BambooHR Automation](./bamboohr-automation/) - Automate BambooHR: employees, time off, reports, and directory management.
+
+**Automation Platforms**
+- [Make Automation](./make-automation/) - Automate Make (Integromat): scenarios, connections, and execution management.
+
+**Zoom & Meetings**
+- [Zoom Automation](./zoom-automation/) - Automate Zoom: meetings, recordings, participants, webinars, and reports.
+
+## Getting Started
+
+### Using Skills in Claude.ai
+
+1. Click the skill icon (🧩) in your chat interface.
+2. Add skills from the marketplace or upload custom skills.
+3. Claude automatically activates relevant skills based on your task.
+
+### Using Skills in Claude Code
+
+1. Place the skill in `~/.config/claude-code/skills/`:
+   ```bash
+   mkdir -p ~/.config/claude-code/skills/
+   cp -r skill-name ~/.config/claude-code/skills/
+   ```
+
+2. Verify skill metadata:
+   ```bash
+   head ~/.config/claude-code/skills/skill-name/SKILL.md
+   ```
+
+3. Start Claude Code:
+   ```bash
+   claude
+   ```
+
+4. The skill loads automatically and activates when relevant.
+
+### Using Skills via API
+
+Use the Claude Skills API to programmatically load and manage skills:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key")
+
+response = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    skills=["skill-id-here"],
+    messages=[{"role": "user", "content": "Your prompt"}]
+)
 ```
 
-### Step 2: Install Rules (Required)
+See the [Skills API documentation](https://docs.claude.com/en/api/skills-guide) for details.
 
-> ⚠️ **Important:** Claude Code plugins cannot distribute `rules` automatically. Install them manually:
+## Creating Skills
 
+### Skill Structure
 
-```bash
-# Clone the repo first
-git clone https://github.com/affaan-m/everything-claude-code.git
-cd everything-claude-code
-
-# Recommended: use the installer (handles common + language rules safely)
-./install.sh typescript    # or python or golang
-# You can pass multiple languages:
-# ./install.sh typescript python golang
-# or target cursor:
-# ./install.sh --target cursor typescript
-```
-
-For manual install instructions see the README in the `rules/` folder.
-
-### Step 3: Start Using
-
-```bash
-# Try a command
-/plan "Add user authentication"
-
-# Check available commands
-/plugin list everything-claude-code@everything-claude-code
-```
-
-✨ **That's it!** You now have access to 13 agents, 43 skills, and 31 commands.
-
----
-
-## 🌐 Cross-Platform Support
-
-This plugin now fully supports **Windows, macOS, and Linux**. All hooks and scripts have been rewritten in Node.js for maximum compatibility.
-
-### Package Manager Detection
-
-The plugin automatically detects your preferred package manager (npm, pnpm, yarn, or bun) with the following priority:
-
-1. **Environment variable**: `CLAUDE_PACKAGE_MANAGER`
-2. **Project config**: `.claude/package-manager.json`
-3. **package.json**: `packageManager` field
-4. **Lock file**: Detection from package-lock.json, yarn.lock, pnpm-lock.yaml, or bun.lockb
-5. **Global config**: `~/.claude/package-manager.json`
-6. **Fallback**: First available package manager
-
-To set your preferred package manager:
-
-```bash
-# Via environment variable
-export CLAUDE_PACKAGE_MANAGER=pnpm
-
-# Via global config
-node scripts/setup-package-manager.js --global pnpm
-
-# Via project config
-node scripts/setup-package-manager.js --project bun
-
-# Detect current setting
-node scripts/setup-package-manager.js --detect
-```
-
-Or use the `/setup-pm` command in Claude Code.
-
----
-
-## 📦 What's Inside
-
-This repo is a **Claude Code plugin** - install it directly or copy components manually.
+Each skill is a folder containing a `SKILL.md` file with YAML frontmatter:
 
 ```
-everything-claude-code/
-|-- .claude-plugin/   # Plugin and marketplace manifests
-|   |-- plugin.json         # Plugin metadata and component paths
-|   |-- marketplace.json    # Marketplace catalog for /plugin marketplace add
-|
-|-- agents/           # Specialized subagents for delegation
-|   |-- planner.md           # Feature implementation planning
-|   |-- architect.md         # System design decisions
-|   |-- tdd-guide.md         # Test-driven development
-|   |-- code-reviewer.md     # Quality and security review
-|   |-- security-reviewer.md # Vulnerability analysis
-|   |-- build-error-resolver.md
-|   |-- e2e-runner.md        # Playwright E2E testing
-|   |-- refactor-cleaner.md  # Dead code cleanup
-|   |-- doc-updater.md       # Documentation sync
-|   |-- go-reviewer.md       # Go code review
-|   |-- go-build-resolver.md # Go build error resolution
-|   |-- python-reviewer.md   # Python code review (NEW)
-|   |-- database-reviewer.md # Database/Supabase review (NEW)
-|
-|-- skills/           # Workflow definitions and domain knowledge
-|   |-- coding-standards/           # Language best practices
-|   |-- clickhouse-io/              # ClickHouse analytics, queries, data engineering
-|   |-- backend-patterns/           # API, database, caching patterns
-|   |-- frontend-patterns/          # React, Next.js patterns
-|   |-- continuous-learning/        # Auto-extract patterns from sessions (Longform Guide)
-|   |-- continuous-learning-v2/     # Instinct-based learning with confidence scoring
-|   |-- iterative-retrieval/        # Progressive context refinement for subagents
-|   |-- strategic-compact/          # Manual compaction suggestions (Longform Guide)
-|   |-- tdd-workflow/               # TDD methodology
-|   |-- security-review/            # Security checklist
-|   |-- eval-harness/               # Verification loop evaluation (Longform Guide)
-|   |-- verification-loop/          # Continuous verification (Longform Guide)
-|   |-- golang-patterns/            # Go idioms and best practices
-|   |-- golang-testing/             # Go testing patterns, TDD, benchmarks
-|   |-- cpp-coding-standards/         # C++ coding standards from C++ Core Guidelines (NEW)
-|   |-- cpp-testing/                # C++ testing with GoogleTest, CMake/CTest (NEW)
-|   |-- django-patterns/            # Django patterns, models, views (NEW)
-|   |-- django-security/            # Django security best practices (NEW)
-|   |-- django-tdd/                 # Django TDD workflow (NEW)
-|   |-- django-verification/        # Django verification loops (NEW)
-|   |-- python-patterns/            # Python idioms and best practices (NEW)
-|   |-- python-testing/             # Python testing with pytest (NEW)
-|   |-- springboot-patterns/        # Java Spring Boot patterns (NEW)
-|   |-- springboot-security/        # Spring Boot security (NEW)
-|   |-- springboot-tdd/             # Spring Boot TDD (NEW)
-|   |-- springboot-verification/    # Spring Boot verification (NEW)
-|   |-- configure-ecc/              # Interactive installation wizard (NEW)
-|   |-- security-scan/              # AgentShield security auditor integration (NEW)
-|   |-- java-coding-standards/     # Java coding standards (NEW)
-|   |-- jpa-patterns/              # JPA/Hibernate patterns (NEW)
-|   |-- postgres-patterns/         # PostgreSQL optimization patterns (NEW)
-|   |-- nutrient-document-processing/ # Document processing with Nutrient API (NEW)
-|   |-- project-guidelines-example/   # Template for project-specific skills
-|   |-- database-migrations/         # Migration patterns (Prisma, Drizzle, Django, Go) (NEW)
-|   |-- api-design/                  # REST API design, pagination, error responses (NEW)
-|   |-- deployment-patterns/         # CI/CD, Docker, health checks, rollbacks (NEW)
-|   |-- docker-patterns/            # Docker Compose, networking, volumes, container security (NEW)
-|   |-- e2e-testing/                 # Playwright E2E patterns and Page Object Model (NEW)
-|   |-- content-hash-cache-pattern/  # SHA-256 content hash caching for file processing (NEW)
-|   |-- cost-aware-llm-pipeline/     # LLM cost optimization, model routing, budget tracking (NEW)
-|   |-- regex-vs-llm-structured-text/ # Decision framework: regex vs LLM for text parsing (NEW)
-|   |-- swift-actor-persistence/     # Thread-safe Swift data persistence with actors (NEW)
-|   |-- swift-protocol-di-testing/   # Protocol-based DI for testable Swift code (NEW)
-|
-|-- commands/         # Slash commands for quick execution
-|   |-- tdd.md              # /tdd - Test-driven development
-|   |-- plan.md             # /plan - Implementation planning
-|   |-- e2e.md              # /e2e - E2E test generation
-|   |-- code-review.md      # /code-review - Quality review
-|   |-- build-fix.md        # /build-fix - Fix build errors
-|   |-- refactor-clean.md   # /refactor-clean - Dead code removal
-|   |-- learn.md            # /learn - Extract patterns mid-session (Longform Guide)
-|   |-- checkpoint.md       # /checkpoint - Save verification state (Longform Guide)
-|   |-- verify.md           # /verify - Run verification loop (Longform Guide)
-|   |-- setup-pm.md         # /setup-pm - Configure package manager
-|   |-- go-review.md        # /go-review - Go code review (NEW)
-|   |-- go-test.md          # /go-test - Go TDD workflow (NEW)
-|   |-- go-build.md         # /go-build - Fix Go build errors (NEW)
-|   |-- skill-create.md     # /skill-create - Generate skills from git history (NEW)
-|   |-- instinct-status.md  # /instinct-status - View learned instincts (NEW)
-|   |-- instinct-import.md  # /instinct-import - Import instincts (NEW)
-|   |-- instinct-export.md  # /instinct-export - Export instincts (NEW)
-|   |-- evolve.md           # /evolve - Cluster instincts into skills
-|   |-- pm2.md              # /pm2 - PM2 service lifecycle management (NEW)
-|   |-- multi-plan.md       # /multi-plan - Multi-agent task decomposition (NEW)
-|   |-- multi-execute.md    # /multi-execute - Orchestrated multi-agent workflows (NEW)
-|   |-- multi-backend.md    # /multi-backend - Backend multi-service orchestration (NEW)
-|   |-- multi-frontend.md   # /multi-frontend - Frontend multi-service orchestration (NEW)
-|   |-- multi-workflow.md   # /multi-workflow - General multi-service workflows (NEW)
-|   |-- orchestrate.md      # /orchestrate - Multi-agent coordination
-|   |-- sessions.md         # /sessions - Session history management
-|   |-- eval.md             # /eval - Evaluate against criteria
-|   |-- test-coverage.md    # /test-coverage - Test coverage analysis
-|   |-- update-docs.md      # /update-docs - Update documentation
-|   |-- update-codemaps.md  # /update-codemaps - Update codemaps
-|   |-- python-review.md    # /python-review - Python code review (NEW)
-|
-|-- rules/            # Always-follow guidelines (copy to ~/.claude/rules/)
-|   |-- README.md            # Structure overview and installation guide
-|   |-- common/              # Language-agnostic principles
-|   |   |-- coding-style.md    # Immutability, file organization
-|   |   |-- git-workflow.md    # Commit format, PR process
-|   |   |-- testing.md         # TDD, 80% coverage requirement
-|   |   |-- performance.md     # Model selection, context management
-|   |   |-- patterns.md        # Design patterns, skeleton projects
-|   |   |-- hooks.md           # Hook architecture, TodoWrite
-|   |   |-- agents.md          # When to delegate to subagents
-|   |   |-- security.md        # Mandatory security checks
-|   |-- typescript/          # TypeScript/JavaScript specific
-|   |-- python/              # Python specific
-|   |-- golang/              # Go specific
-|
-|-- hooks/            # Trigger-based automations
-|   |-- README.md                 # Hook documentation, recipes, and customization guide
-|   |-- hooks.json                # All hooks config (PreToolUse, PostToolUse, Stop, etc.)
-|   |-- memory-persistence/       # Session lifecycle hooks (Longform Guide)
-|   |-- strategic-compact/        # Compaction suggestions (Longform Guide)
-|
-|-- scripts/          # Cross-platform Node.js scripts (NEW)
-|   |-- lib/                     # Shared utilities
-|   |   |-- utils.js             # Cross-platform file/path/system utilities
-|   |   |-- package-manager.js   # Package manager detection and selection
-|   |-- hooks/                   # Hook implementations
-|   |   |-- session-start.js     # Load context on session start
-|   |   |-- session-end.js       # Save state on session end
-|   |   |-- pre-compact.js       # Pre-compaction state saving
-|   |   |-- suggest-compact.js   # Strategic compaction suggestions
-|   |   |-- evaluate-session.js  # Extract patterns from sessions
-|   |-- setup-package-manager.js # Interactive PM setup
-|
-|-- tests/            # Test suite (NEW)
-|   |-- lib/                     # Library tests
-|   |-- hooks/                   # Hook tests
-|   |-- run-all.js               # Run all tests
-|
-|-- contexts/         # Dynamic system prompt injection contexts (Longform Guide)
-|   |-- dev.md              # Development mode context
-|   |-- review.md           # Code review mode context
-|   |-- research.md         # Research/exploration mode context
-|
-|-- examples/         # Example configurations and sessions
-|   |-- CLAUDE.md             # Example project-level config
-|   |-- user-CLAUDE.md        # Example user-level config
-|   |-- saas-nextjs-CLAUDE.md   # Real-world SaaS (Next.js + Supabase + Stripe)
-|   |-- go-microservice-CLAUDE.md # Real-world Go microservice (gRPC + PostgreSQL)
-|   |-- django-api-CLAUDE.md      # Real-world Django REST API (DRF + Celery)
-|   |-- rust-api-CLAUDE.md        # Real-world Rust API (Axum + SQLx + PostgreSQL) (NEW)
-|
-|-- mcp-configs/      # MCP server configurations
-|   |-- mcp-servers.json    # GitHub, Supabase, Vercel, Railway, etc.
-|
-|-- marketplace.json  # Self-hosted marketplace config (for /plugin marketplace add)
+skill-name/
+├── SKILL.md          # Required: Skill instructions and metadata
+├── scripts/          # Optional: Helper scripts
+├── templates/        # Optional: Document templates
+└── resources/        # Optional: Reference files
 ```
 
----
-
-## 🛠️ Ecosystem Tools
-
-### Skill Creator
-
-Two ways to generate Claude Code skills from your repository:
-
-#### Option A: Local Analysis (Built-in)
-
-Use the `/skill-create` command for local analysis without external services:
-
-```bash
-/skill-create                    # Analyze current repo
-/skill-create --instincts        # Also generate instincts for continuous-learning
-```
-
-This analyzes your git history locally and generates SKILL.md files.
-
-#### Option B: GitHub App (Advanced)
-
-For advanced features (10k+ commits, auto-PRs, team sharing):
-
-[Install GitHub App](https://github.com/apps/skill-creator) | [ecc.tools](https://ecc.tools)
-
-```bash
-# Comment on any issue:
-/skill-creator analyze
-
-# Or auto-triggers on push to default branch
-```
-
-Both options create:
-- **SKILL.md files** - Ready-to-use skills for Claude Code
-- **Instinct collections** - For continuous-learning-v2
-- **Pattern extraction** - Learns from your commit history
-
-### AgentShield — Security Auditor
-
-> Built at the Claude Code Hackathon (Cerebral Valley x Anthropic, Feb 2026). 912 tests, 98% coverage, 102 static analysis rules.
-
-Scan your Claude Code configuration for vulnerabilities, misconfigurations, and injection risks.
-
-```bash
-# Quick scan (no install needed)
-npx ecc-agentshield scan
-
-# Auto-fix safe issues
-npx ecc-agentshield scan --fix
-
-# Deep analysis with three Opus 4.6 agents
-npx ecc-agentshield scan --opus --stream
-
-# Generate secure config from scratch
-npx ecc-agentshield init
-```
-
-**What it scans:** CLAUDE.md, settings.json, MCP configs, hooks, agent definitions, and skills across 5 categories — secrets detection (14 patterns), permission auditing, hook injection analysis, MCP server risk profiling, and agent config review.
-
-**The `--opus` flag** runs three Claude Opus 4.6 agents in a red-team/blue-team/auditor pipeline. The attacker finds exploit chains, the defender evaluates protections, and the auditor synthesizes both into a prioritized risk assessment. Adversarial reasoning, not just pattern matching.
-
-**Output formats:** Terminal (color-graded A-F), JSON (CI pipelines), Markdown, HTML. Exit code 2 on critical findings for build gates.
-
-Use `/security-scan` in Claude Code to run it, or add to CI with the [GitHub Action](https://github.com/affaan-m/agentshield).
-
-[GitHub](https://github.com/affaan-m/agentshield) | [npm](https://www.npmjs.com/package/ecc-agentshield)
-
-### 🧠 Continuous Learning v2
-
-The instinct-based learning system automatically learns your patterns:
-
-```bash
-/instinct-status        # Show learned instincts with confidence
-/instinct-import <file> # Import instincts from others
-/instinct-export        # Export your instincts for sharing
-/evolve                 # Cluster related instincts into skills
-```
-
-See `skills/continuous-learning-v2/` for full documentation.
-
----
-
-## 📋 Requirements
-
-### Claude Code CLI Version
-
-**Minimum version: v2.1.0 or later**
-
-This plugin requires Claude Code CLI v2.1.0+ due to changes in how the plugin system handles hooks.
-
-Check your version:
-```bash
-claude --version
-```
-
-### Important: Hooks Auto-Loading Behavior
-
-> ⚠️ **For Contributors:** Do NOT add a `"hooks"` field to `.claude-plugin/plugin.json`. This is enforced by a regression test.
-
-Claude Code v2.1+ **automatically loads** `hooks/hooks.json` from any installed plugin by convention. Explicitly declaring it in `plugin.json` causes a duplicate detection error:
-
-```
-Duplicate hooks file detected: ./hooks/hooks.json resolves to already-loaded file
-```
-
-**History:** This has caused repeated fix/revert cycles in this repo ([#29](https://github.com/affaan-m/everything-claude-code/issues/29), [#52](https://github.com/affaan-m/everything-claude-code/issues/52), [#103](https://github.com/affaan-m/everything-claude-code/issues/103)). The behavior changed between Claude Code versions, leading to confusion. We now have a regression test to prevent this from being reintroduced.
-
----
-
-## 📥 Installation
-
-### Option 1: Install as Plugin (Recommended)
-
-The easiest way to use this repo - install as a Claude Code plugin:
-
-```bash
-# Add this repo as a marketplace
-/plugin marketplace add affaan-m/everything-claude-code
-
-# Install the plugin
-/plugin install everything-claude-code@everything-claude-code
-```
-
-Or add directly to your `~/.claude/settings.json`:
-
-```json
-{
-  "extraKnownMarketplaces": {
-    "everything-claude-code": {
-      "source": {
-        "source": "github",
-        "repo": "affaan-m/everything-claude-code"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "everything-claude-code@everything-claude-code": true
-  }
-}
-```
-
-This gives you instant access to all commands, agents, skills, and hooks.
-
-> **Note:** The Claude Code plugin system does not support distributing `rules` via plugins ([upstream limitation](https://code.claude.com/docs/en/plugins-reference)). You need to install rules manually:
->
-> ```bash
-> # Clone the repo first
-> git clone https://github.com/affaan-m/everything-claude-code.git
->
-> # Option A: User-level rules (applies to all projects)
-> mkdir -p ~/.claude/rules
-> cp -r everything-claude-code/rules/common/* ~/.claude/rules/
-> cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/   # pick your stack
-> cp -r everything-claude-code/rules/python/* ~/.claude/rules/
-> cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
->
-> # Option B: Project-level rules (applies to current project only)
-> mkdir -p .claude/rules
-> cp -r everything-claude-code/rules/common/* .claude/rules/
-> cp -r everything-claude-code/rules/typescript/* .claude/rules/     # pick your stack
-> ```
-
----
-
-### 🔧 Option 2: Manual Installation
-
-If you prefer manual control over what's installed:
-
-```bash
-# Clone the repo
-git clone https://github.com/affaan-m/everything-claude-code.git
-
-# Copy agents to your Claude config
-cp everything-claude-code/agents/*.md ~/.claude/agents/
-
-# Copy rules (common + language-specific)
-cp -r everything-claude-code/rules/common/* ~/.claude/rules/
-cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/   # pick your stack
-cp -r everything-claude-code/rules/python/* ~/.claude/rules/
-cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
-
-# Copy commands
-cp everything-claude-code/commands/*.md ~/.claude/commands/
-
-# Copy skills
-cp -r everything-claude-code/skills/* ~/.claude/skills/
-```
-
-#### Add hooks to settings.json
-
-Copy the hooks from `hooks/hooks.json` to your `~/.claude/settings.json`.
-
-#### Configure MCPs
-
-Copy desired MCP servers from `mcp-configs/mcp-servers.json` to your `~/.claude.json`.
-
-**Important:** Replace `YOUR_*_HERE` placeholders with your actual API keys.
-
----
-
-## 🎯 Key Concepts
-
-### Agents
-
-Subagents handle delegated tasks with limited scope. Example:
+### Basic Skill Template
 
 ```markdown
 ---
-name: code-reviewer
-description: Reviews code for quality, security, and maintainability
-tools: ["Read", "Grep", "Glob", "Bash"]
-model: opus
+name: my-skill-name
+description: A clear description of what this skill does and when to use it.
 ---
 
-You are a senior code reviewer...
+# My Skill Name
+
+Detailed description of the skill's purpose and capabilities.
+
+## When to Use This Skill
+
+- Use case 1
+- Use case 2
+- Use case 3
+
+## Instructions
+
+[Detailed instructions for Claude on how to execute this skill]
+
+## Examples
+
+[Real-world examples showing the skill in action]
 ```
 
-### Skills
+### Skill Best Practices
 
-Skills are workflow definitions invoked by commands or agents:
+- Focus on specific, repeatable tasks
+- Include clear examples and edge cases
+- Write instructions for Claude, not end users
+- Test across Claude.ai, Claude Code, and API
+- Document prerequisites and dependencies
+- Include error handling guidance
 
-```markdown
-# TDD Workflow
+## Contributing
 
-1. Define interfaces first
-2. Write failing tests (RED)
-3. Implement minimal code (GREEN)
-4. Refactor (IMPROVE)
-5. Verify 80%+ coverage
-```
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on:
 
-### Hooks
+- How to submit new skills
+- Skill quality standards
+- Pull request process
+- Code of conduct
 
-Hooks fire on tool events. Example - warn about console.log:
+### Quick Contribution Steps
 
-```json
-{
-  "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx)$\"",
-  "hooks": [{
-    "type": "command",
-    "command": "#!/bin/bash\ngrep -n 'console\\.log' \"$file_path\" && echo '[Hook] Remove console.log' >&2"
-  }]
-}
-```
+1. Ensure your skill is based on a real use case
+2. Check for duplicates in existing skills
+3. Follow the skill structure template
+4. Test your skill across platforms
+5. Submit a pull request with clear documentation
 
-### Rules
+## Resources
 
-Rules are always-follow guidelines, organized into `common/` (language-agnostic) + language-specific directories:
+### Official Documentation
 
-```
-rules/
-  common/          # Universal principles (always install)
-  typescript/      # TS/JS specific patterns and tools
-  python/          # Python specific patterns and tools
-  golang/          # Go specific patterns and tools
-```
+- [Claude Skills Overview](https://www.anthropic.com/news/skills) - Official announcement and features
+- [Skills User Guide](https://support.claude.com/en/articles/12512180-using-skills-in-claude) - How to use skills in Claude
+- [Creating Custom Skills](https://support.claude.com/en/articles/12512198-creating-custom-skills) - Skill development guide
+- [Skills API Documentation](https://docs.claude.com/en/api/skills-guide) - API integration guide
+- [Agent Skills Blog Post](https://anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) - Engineering deep dive
 
-See [`rules/README.md`](rules/README.md) for installation and structure details.
+### Community Resources
 
----
+- [Anthropic Skills Repository](https://github.com/anthropics/skills) - Official example skills
+- [Claude Community](https://community.anthropic.com) - Discuss skills with other users
+- [Skills Marketplace](https://claude.ai/marketplace) - Discover and share skills
 
-## 🗺️ Which Agent Should I Use?
+### Inspiration & Use Cases
 
-Not sure where to start? Use this quick reference:
+- [Lenny's Newsletter](https://www.lennysnewsletter.com/p/everyone-should-be-using-claude-code) - 50 ways people use Claude Code
+- [Notion Skills](https://www.notion.so/notiondevs/Notion-Skills-for-Claude-28da4445d27180c7af1df7d8615723d0) - Notion integration skills
 
-| I want to... | Use this command | Agent used |
-|--------------|-----------------|------------|
-| Plan a new feature | `/plan "Add auth"` | planner |
-| Design system architecture | `/plan` + architect agent | architect |
-| Write code with tests first | `/tdd` | tdd-guide |
-| Review code I just wrote | `/code-review` | code-reviewer |
-| Fix a failing build | `/build-fix` | build-error-resolver |
-| Run end-to-end tests | `/e2e` | e2e-runner |
-| Find security vulnerabilities | `/security-scan` | security-reviewer |
-| Remove dead code | `/refactor-clean` | refactor-cleaner |
-| Update documentation | `/update-docs` | doc-updater |
-| Review Go code | `/go-review` | go-reviewer |
-| Review Python code | `/python-review` | python-reviewer |
-| Audit database queries | *(auto-delegated)* | database-reviewer |
 
-### Common Workflows
+## Join the Community
 
-**Starting a new feature:**
-```
-/plan "Add user authentication with OAuth"   → planner creates implementation blueprint
-/tdd                                          → tdd-guide enforces write-tests-first
-/code-review                                  → code-reviewer checks your work
-```
-
-**Fixing a bug:**
-```
-/tdd                                          → tdd-guide: write a failing test that reproduces it
-                                              → implement the fix, verify test passes
-/code-review                                  → code-reviewer: catch regressions
-```
-
-**Preparing for production:**
-```
-/security-scan                                → security-reviewer: OWASP Top 10 audit
-/e2e                                          → e2e-runner: critical user flow tests
-/test-coverage                                → verify 80%+ coverage
-```
+- [Join our Discord](https://discord.com/invite/composio) - Chat with other developers building Claude Skills
+- [Follow on Twitter/X](https://x.com/composio) - Stay updated on new skills and features
+- Questions? [support@composio.dev](mailto:support@composio.dev)
 
 ---
 
-## ❓ FAQ
+<p align="center">
+  <b>Join 20,000+ developers building agents that ship</b>
+</p>
 
-<details>
-<summary><b>How do I check which agents/commands are installed?</b></summary>
+<p align="center">
+  <a href="https://platform.composio.dev/?utm_source=Github&utm_content=AwesomeSkills">
+    <img src="https://img.shields.io/badge/Get_Started_Free-4F46E5?style=for-the-badge" alt="Get Started"/>
+  </a>
+</p>
 
-```bash
-/plugin list everything-claude-code@everything-claude-code
-```
+## License
 
-This shows all available agents, commands, and skills from the plugin.
-</details>
+This repository is licensed under the Apache License 2.0.
 
-<details>
-<summary><b>My hooks aren't working / I see "Duplicate hooks file" errors</b></summary>
-
-This is the most common issue. **Do NOT add a `"hooks"` field to `.claude-plugin/plugin.json`.** Claude Code v2.1+ automatically loads `hooks/hooks.json` from installed plugins. Explicitly declaring it causes duplicate detection errors. See [#29](https://github.com/affaan-m/everything-claude-code/issues/29), [#52](https://github.com/affaan-m/everything-claude-code/issues/52), [#103](https://github.com/affaan-m/everything-claude-code/issues/103).
-</details>
-
-<details>
-<summary><b>My context window is shrinking / Claude is running out of context</b></summary>
-
-Too many MCP servers eat your context. Each MCP tool description consumes tokens from your 200k window, potentially reducing it to ~70k.
-
-**Fix:** Disable unused MCPs per project:
-```json
-// In your project's .claude/settings.json
-{
-  "disabledMcpServers": ["supabase", "railway", "vercel"]
-}
-```
-
-Keep under 10 MCPs enabled and under 80 tools active.
-</details>
-
-<details>
-<summary><b>Can I use only some components (e.g., just agents)?</b></summary>
-
-Yes. Use Option 2 (manual installation) and copy only what you need:
-
-```bash
-# Just agents
-cp everything-claude-code/agents/*.md ~/.claude/agents/
-
-# Just rules
-cp -r everything-claude-code/rules/common/* ~/.claude/rules/
-```
-
-Each component is fully independent.
-</details>
-
-<details>
-<summary><b>Does this work with Cursor / OpenCode?</b></summary>
-
-Yes. ECC is cross-platform:
-- **Cursor**: Pre-translated configs in `.cursor/`. See [Cursor IDE Support](#cursor-ide-support).
-- **OpenCode**: Full plugin support in `.opencode/`. See [OpenCode Support](#-opencode-support).
-- **Claude Code**: Native — this is the primary target.
-</details>
-
-<details>
-<summary><b>How do I contribute a new skill or agent?</b></summary>
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
-1. Fork the repo
-2. Create your skill in `skills/your-skill-name/SKILL.md` (with YAML frontmatter)
-3. Or create an agent in `agents/your-agent.md`
-4. Submit a PR with a clear description of what it does and when to use it
-</details>
+Individual skills may have different licenses - please check each skill's folder for specific licensing information.
 
 ---
 
-## 🧪 Running Tests
+**Note**: Claude Skills work across Claude.ai, Claude Code, and the Claude API. Once you create a skill, it's portable across all platforms, making your workflows consistent everywhere you use Claude.
 
-The plugin includes a comprehensive test suite:
-
-```bash
-# Run all tests
-node tests/run-all.js
-
-# Run individual test files
-node tests/lib/utils.test.js
-node tests/lib/package-manager.test.js
-node tests/hooks/hooks.test.js
-```
-
----
-
-## 🤝 Contributing
-
-**Contributions are welcome and encouraged.**
-
-This repo is meant to be a community resource. If you have:
-- Useful agents or skills
-- Clever hooks
-- Better MCP configurations
-- Improved rules
-
-Please contribute! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Ideas for Contributions
-
-- Language-specific skills (Rust, C#, Swift, Kotlin) — Go, Python, Java already included
-- Framework-specific configs (Rails, Laravel, FastAPI, NestJS) — Django, Spring Boot already included
-- DevOps agents (Kubernetes, Terraform, AWS, Docker)
-- Testing strategies (different frameworks, visual regression)
-- Domain-specific knowledge (ML, data engineering, mobile)
-
----
-
-## Cursor IDE Support
-
-ecc-universal includes pre-translated configurations for [Cursor IDE](https://cursor.com). The `.cursor/` directory contains rules, agents, skills, commands, and MCP configs adapted for Cursor's format.
-
-### Quick Start (Cursor)
-
-```bash
-# Install the package
-npm install ecc-universal
-
-# Install for your language(s)
-./install.sh --target cursor typescript
-./install.sh --target cursor python golang
-```
-
-### What's Translated
-
-| Component | Claude Code → Cursor | Parity |
-|-----------|---------------------|--------|
-| Rules | YAML frontmatter added, paths flattened | Full |
-| Agents | Model IDs expanded, tools → readonly flag | Full |
-| Skills | No changes needed (identical standard) | Identical |
-| Commands | Path references updated, multi-* stubbed | Partial |
-| MCP Config | Env interpolation syntax updated | Full |
-| Hooks | No equivalent in Cursor | See alternatives |
-
-See [.cursor/README.md](.cursor/README.md) for details and [.cursor/MIGRATION.md](.cursor/MIGRATION.md) for the full migration guide.
-
----
-
-## 🔌 OpenCode Support
-
-ECC provides **full OpenCode support** including plugins and hooks.
-
-### Quick Start
-
-```bash
-# Install OpenCode
-npm install -g opencode
-
-# Run in the repository root
-opencode
-```
-
-The configuration is automatically detected from `.opencode/opencode.json`.
-
-### Feature Parity
-
-| Feature | Claude Code | OpenCode | Status |
-|---------|-------------|----------|--------|
-| Agents | ✅ 13 agents | ✅ 12 agents | **Claude Code leads** |
-| Commands | ✅ 31 commands | ✅ 24 commands | **Claude Code leads** |
-| Skills | ✅ 43 skills | ✅ 16 skills | **Claude Code leads** |
-| Hooks | ✅ 3 phases | ✅ 20+ events | **OpenCode has more!** |
-| Rules | ✅ 8 rules | ✅ 8 rules | **Full parity** |
-| MCP Servers | ✅ Full | ✅ Full | **Full parity** |
-| Custom Tools | ✅ Via hooks | ✅ Native support | **OpenCode is better** |
-
-### Hook Support via Plugins
-
-OpenCode's plugin system is MORE sophisticated than Claude Code with 20+ event types:
-
-| Claude Code Hook | OpenCode Plugin Event |
-|-----------------|----------------------|
-| PreToolUse | `tool.execute.before` |
-| PostToolUse | `tool.execute.after` |
-| Stop | `session.idle` |
-| SessionStart | `session.created` |
-| SessionEnd | `session.deleted` |
-
-**Additional OpenCode events**: `file.edited`, `file.watcher.updated`, `message.updated`, `lsp.client.diagnostics`, `tui.toast.show`, and more.
-
-### Available Commands (31)
-
-| Command | Description |
-|---------|-------------|
-| `/plan` | Create implementation plan |
-| `/tdd` | Enforce TDD workflow |
-| `/code-review` | Review code changes |
-| `/build-fix` | Fix build errors |
-| `/e2e` | Generate E2E tests |
-| `/refactor-clean` | Remove dead code |
-| `/orchestrate` | Multi-agent workflow |
-| `/learn` | Extract patterns from session |
-| `/checkpoint` | Save verification state |
-| `/verify` | Run verification loop |
-| `/eval` | Evaluate against criteria |
-| `/update-docs` | Update documentation |
-| `/update-codemaps` | Update codemaps |
-| `/test-coverage` | Analyze coverage |
-| `/go-review` | Go code review |
-| `/go-test` | Go TDD workflow |
-| `/go-build` | Fix Go build errors |
-| `/python-review` | Python code review (PEP 8, type hints, security) |
-| `/multi-plan` | Multi-model collaborative planning |
-| `/multi-execute` | Multi-model collaborative execution |
-| `/multi-backend` | Backend-focused multi-model workflow |
-| `/multi-frontend` | Frontend-focused multi-model workflow |
-| `/multi-workflow` | Full multi-model development workflow |
-| `/pm2` | Auto-generate PM2 service commands |
-| `/sessions` | Manage session history |
-| `/skill-create` | Generate skills from git |
-| `/instinct-status` | View learned instincts |
-| `/instinct-import` | Import instincts |
-| `/instinct-export` | Export instincts |
-| `/evolve` | Cluster instincts into skills |
-| `/setup-pm` | Configure package manager |
-
-### Plugin Installation
-
-**Option 1: Use directly**
-```bash
-cd everything-claude-code
-opencode
-```
-
-**Option 2: Install as npm package**
-```bash
-npm install ecc-universal
-```
-
-Then add to your `opencode.json`:
-```json
-{
-  "plugin": ["ecc-universal"]
-}
-```
-
-### Documentation
-
-- **Migration Guide**: `.opencode/MIGRATION.md`
-- **OpenCode Plugin README**: `.opencode/README.md`
-- **Consolidated Rules**: `.opencode/instructions/INSTRUCTIONS.md`
-- **LLM Documentation**: `llms.txt` (complete OpenCode docs for LLMs)
-
----
-
-## 📖 Background
-
-I've been using Claude Code since the experimental rollout. Won the Anthropic x Forum Ventures hackathon in Sep 2025 building [zenith.chat](https://zenith.chat) with [@DRodriguezFX](https://x.com/DRodriguezFX) - entirely using Claude Code.
-
-These configs are battle-tested across multiple production applications.
-
----
-
-## Token Optimization
-
-Claude Code usage can be expensive if you don't manage token consumption. These settings significantly reduce costs without sacrificing quality.
-
-### Recommended Settings
-
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "model": "sonnet",
-  "env": {
-    "MAX_THINKING_TOKENS": "10000",
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"
-  }
-}
-```
-
-| Setting | Default | Recommended | Impact |
-|---------|---------|-------------|--------|
-| `model` | opus | **sonnet** | ~60% cost reduction; handles 80%+ of coding tasks |
-| `MAX_THINKING_TOKENS` | 31,999 | **10,000** | ~70% reduction in hidden thinking cost per request |
-| `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` | 95 | **50** | Compacts earlier — better quality in long sessions |
-
-Switch to Opus only when you need deep architectural reasoning:
-```
-/model opus
-```
-
-### Daily Workflow Commands
-
-| Command | When to Use |
-|---------|-------------|
-| `/model sonnet` | Default for most tasks |
-| `/model opus` | Complex architecture, debugging, deep reasoning |
-| `/clear` | Between unrelated tasks (free, instant reset) |
-| `/compact` | At logical task breakpoints (research done, milestone complete) |
-| `/cost` | Monitor token spending during session |
-
-### Strategic Compaction
-
-The `strategic-compact` skill (included in this plugin) suggests `/compact` at logical breakpoints instead of relying on auto-compaction at 95% context. See `skills/strategic-compact/SKILL.md` for the full decision guide.
-
-**When to compact:**
-- After research/exploration, before implementation
-- After completing a milestone, before starting the next
-- After debugging, before continuing feature work
-- After a failed approach, before trying a new one
-
-**When NOT to compact:**
-- Mid-implementation (you'll lose variable names, file paths, partial state)
-
-### Context Window Management
-
-**Critical:** Don't enable all MCPs at once. Each MCP tool description consumes tokens from your 200k window, potentially reducing it to ~70k.
-
-- Keep under 10 MCPs enabled per project
-- Keep under 80 tools active
-- Use `disabledMcpServers` in project config to disable unused ones
-
-### Agent Teams Cost Warning
-
-Agent Teams spawns multiple context windows. Each teammate consumes tokens independently. Only use for tasks where parallelism provides clear value (multi-module work, parallel reviews). For simple sequential tasks, subagents are more token-efficient.
-
----
-
-## ⚠️ Important Notes
-
-### Token Optimization
-
-Hitting daily limits? See the **[Token Optimization Guide](docs/token-optimization.md)** for recommended settings and workflow tips.
-
-Quick wins:
-
-```json
-// ~/.claude/settings.json
-{
-  "model": "sonnet",
-  "env": {
-    "MAX_THINKING_TOKENS": "10000",
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
-  }
-}
-```
-
-Use `/clear` between unrelated tasks, `/compact` at logical breakpoints, and `/cost` to monitor spending.
-
-### Customization
-
-These configs work for my workflow. You should:
-1. Start with what resonates
-2. Modify for your stack
-3. Remove what you don't use
-4. Add your own patterns
-
----
-
-## 💜 Sponsors
-
-This project is free and open source. Sponsors help keep it maintained and growing.
-
-[**Become a Sponsor**](https://github.com/sponsors/affaan-m) | [Sponsor Tiers](SPONSORS.md)
-
----
-
-## 🌟 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=affaan-m/everything-claude-code&type=Date)](https://star-history.com/#affaan-m/everything-claude-code&Date)
-
----
-
-## 🔗 Links
-
-- **Shorthand Guide (Start Here):** [The Shorthand Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2012378465664745795)
-- **Longform Guide (Advanced):** [The Longform Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2014040193557471352)
-- **Follow:** [@affaanmustafa](https://x.com/affaanmustafa)
-- **zenith.chat:** [zenith.chat](https://zenith.chat)
-- **Skills Directory:** [awesome-agent-skills](https://github.com/JackyST0/awesome-agent-skills)
-
----
-
-## 📄 License
-
-MIT - Use freely, modify as needed, contribute back if you can.
-
----
-
-**Star this repo if it helps. Read both guides. Build something great.**
+- [AgentsKB](https://agentskb.com) - Upgrade your AI with researched answers. We did the research so your AI gets it right the first time.
