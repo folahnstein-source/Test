@@ -1,19 +1,25 @@
-# Go 编码风格
+---
+paths:
+  - "**/*.go"
+  - "**/go.mod"
+  - "**/go.sum"
+---
+# Go Coding Style
 
-> 本文件在 [common/coding-style.md](../common/coding-style.md) 的基础上，扩展了 Go 语言的特定内容。
+> This file extends [common/coding-style.md](../common/coding-style.md) with Go specific content.
 
-## 格式化
+## Formatting
 
-* **gofmt** 和 **goimports** 是强制性的 —— 无需进行风格辩论
+- **gofmt** and **goimports** are mandatory — no style debates
 
-## 设计原则
+## Design Principles
 
-* 接受接口，返回结构体
-* 保持接口小巧（1-3 个方法）
+- Accept interfaces, return structs
+- Keep interfaces small (1-3 methods)
 
-## 错误处理
+## Error Handling
 
-始终用上下文包装错误：
+Always wrap errors with context:
 
 ```go
 if err != nil {
@@ -21,6 +27,6 @@ if err != nil {
 }
 ```
 
-## 参考
+## Reference
 
-查看技能：`golang-patterns` 以获取全面的 Go 语言惯用法和模式。
+See skill: `golang-patterns` for comprehensive Go idioms and patterns.

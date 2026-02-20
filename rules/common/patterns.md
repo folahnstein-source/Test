@@ -1,34 +1,31 @@
-# 常见模式
+# Common Patterns
 
-## 骨架项目
+## Skeleton Projects
 
-当实现新功能时：
+When implementing new functionality:
+1. Search for battle-tested skeleton projects
+2. Use parallel agents to evaluate options:
+   - Security assessment
+   - Extensibility analysis
+   - Relevance scoring
+   - Implementation planning
+3. Clone best match as foundation
+4. Iterate within proven structure
 
-1. 搜索经过实战检验的骨架项目
-2. 使用并行代理评估选项：
-   * 安全性评估
-   * 可扩展性分析
-   * 相关性评分
-   * 实施规划
-3. 克隆最佳匹配作为基础
-4. 在已验证的结构内迭代
+## Design Patterns
 
-## 设计模式
+### Repository Pattern
 
-### 仓库模式
+Encapsulate data access behind a consistent interface:
+- Define standard operations: findAll, findById, create, update, delete
+- Concrete implementations handle storage details (database, API, file, etc.)
+- Business logic depends on the abstract interface, not the storage mechanism
+- Enables easy swapping of data sources and simplifies testing with mocks
 
-将数据访问封装在一个一致的接口之后：
+### API Response Format
 
-* 定义标准操作：findAll, findById, create, update, delete
-* 具体实现处理存储细节（数据库、API、文件等）
-* 业务逻辑依赖于抽象接口，而非存储机制
-* 便于轻松切换数据源，并使用模拟对象简化测试
-
-### API 响应格式
-
-对所有 API 响应使用一致的信封格式：
-
-* 包含一个成功/状态指示器
-* 包含数据载荷（出错时可为空）
-* 包含一个错误消息字段（成功时可为空）
-* 为分页响应包含元数据（总数、页码、限制）
+Use a consistent envelope for all API responses:
+- Include a success/status indicator
+- Include the data payload (nullable on error)
+- Include an error message field (nullable on success)
+- Include metadata for paginated responses (total, page, limit)

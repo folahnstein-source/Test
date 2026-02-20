@@ -1,10 +1,17 @@
-# TypeScript/JavaScript 编码风格
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+---
+# TypeScript/JavaScript Coding Style
 
-> 本文件基于 [common/coding-style.md](../common/coding-style.md) 扩展，包含 TypeScript/JavaScript 特定内容。
+> This file extends [common/coding-style.md](../common/coding-style.md) with TypeScript/JavaScript specific content.
 
-## 不可变性
+## Immutability
 
-使用展开运算符进行不可变更新：
+Use spread operator for immutable updates:
 
 ```typescript
 // WRONG: Mutation
@@ -22,9 +29,9 @@ function updateUser(user, name) {
 }
 ```
 
-## 错误处理
+## Error Handling
 
-使用 async/await 配合 try-catch：
+Use async/await with try-catch:
 
 ```typescript
 try {
@@ -36,9 +43,9 @@ try {
 }
 ```
 
-## 输入验证
+## Input Validation
 
-使用 Zod 进行基于模式的验证：
+Use Zod for schema-based validation:
 
 ```typescript
 import { z } from 'zod'
@@ -53,6 +60,6 @@ const validated = schema.parse(input)
 
 ## Console.log
 
-* 生产代码中不允许出现 `console.log` 语句
-* 请使用适当的日志库替代
-* 查看钩子以进行自动检测
+- No `console.log` statements in production code
+- Use proper logging libraries instead
+- See hooks for automatic detection

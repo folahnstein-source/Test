@@ -1,15 +1,20 @@
-# Python 编码风格
+---
+paths:
+  - "**/*.py"
+  - "**/*.pyi"
+---
+# Python Coding Style
 
-> 本文件在 [common/coding-style.md](../common/coding-style.md) 的基础上扩展了 Python 特定的内容。
+> This file extends [common/coding-style.md](../common/coding-style.md) with Python specific content.
 
-## 标准
+## Standards
 
-* 遵循 **PEP 8** 规范
-* 在所有函数签名上使用 **类型注解**
+- Follow **PEP 8** conventions
+- Use **type annotations** on all function signatures
 
-## 不变性
+## Immutability
 
-优先使用不可变数据结构：
+Prefer immutable data structures:
 
 ```python
 from dataclasses import dataclass
@@ -26,12 +31,12 @@ class Point(NamedTuple):
     y: float
 ```
 
-## 格式化
+## Formatting
 
-* 使用 **black** 进行代码格式化
-* 使用 **isort** 进行导入排序
-* 使用 **ruff** 进行代码检查
+- **black** for code formatting
+- **isort** for import sorting
+- **ruff** for linting
 
-## 参考
+## Reference
 
-查看技能：`python-patterns` 以获取全面的 Python 惯用法和模式。
+See skill: `python-patterns` for comprehensive Python idioms and patterns.

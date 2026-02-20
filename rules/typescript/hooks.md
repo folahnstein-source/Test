@@ -1,15 +1,22 @@
-# TypeScript/JavaScript 钩子
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+---
+# TypeScript/JavaScript Hooks
 
-> 此文件扩展了 [common/hooks.md](../common/hooks.md)，并添加了 TypeScript/JavaScript 特有的内容。
+> This file extends [common/hooks.md](../common/hooks.md) with TypeScript/JavaScript specific content.
 
-## PostToolUse 钩子
+## PostToolUse Hooks
 
-在 `~/.claude/settings.json` 中配置：
+Configure in `~/.claude/settings.json`:
 
-* **Prettier**：编辑后自动格式化 JS/TS 文件
-* **TypeScript 检查**：编辑 `.ts`/`.tsx` 文件后运行 `tsc`
-* **console.log 警告**：警告编辑过的文件中存在 `console.log`
+- **Prettier**: Auto-format JS/TS files after edit
+- **TypeScript check**: Run `tsc` after editing `.ts`/`.tsx` files
+- **console.log warning**: Warn about `console.log` in edited files
 
-## Stop 钩子
+## Stop Hooks
 
-* **console.log 审计**：在会话结束前，检查所有修改过的文件中是否存在 `console.log`
+- **console.log audit**: Check all modified files for `console.log` before session ends

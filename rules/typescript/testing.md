@@ -1,11 +1,18 @@
-# TypeScript/JavaScript 测试
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+---
+# TypeScript/JavaScript Testing
 
-> 本文档基于 [common/testing.md](../common/testing.md) 扩展，补充了 TypeScript/JavaScript 特定的内容。
+> This file extends [common/testing.md](../common/testing.md) with TypeScript/JavaScript specific content.
 
-## E2E 测试
+## E2E Testing
 
-使用 **Playwright** 作为关键用户流程的 E2E 测试框架。
+Use **Playwright** as the E2E testing framework for critical user flows.
 
-## 智能体支持
+## Agent Support
 
-* **e2e-runner** - Playwright E2E 测试专家
+- **e2e-runner** - Playwright E2E testing specialist

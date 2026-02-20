@@ -1,8 +1,14 @@
-# Go 安全
+---
+paths:
+  - "**/*.go"
+  - "**/go.mod"
+  - "**/go.sum"
+---
+# Go Security
 
-> 此文件基于 [common/security.md](../common/security.md) 扩展了 Go 特定内容。
+> This file extends [common/security.md](../common/security.md) with Go specific content.
 
-## 密钥管理
+## Secret Management
 
 ```go
 apiKey := os.Getenv("OPENAI_API_KEY")
@@ -11,16 +17,16 @@ if apiKey == "" {
 }
 ```
 
-## 安全扫描
+## Security Scanning
 
-* 使用 **gosec** 进行静态安全分析：
+- Use **gosec** for static security analysis:
   ```bash
   gosec ./...
   ```
 
-## 上下文与超时
+## Context & Timeouts
 
-始终使用 `context.Context` 进行超时控制：
+Always use `context.Context` for timeout control:
 
 ```go
 ctx, cancel := context.WithTimeout(ctx, 5*time.Second)

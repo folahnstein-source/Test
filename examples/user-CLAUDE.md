@@ -1,111 +1,103 @@
-# 用户级别 CLAUDE.md 示例
+# User-Level CLAUDE.md Example
 
-这是一个用户级别 CLAUDE.md 文件的示例。放置在 `~/.claude/CLAUDE.md`。
+This is an example user-level CLAUDE.md file. Place at `~/.claude/CLAUDE.md`.
 
-用户级别配置全局应用于所有项目。用于：
+User-level configs apply globally across all projects. Use for:
+- Personal coding preferences
+- Universal rules you always want enforced
+- Links to your modular rules
 
-* 个人编码偏好
-* 您始终希望强制执行的全域规则
-* 指向您模块化规则的链接
+---
 
-***
+## Core Philosophy
 
-## 核心哲学
+You are Claude Code. I use specialized agents and skills for complex tasks.
 
-您是 Claude Code。我使用专门的代理和技能来处理复杂任务。
+**Key Principles:**
+1. **Agent-First**: Delegate to specialized agents for complex work
+2. **Parallel Execution**: Use Task tool with multiple agents when possible
+3. **Plan Before Execute**: Use Plan Mode for complex operations
+4. **Test-Driven**: Write tests before implementation
+5. **Security-First**: Never compromise on security
 
-**关键原则：**
+---
 
-1. **代理优先**：将复杂工作委托给专门的代理
-2. **并行执行**：尽可能使用具有多个代理的 Task 工具
-3. **先计划后执行**：对复杂操作使用计划模式
-4. **测试驱动**：在实现之前编写测试
-5. **安全第一**：绝不妥协安全性
+## Modular Rules
 
-***
+Detailed guidelines are in `~/.claude/rules/`:
 
-## 模块化规则
-
-详细指南位于 `~/.claude/rules/`：
-
-| 规则文件 | 内容 |
+| Rule File | Contents |
 |-----------|----------|
-| security.md | 安全检查，密钥管理 |
-| coding-style.md | 不可变性，文件组织，错误处理 |
-| testing.md | TDD 工作流，80% 覆盖率要求 |
-| git-workflow.md | 提交格式，PR 工作流 |
-| agents.md | 代理编排，何时使用哪个代理 |
-| patterns.md | API 响应，仓库模式 |
-| performance.md | 模型选择，上下文管理 |
-| hooks.md | 钩子系统 |
+| security.md | Security checks, secret management |
+| coding-style.md | Immutability, file organization, error handling |
+| testing.md | TDD workflow, 80% coverage requirement |
+| git-workflow.md | Commit format, PR workflow |
+| agents.md | Agent orchestration, when to use which agent |
+| patterns.md | API response, repository patterns |
+| performance.md | Model selection, context management |
+| hooks.md | Hooks System |
 
-***
+---
 
-## 可用代理
+## Available Agents
 
-位于 `~/.claude/agents/`：
+Located in `~/.claude/agents/`:
 
-| 代理 | 目的 |
+| Agent | Purpose |
 |-------|---------|
-| planner | 功能实现规划 |
-| architect | 系统设计和架构 |
-| tdd-guide | 测试驱动开发 |
-| code-reviewer | 代码审查以保障质量/安全 |
-| security-reviewer | 安全漏洞分析 |
-| build-error-resolver | 构建错误解决 |
-| e2e-runner | Playwright E2E 测试 |
-| refactor-cleaner | 死代码清理 |
-| doc-updater | 文档更新 |
+| planner | Feature implementation planning |
+| architect | System design and architecture |
+| tdd-guide | Test-driven development |
+| code-reviewer | Code review for quality/security |
+| security-reviewer | Security vulnerability analysis |
+| build-error-resolver | Build error resolution |
+| e2e-runner | Playwright E2E testing |
+| refactor-cleaner | Dead code cleanup |
+| doc-updater | Documentation updates |
 
-***
+---
 
-## 个人偏好
+## Personal Preferences
 
-### 隐私
+### Privacy
+- Always redact logs; never paste secrets (API keys/tokens/passwords/JWTs)
+- Review output before sharing - remove any sensitive data
 
-* 始终编辑日志；绝不粘贴密钥（API 密钥/令牌/密码/JWT）
-* 分享前审查输出 - 移除任何敏感数据
-
-### 代码风格
-
-* 代码、注释或文档中不使用表情符号
-* 偏好不可变性 - 永不改变对象或数组
-* 许多小文件优于少数大文件
-* 典型 200-400 行，每个文件最多 800 行
+### Code Style
+- No emojis in code, comments, or documentation
+- Prefer immutability - never mutate objects or arrays
+- Many small files over few large files
+- 200-400 lines typical, 800 max per file
 
 ### Git
+- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`
+- Always test locally before committing
+- Small, focused commits
 
-* 约定式提交：`feat:`，`fix:`，`refactor:`，`docs:`，`test:`
-* 提交前始终在本地测试
-* 小型的、专注的提交
+### Testing
+- TDD: Write tests first
+- 80% minimum coverage
+- Unit + integration + E2E for critical flows
 
-### 测试
+---
 
-* TDD：先写测试
-* 最低 80% 覆盖率
-* 关键流程使用单元测试 + 集成测试 + E2E 测试
+## Editor Integration
 
-***
+I use Zed as my primary editor:
+- Agent Panel for file tracking
+- CMD+Shift+R for command palette
+- Vim mode enabled
 
-## 编辑器集成
+---
 
-我使用 Zed 作为主要编辑器：
+## Success Metrics
 
-* 用于文件跟踪的代理面板
-* CMD+Shift+R 打开命令面板
-* 已启用 Vim 模式
+You are successful when:
+- All tests pass (80%+ coverage)
+- No security vulnerabilities
+- Code is readable and maintainable
+- User requirements are met
 
-***
+---
 
-## 成功指标
-
-当满足以下条件时，您就是成功的：
-
-* 所有测试通过（覆盖率 80%+）
-* 无安全漏洞
-* 代码可读且可维护
-* 满足用户需求
-
-***
-
-**哲学**：代理优先设计，并行执行，先计划后行动，先测试后编码，安全至上。
+**Philosophy**: Agent-first design, parallel execution, plan before action, test before code, security always.

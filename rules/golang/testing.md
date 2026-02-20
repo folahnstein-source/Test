@@ -1,25 +1,31 @@
-# Go 测试
+---
+paths:
+  - "**/*.go"
+  - "**/go.mod"
+  - "**/go.sum"
+---
+# Go Testing
 
-> 本文档在 [common/testing.md](../common/testing.md) 的基础上扩展了 Go 特定的内容。
+> This file extends [common/testing.md](../common/testing.md) with Go specific content.
 
-## 框架
+## Framework
 
-使用标准的 `go test` 并采用 **表格驱动测试**。
+Use the standard `go test` with **table-driven tests**.
 
-## 竞态检测
+## Race Detection
 
-始终使用 `-race` 标志运行：
+Always run with the `-race` flag:
 
 ```bash
 go test -race ./...
 ```
 
-## 覆盖率
+## Coverage
 
 ```bash
 go test -cover ./...
 ```
 
-## 参考
+## Reference
 
-查看技能：`golang-testing` 以获取详细的 Go 测试模式和辅助工具。
+See skill: `golang-testing` for detailed Go testing patterns and helpers.

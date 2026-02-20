@@ -1,8 +1,15 @@
-# TypeScript/JavaScript 安全
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+---
+# TypeScript/JavaScript Security
 
-> 本文档扩展了 [common/security.md](../common/security.md)，包含了 TypeScript/JavaScript 特定的内容。
+> This file extends [common/security.md](../common/security.md) with TypeScript/JavaScript specific content.
 
-## 密钥管理
+## Secret Management
 
 ```typescript
 // NEVER: Hardcoded secrets
@@ -16,6 +23,6 @@ if (!apiKey) {
 }
 ```
 
-## 代理支持
+## Agent Support
 
-* 使用 **security-reviewer** 技能进行全面的安全审计
+- Use **security-reviewer** skill for comprehensive security audits

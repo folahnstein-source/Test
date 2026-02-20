@@ -1,4 +1,4 @@
-**语言:** English | [繁體中文](../zh-TW/README.md) | [简体中文](README.md)
+**Language:** English | [繁體中文](docs/zh-TW/README.md)
 
 # Everything Claude Code
 
@@ -6,36 +6,36 @@
 [![Forks](https://img.shields.io/github/forks/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/network/members)
 [![Contributors](https://img.shields.io/github/contributors/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/graphs/contributors)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Shell](https://img.shields.io/badge/-Shell-4EAA25?logo=gnu-bash\&logoColor=white)
-![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript\&logoColor=white)
-![Python](https://img.shields.io/badge/-Python-3776AB?logo=python\&logoColor=white)
-![Go](https://img.shields.io/badge/-Go-00ADD8?logo=go\&logoColor=white)
-![Java](https://img.shields.io/badge/-Java-ED8B00?logo=openjdk\&logoColor=white)
-![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown\&logoColor=white)
+![Shell](https://img.shields.io/badge/-Shell-4EAA25?logo=gnu-bash&logoColor=white)
+![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white)
+![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)
+![Go](https://img.shields.io/badge/-Go-00ADD8?logo=go&logoColor=white)
+![Java](https://img.shields.io/badge/-Java-ED8B00?logo=openjdk&logoColor=white)
+![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown&logoColor=white)
 
-> **42K+ 星标** | **5K+ 分支** | **24 位贡献者** | **支持 6 种语言**
+> **42K+ stars** | **5K+ forks** | **24 contributors** | **6 languages supported** | **Anthropic Hackathon Winner**
 
-***
+---
 
 <div align="center">
 
-**🌐 语言 / 语言 / 語言**
+**🌐 Language / 语言 / 語言**
 
-[**English**](../../README.md) | [简体中文](../../README.zh-CN.md) | [繁體中文](../../docs/zh-TW/README.md)
+[**English**](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](docs/zh-TW/README.md) | [日本語](docs/ja-JP/README.md)
 
 </div>
 
-***
+---
 
-**Anthropic 黑客马拉松获胜者提供的完整 Claude Code 配置集合。**
+**The complete collection of Claude Code configs from an Anthropic hackathon winner.**
 
-经过 10 多个月的密集日常使用，在构建真实产品的过程中演化出的生产就绪的智能体、技能、钩子、命令、规则和 MCP 配置。
+Production-ready agents, skills, hooks, commands, rules, and MCP configurations evolved over 10+ months of intensive daily use building real products.
 
-***
+---
 
-## 指南
+## The Guides
 
-此仓库仅包含原始代码。指南解释了一切。
+This repo is the raw code only. The guides explain everything.
 
 <table>
 <tr>
@@ -56,54 +56,54 @@
 </tr>
 </table>
 
-| 主题 | 你将学到什么 |
+| Topic | What You'll Learn |
 |-------|-------------------|
-| 令牌优化 | 模型选择，系统提示精简，后台进程 |
-| 内存持久化 | 自动跨会话保存/加载上下文的钩子 |
-| 持续学习 | 从会话中自动提取模式为可重用技能 |
-| 验证循环 | 检查点与持续评估，评分器类型，pass@k 指标 |
-| 并行化 | Git 工作树，级联方法，何时扩展实例 |
-| 子智能体编排 | 上下文问题，迭代检索模式 |
+| Token Optimization | Model selection, system prompt slimming, background processes |
+| Memory Persistence | Hooks that save/load context across sessions automatically |
+| Continuous Learning | Auto-extract patterns from sessions into reusable skills |
+| Verification Loops | Checkpoint vs continuous evals, grader types, pass@k metrics |
+| Parallelization | Git worktrees, cascade method, when to scale instances |
+| Subagent Orchestration | The context problem, iterative retrieval pattern |
 
-***
+---
 
-## 最新动态
+## What's New
 
-### v1.4.1 — 错误修复 (2026年2月)
+### v1.4.1 — Bug Fix (Feb 2026)
 
-* **修复了直觉导入内容丢失问题** — `parse_instinct_file()` 在 `/instinct-import` 期间会静默丢弃 frontmatter 之后的所有内容（Action, Evidence, Examples 部分）。已由社区贡献者 @ericcai0814 修复 ([#148](https://github.com/affaan-m/everything-claude-code/issues/148), [#161](https://github.com/affaan-m/everything-claude-code/pull/161))
+- **Fixed instinct import content loss** — `parse_instinct_file()` was silently dropping all content after frontmatter (Action, Evidence, Examples sections) during `/instinct-import`. Fixed by community contributor @ericcai0814 ([#148](https://github.com/affaan-m/everything-claude-code/issues/148), [#161](https://github.com/affaan-m/everything-claude-code/pull/161))
 
-### v1.4.0 — 多语言规则、安装向导 & PM2 (2026年2月)
+### v1.4.0 — Multi-Language Rules, Installation Wizard & PM2 (Feb 2026)
 
-* **交互式安装向导** — 新的 `configure-ecc` 技能提供了带有合并/覆盖检测的引导式设置
-* **PM2 & 多智能体编排** — 6 个新命令 (`/pm2`, `/multi-plan`, `/multi-execute`, `/multi-backend`, `/multi-frontend`, `/multi-workflow`) 用于管理复杂的多服务工作流
-* **多语言规则架构** — 规则从扁平文件重组为 `common/` + `typescript/` + `python/` + `golang/` 目录。仅安装您需要的语言
-* **中文 (zh-CN) 翻译** — 所有智能体、命令、技能和规则的完整翻译 (80+ 个文件)
-* **GitHub Sponsors 支持** — 通过 GitHub Sponsors 赞助项目
-* **增强的 CONTRIBUTING.md** — 针对每种贡献类型的详细 PR 模板
+- **Interactive installation wizard** — New `configure-ecc` skill provides guided setup with merge/overwrite detection
+- **PM2 & multi-agent orchestration** — 6 new commands (`/pm2`, `/multi-plan`, `/multi-execute`, `/multi-backend`, `/multi-frontend`, `/multi-workflow`) for managing complex multi-service workflows
+- **Multi-language rules architecture** — Rules restructured from flat files into `common/` + `typescript/` + `python/` + `golang/` directories. Install only the languages you need
+- **Chinese (zh-CN) translations** — Complete translation of all agents, commands, skills, and rules (80+ files)
+- **GitHub Sponsors support** — Sponsor the project via GitHub Sponsors
+- **Enhanced CONTRIBUTING.md** — Detailed PR templates for each contribution type
 
-### v1.3.0 — OpenCode 插件支持 (2026年2月)
+### v1.3.0 — OpenCode Plugin Support (Feb 2026)
 
-* **完整的 OpenCode 集成** — 12 个智能体，24 个命令，16 个技能，通过 OpenCode 的插件系统支持钩子 (20+ 种事件类型)
-* **3 个原生自定义工具** — run-tests, check-coverage, security-audit
-* **LLM 文档** — `llms.txt` 用于获取全面的 OpenCode 文档
+- **Full OpenCode integration** — 12 agents, 24 commands, 16 skills with hook support via OpenCode's plugin system (20+ event types)
+- **3 native custom tools** — run-tests, check-coverage, security-audit
+- **LLM documentation** — `llms.txt` for comprehensive OpenCode docs
 
-### v1.2.0 — 统一的命令和技能 (2026年2月)
+### v1.2.0 — Unified Commands & Skills (Feb 2026)
 
-* **Python/Django 支持** — Django 模式、安全、TDD 和验证技能
-* **Java Spring Boot 技能** — Spring Boot 的模式、安全、TDD 和验证
-* **会话管理** — `/sessions` 命令用于查看会话历史
-* **持续学习 v2** — 基于直觉的学习，带有置信度评分、导入/导出、进化
+- **Python/Django support** — Django patterns, security, TDD, and verification skills
+- **Java Spring Boot skills** — Patterns, security, TDD, and verification for Spring Boot
+- **Session management** — `/sessions` command for session history
+- **Continuous learning v2** — Instinct-based learning with confidence scoring, import/export, evolution
 
-完整的更新日志请参见 [Releases](https://github.com/affaan-m/everything-claude-code/releases)。
+See the full changelog in [Releases](https://github.com/affaan-m/everything-claude-code/releases).
 
-***
+---
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-在 2 分钟内启动并运行：
+Get up and running in under 2 minutes:
 
-### 步骤 1：安装插件
+### Step 1: Install the Plugin
 
 ```bash
 # Add marketplace
@@ -113,24 +113,27 @@
 /plugin install everything-claude-code@everything-claude-code
 ```
 
-### 步骤 2：安装规则（必需）
+### Step 2: Install Rules (Required)
 
-> ⚠️ **重要提示：** Claude Code 插件无法自动分发 `rules`。请手动安装它们：
+> ⚠️ **Important:** Claude Code plugins cannot distribute `rules` automatically. Install them manually:
+
 
 ```bash
 # Clone the repo first
 git clone https://github.com/affaan-m/everything-claude-code.git
+cd everything-claude-code
 
-# Install common rules (required)
-cp -r everything-claude-code/rules/common/* ~/.claude/rules/
-
-# Install language-specific rules (pick your stack)
-cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/
-cp -r everything-claude-code/rules/python/* ~/.claude/rules/
-cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
+# Recommended: use the installer (handles common + language rules safely)
+./install.sh typescript    # or python or golang
+# You can pass multiple languages:
+# ./install.sh typescript python golang
+# or target cursor:
+# ./install.sh --target cursor typescript
 ```
 
-### 步骤 3：开始使用
+For manual install instructions see the README in the `rules/` folder.
+
+### Step 3: Start Using
 
 ```bash
 # Try a command
@@ -140,26 +143,26 @@ cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
 /plugin list everything-claude-code@everything-claude-code
 ```
 
-✨ **就是这样！** 您现在可以访问 15+ 个智能体，30+ 个技能，以及 30+ 个命令。
+✨ **That's it!** You now have access to 13 agents, 43 skills, and 31 commands.
 
-***
+---
 
-## 🌐 跨平台支持
+## 🌐 Cross-Platform Support
 
-此插件现已完全支持 **Windows、macOS 和 Linux**。所有钩子和脚本都已用 Node.js 重写，以实现最大的兼容性。
+This plugin now fully supports **Windows, macOS, and Linux**. All hooks and scripts have been rewritten in Node.js for maximum compatibility.
 
-### 包管理器检测
+### Package Manager Detection
 
-插件会自动检测您首选的包管理器（npm、pnpm、yarn 或 bun），优先级如下：
+The plugin automatically detects your preferred package manager (npm, pnpm, yarn, or bun) with the following priority:
 
-1. **环境变量**：`CLAUDE_PACKAGE_MANAGER`
-2. **项目配置**：`.claude/package-manager.json`
-3. **package.json**：`packageManager` 字段
-4. **锁文件**：从 package-lock.json、yarn.lock、pnpm-lock.yaml 或 bun.lockb 检测
-5. **全局配置**：`~/.claude/package-manager.json`
-6. **回退方案**：第一个可用的包管理器
+1. **Environment variable**: `CLAUDE_PACKAGE_MANAGER`
+2. **Project config**: `.claude/package-manager.json`
+3. **package.json**: `packageManager` field
+4. **Lock file**: Detection from package-lock.json, yarn.lock, pnpm-lock.yaml, or bun.lockb
+5. **Global config**: `~/.claude/package-manager.json`
+6. **Fallback**: First available package manager
 
-要设置您首选的包管理器：
+To set your preferred package manager:
 
 ```bash
 # Via environment variable
@@ -175,165 +178,194 @@ node scripts/setup-package-manager.js --project bun
 node scripts/setup-package-manager.js --detect
 ```
 
-或者在 Claude Code 中使用 `/setup-pm` 命令。
+Or use the `/setup-pm` command in Claude Code.
 
-***
+---
 
-## 📦 包含内容
+## 📦 What's Inside
 
-此仓库是一个 **Claude Code 插件** - 可以直接安装或手动复制组件。
+This repo is a **Claude Code plugin** - install it directly or copy components manually.
 
 ```
 everything-claude-code/
-|-- .claude-plugin/   # 插件和插件市场清单
-|   |-- plugin.json         # 插件元数据和组件路径
-|   |-- marketplace.json    # 用于 /plugin marketplace add 的市场目录
+|-- .claude-plugin/   # Plugin and marketplace manifests
+|   |-- plugin.json         # Plugin metadata and component paths
+|   |-- marketplace.json    # Marketplace catalog for /plugin marketplace add
 |
-|-- agents/           # 用于任务委派的专用子代理
-|   |-- planner.md           # 功能实现规划
-|   |-- architect.md         # 系统设计决策
-|   |-- tdd-guide.md         # 测试驱动开发
-|   |-- code-reviewer.md     # 质量与安全审查
-|   |-- security-reviewer.md # 漏洞分析
+|-- agents/           # Specialized subagents for delegation
+|   |-- planner.md           # Feature implementation planning
+|   |-- architect.md         # System design decisions
+|   |-- tdd-guide.md         # Test-driven development
+|   |-- code-reviewer.md     # Quality and security review
+|   |-- security-reviewer.md # Vulnerability analysis
 |   |-- build-error-resolver.md
-|   |-- e2e-runner.md        # Playwright 端到端测试
-|   |-- refactor-cleaner.md  # 无用代码清理
-|   |-- doc-updater.md       # 文档同步
-|   |-- go-reviewer.md       # Go 代码审查
-|   |-- go-build-resolver.md # Go 构建错误修复
-|   |-- python-reviewer.md   # Python 代码审查（新增）
-|   |-- database-reviewer.md # 数据库/Supabase 审查（新增）
+|   |-- e2e-runner.md        # Playwright E2E testing
+|   |-- refactor-cleaner.md  # Dead code cleanup
+|   |-- doc-updater.md       # Documentation sync
+|   |-- go-reviewer.md       # Go code review
+|   |-- go-build-resolver.md # Go build error resolution
+|   |-- python-reviewer.md   # Python code review (NEW)
+|   |-- database-reviewer.md # Database/Supabase review (NEW)
 |
-|-- skills/           # 工作流定义与领域知识
-|   |-- coding-standards/           # 各语言最佳实践
-|   |-- backend-patterns/           # API、数据库、缓存模式
-|   |-- frontend-patterns/          # React、Next.js 模式
-|   |-- continuous-learning/        # 从会话中自动提取模式（长文档指南）
-|   |-- continuous-learning-v2/     # 基于直觉的学习与置信度评分
-|   |-- iterative-retrieval/        # 子代理的渐进式上下文精炼
-|   |-- strategic-compact/          # 手动压缩建议（长文档指南）
-|   |-- tdd-workflow/               # TDD 方法论
-|   |-- security-review/            # 安全检查清单
-|   |-- eval-harness/               # 验证循环评估（长文档指南）
-|   |-- verification-loop/          # 持续验证（长文档指南）
-|   |-- golang-patterns/            # Go 语言惯用法与最佳实践
-|   |-- golang-testing/             # Go 测试模式、TDD 与基准测试
-|   |-- cpp-testing/                # 使用 GoogleTest、CMake/CTest 的 C++ 测试（新增）
-|   |-- django-patterns/            # Django 模式、模型与视图（新增）
-|   |-- django-security/            # Django 安全最佳实践（新增）
-|   |-- django-tdd/                 # Django TDD 工作流（新增）
-|   |-- django-verification/        # Django 验证循环（新增）
-|   |-- python-patterns/            # Python 惯用法与最佳实践（新增）
-|   |-- python-testing/             # 使用 pytest 的 Python 测试（新增）
-|   |-- springboot-patterns/        # Java Spring Boot 模式（新增）
-|   |-- springboot-security/        # Spring Boot 安全（新增）
-|   |-- springboot-tdd/             # Spring Boot TDD（新增）
-|   |-- springboot-verification/    # Spring Boot 验证流程（新增）
-|   |-- configure-ecc/              # 交互式安装向导（新增）
-|   |-- security-scan/              # AgentShield 安全审计集成（新增）
+|-- skills/           # Workflow definitions and domain knowledge
+|   |-- coding-standards/           # Language best practices
+|   |-- clickhouse-io/              # ClickHouse analytics, queries, data engineering
+|   |-- backend-patterns/           # API, database, caching patterns
+|   |-- frontend-patterns/          # React, Next.js patterns
+|   |-- continuous-learning/        # Auto-extract patterns from sessions (Longform Guide)
+|   |-- continuous-learning-v2/     # Instinct-based learning with confidence scoring
+|   |-- iterative-retrieval/        # Progressive context refinement for subagents
+|   |-- strategic-compact/          # Manual compaction suggestions (Longform Guide)
+|   |-- tdd-workflow/               # TDD methodology
+|   |-- security-review/            # Security checklist
+|   |-- eval-harness/               # Verification loop evaluation (Longform Guide)
+|   |-- verification-loop/          # Continuous verification (Longform Guide)
+|   |-- golang-patterns/            # Go idioms and best practices
+|   |-- golang-testing/             # Go testing patterns, TDD, benchmarks
+|   |-- cpp-coding-standards/         # C++ coding standards from C++ Core Guidelines (NEW)
+|   |-- cpp-testing/                # C++ testing with GoogleTest, CMake/CTest (NEW)
+|   |-- django-patterns/            # Django patterns, models, views (NEW)
+|   |-- django-security/            # Django security best practices (NEW)
+|   |-- django-tdd/                 # Django TDD workflow (NEW)
+|   |-- django-verification/        # Django verification loops (NEW)
+|   |-- python-patterns/            # Python idioms and best practices (NEW)
+|   |-- python-testing/             # Python testing with pytest (NEW)
+|   |-- springboot-patterns/        # Java Spring Boot patterns (NEW)
+|   |-- springboot-security/        # Spring Boot security (NEW)
+|   |-- springboot-tdd/             # Spring Boot TDD (NEW)
+|   |-- springboot-verification/    # Spring Boot verification (NEW)
+|   |-- configure-ecc/              # Interactive installation wizard (NEW)
+|   |-- security-scan/              # AgentShield security auditor integration (NEW)
+|   |-- java-coding-standards/     # Java coding standards (NEW)
+|   |-- jpa-patterns/              # JPA/Hibernate patterns (NEW)
+|   |-- postgres-patterns/         # PostgreSQL optimization patterns (NEW)
+|   |-- nutrient-document-processing/ # Document processing with Nutrient API (NEW)
+|   |-- project-guidelines-example/   # Template for project-specific skills
+|   |-- database-migrations/         # Migration patterns (Prisma, Drizzle, Django, Go) (NEW)
+|   |-- api-design/                  # REST API design, pagination, error responses (NEW)
+|   |-- deployment-patterns/         # CI/CD, Docker, health checks, rollbacks (NEW)
+|   |-- docker-patterns/            # Docker Compose, networking, volumes, container security (NEW)
+|   |-- e2e-testing/                 # Playwright E2E patterns and Page Object Model (NEW)
+|   |-- content-hash-cache-pattern/  # SHA-256 content hash caching for file processing (NEW)
+|   |-- cost-aware-llm-pipeline/     # LLM cost optimization, model routing, budget tracking (NEW)
+|   |-- regex-vs-llm-structured-text/ # Decision framework: regex vs LLM for text parsing (NEW)
+|   |-- swift-actor-persistence/     # Thread-safe Swift data persistence with actors (NEW)
+|   |-- swift-protocol-di-testing/   # Protocol-based DI for testable Swift code (NEW)
 |
-|-- commands/         # 快捷执行的 Slash 命令
-|   |-- tdd.md              # /tdd - 测试驱动开发
-|   |-- plan.md             # /plan - 实现规划
-|   |-- e2e.md              # /e2e - 端到端测试生成
-|   |-- code-review.md      # /code-review - 质量审查
-|   |-- build-fix.md        # /build-fix - 修复构建错误
-|   |-- refactor-clean.md   # /refactor-clean - 清理无用代码
-|   |-- learn.md            # /learn - 会话中提取模式（长文档指南）
-|   |-- checkpoint.md       # /checkpoint - 保存验证状态（长文档指南）
-|   |-- verify.md           # /verify - 运行验证循环（长文档指南）
-|   |-- setup-pm.md         # /setup-pm - 配置包管理器
-|   |-- go-review.md        # /go-review - Go 代码审查（新增）
-|   |-- go-test.md          # /go-test - Go 的 TDD 工作流（新增）
-|   |-- go-build.md         # /go-build - 修复 Go 构建错误（新增）
-|   |-- skill-create.md     # /skill-create - 从 Git 历史生成技能（新增）
-|   |-- instinct-status.md  # /instinct-status - 查看已学习的直觉（新增）
-|   |-- instinct-import.md  # /instinct-import - 导入直觉（新增）
-|   |-- instinct-export.md  # /instinct-export - 导出直觉（新增）
-|   |-- evolve.md           # /evolve - 将直觉聚类为技能
-|   |-- pm2.md              # /pm2 - PM2 服务生命周期管理（新增）
-|   |-- multi-plan.md       # /multi-plan - 多代理任务拆解（新增）
-|   |-- multi-execute.md    # /multi-execute - 编排式多代理工作流（新增）
-|   |-- multi-backend.md    # /multi-backend - 后端多服务编排（新增）
-|   |-- multi-frontend.md   # /multi-frontend - 前端多服务编排（新增）
-|   |-- multi-workflow.md   # /multi-workflow - 通用多服务工作流（新增）
+|-- commands/         # Slash commands for quick execution
+|   |-- tdd.md              # /tdd - Test-driven development
+|   |-- plan.md             # /plan - Implementation planning
+|   |-- e2e.md              # /e2e - E2E test generation
+|   |-- code-review.md      # /code-review - Quality review
+|   |-- build-fix.md        # /build-fix - Fix build errors
+|   |-- refactor-clean.md   # /refactor-clean - Dead code removal
+|   |-- learn.md            # /learn - Extract patterns mid-session (Longform Guide)
+|   |-- checkpoint.md       # /checkpoint - Save verification state (Longform Guide)
+|   |-- verify.md           # /verify - Run verification loop (Longform Guide)
+|   |-- setup-pm.md         # /setup-pm - Configure package manager
+|   |-- go-review.md        # /go-review - Go code review (NEW)
+|   |-- go-test.md          # /go-test - Go TDD workflow (NEW)
+|   |-- go-build.md         # /go-build - Fix Go build errors (NEW)
+|   |-- skill-create.md     # /skill-create - Generate skills from git history (NEW)
+|   |-- instinct-status.md  # /instinct-status - View learned instincts (NEW)
+|   |-- instinct-import.md  # /instinct-import - Import instincts (NEW)
+|   |-- instinct-export.md  # /instinct-export - Export instincts (NEW)
+|   |-- evolve.md           # /evolve - Cluster instincts into skills
+|   |-- pm2.md              # /pm2 - PM2 service lifecycle management (NEW)
+|   |-- multi-plan.md       # /multi-plan - Multi-agent task decomposition (NEW)
+|   |-- multi-execute.md    # /multi-execute - Orchestrated multi-agent workflows (NEW)
+|   |-- multi-backend.md    # /multi-backend - Backend multi-service orchestration (NEW)
+|   |-- multi-frontend.md   # /multi-frontend - Frontend multi-service orchestration (NEW)
+|   |-- multi-workflow.md   # /multi-workflow - General multi-service workflows (NEW)
+|   |-- orchestrate.md      # /orchestrate - Multi-agent coordination
+|   |-- sessions.md         # /sessions - Session history management
+|   |-- eval.md             # /eval - Evaluate against criteria
+|   |-- test-coverage.md    # /test-coverage - Test coverage analysis
+|   |-- update-docs.md      # /update-docs - Update documentation
+|   |-- update-codemaps.md  # /update-codemaps - Update codemaps
+|   |-- python-review.md    # /python-review - Python code review (NEW)
 |
-|-- rules/            # 必须遵循的规则（复制到 ~/.claude/rules/）
-|   |-- README.md            # 结构概览与安装指南
-|   |-- common/              # 与语言无关的通用原则
-|   |   |-- coding-style.md    # 不可变性与文件组织
-|   |   |-- git-workflow.md    # 提交格式与 PR 流程
-|   |   |-- testing.md         # TDD，80% 覆盖率要求
-|   |   |-- performance.md     # 模型选择与上下文管理
-|   |   |-- patterns.md        # 设计模式与项目骨架
-|   |   |-- hooks.md           # Hook 架构与 TodoWrite
-|   |   |-- agents.md          # 何时委派给子代理
-|   |   |-- security.md        # 强制安全检查
-|   |-- typescript/          # TypeScript / JavaScript 专用
-|   |-- python/              # Python 专用
-|   |-- golang/              # Go 专用
+|-- rules/            # Always-follow guidelines (copy to ~/.claude/rules/)
+|   |-- README.md            # Structure overview and installation guide
+|   |-- common/              # Language-agnostic principles
+|   |   |-- coding-style.md    # Immutability, file organization
+|   |   |-- git-workflow.md    # Commit format, PR process
+|   |   |-- testing.md         # TDD, 80% coverage requirement
+|   |   |-- performance.md     # Model selection, context management
+|   |   |-- patterns.md        # Design patterns, skeleton projects
+|   |   |-- hooks.md           # Hook architecture, TodoWrite
+|   |   |-- agents.md          # When to delegate to subagents
+|   |   |-- security.md        # Mandatory security checks
+|   |-- typescript/          # TypeScript/JavaScript specific
+|   |-- python/              # Python specific
+|   |-- golang/              # Go specific
 |
-|-- hooks/            # 基于触发器的自动化
-|   |-- hooks.json                # 所有 Hook 配置（PreToolUse、PostToolUse、Stop 等）
-|   |-- memory-persistence/       # 会话生命周期 Hook（长文档指南）
-|   |-- strategic-compact/        # 压缩建议（长文档指南）
+|-- hooks/            # Trigger-based automations
+|   |-- README.md                 # Hook documentation, recipes, and customization guide
+|   |-- hooks.json                # All hooks config (PreToolUse, PostToolUse, Stop, etc.)
+|   |-- memory-persistence/       # Session lifecycle hooks (Longform Guide)
+|   |-- strategic-compact/        # Compaction suggestions (Longform Guide)
 |
-|-- scripts/          # 跨平台 Node.js 脚本（新增）
-|   |-- lib/                     # 共享工具
-|   |   |-- utils.js             # 跨平台文件/路径/系统工具
-|   |   |-- package-manager.js   # 包管理器检测与选择
-|   |-- hooks/                   # Hook 实现
-|   |   |-- session-start.js     # 会话开始时加载上下文
-|   |   |-- session-end.js       # 会话结束时保存状态
-|   |   |-- pre-compact.js       # 压缩前状态保存
-|   |   |-- suggest-compact.js   # 战略性压缩建议
-|   |   |-- evaluate-session.js  # 从会话中提取模式
-|   |-- setup-package-manager.js # 交互式包管理器设置
+|-- scripts/          # Cross-platform Node.js scripts (NEW)
+|   |-- lib/                     # Shared utilities
+|   |   |-- utils.js             # Cross-platform file/path/system utilities
+|   |   |-- package-manager.js   # Package manager detection and selection
+|   |-- hooks/                   # Hook implementations
+|   |   |-- session-start.js     # Load context on session start
+|   |   |-- session-end.js       # Save state on session end
+|   |   |-- pre-compact.js       # Pre-compaction state saving
+|   |   |-- suggest-compact.js   # Strategic compaction suggestions
+|   |   |-- evaluate-session.js  # Extract patterns from sessions
+|   |-- setup-package-manager.js # Interactive PM setup
 |
-|-- tests/            # 测试套件（新增）
-|   |-- lib/                     # 库测试
-|   |-- hooks/                   # Hook 测试
-|   |-- run-all.js               # 运行所有测试
+|-- tests/            # Test suite (NEW)
+|   |-- lib/                     # Library tests
+|   |-- hooks/                   # Hook tests
+|   |-- run-all.js               # Run all tests
 |
-|-- contexts/         # 动态系统提示注入上下文（长文档指南）
-|   |-- dev.md              # 开发模式上下文
-|   |-- review.md           # 代码审查模式上下文
-|   |-- research.md         # 研究/探索模式上下文
+|-- contexts/         # Dynamic system prompt injection contexts (Longform Guide)
+|   |-- dev.md              # Development mode context
+|   |-- review.md           # Code review mode context
+|   |-- research.md         # Research/exploration mode context
 |
-|-- examples/         # 示例配置与会话
-|   |-- CLAUDE.md           # 项目级配置示例
-|   |-- user-CLAUDE.md      # 用户级配置示例
+|-- examples/         # Example configurations and sessions
+|   |-- CLAUDE.md             # Example project-level config
+|   |-- user-CLAUDE.md        # Example user-level config
+|   |-- saas-nextjs-CLAUDE.md   # Real-world SaaS (Next.js + Supabase + Stripe)
+|   |-- go-microservice-CLAUDE.md # Real-world Go microservice (gRPC + PostgreSQL)
+|   |-- django-api-CLAUDE.md      # Real-world Django REST API (DRF + Celery)
+|   |-- rust-api-CLAUDE.md        # Real-world Rust API (Axum + SQLx + PostgreSQL) (NEW)
 |
-|-- mcp-configs/      # MCP 服务器配置
-|   |-- mcp-servers.json    # GitHub、Supabase、Vercel、Railway 等
+|-- mcp-configs/      # MCP server configurations
+|   |-- mcp-servers.json    # GitHub, Supabase, Vercel, Railway, etc.
 |
-|-- marketplace.json  # 自托管插件市场配置（用于 /plugin marketplace add）
+|-- marketplace.json  # Self-hosted marketplace config (for /plugin marketplace add)
 ```
 
-***
+---
 
-## 🛠️ 生态系统工具
+## 🛠️ Ecosystem Tools
 
-### 技能创建器
+### Skill Creator
 
-从您的仓库生成 Claude Code 技能的两种方式：
+Two ways to generate Claude Code skills from your repository:
 
-#### 选项 A：本地分析（内置）
+#### Option A: Local Analysis (Built-in)
 
-使用 `/skill-create` 命令进行本地分析，无需外部服务：
+Use the `/skill-create` command for local analysis without external services:
 
 ```bash
 /skill-create                    # Analyze current repo
 /skill-create --instincts        # Also generate instincts for continuous-learning
 ```
 
-这会在本地分析您的 git 历史记录并生成 SKILL.md 文件。
+This analyzes your git history locally and generates SKILL.md files.
 
-#### 选项 B：GitHub 应用（高级）
+#### Option B: GitHub App (Advanced)
 
-适用于高级功能（10k+ 提交、自动 PR、团队共享）：
+For advanced features (10k+ commits, auto-PRs, team sharing):
 
-[安装 GitHub 应用](https://github.com/apps/skill-creator) | [ecc.tools](https://ecc.tools)
+[Install GitHub App](https://github.com/apps/skill-creator) | [ecc.tools](https://ecc.tools)
 
 ```bash
 # Comment on any issue:
@@ -342,15 +374,16 @@ everything-claude-code/
 # Or auto-triggers on push to default branch
 ```
 
-两种选项都会创建：
+Both options create:
+- **SKILL.md files** - Ready-to-use skills for Claude Code
+- **Instinct collections** - For continuous-learning-v2
+- **Pattern extraction** - Learns from your commit history
 
-* **SKILL.md 文件** - 可供 Claude Code 使用的即用型技能
-* **Instinct 集合** - 用于 continuous-learning-v2
-* **模式提取** - 从您的提交历史中学习
+### AgentShield — Security Auditor
 
-### AgentShield — 安全审计器
+> Built at the Claude Code Hackathon (Cerebral Valley x Anthropic, Feb 2026). 912 tests, 98% coverage, 102 static analysis rules.
 
-扫描您的 Claude Code 配置，查找漏洞、错误配置和注入风险。
+Scan your Claude Code configuration for vulnerabilities, misconfigurations, and injection risks.
 
 ```bash
 # Quick scan (no install needed)
@@ -359,22 +392,26 @@ npx ecc-agentshield scan
 # Auto-fix safe issues
 npx ecc-agentshield scan --fix
 
-# Deep analysis with Opus 4.6
+# Deep analysis with three Opus 4.6 agents
 npx ecc-agentshield scan --opus --stream
 
 # Generate secure config from scratch
 npx ecc-agentshield init
 ```
 
-检查 CLAUDE.md、settings.json、MCP 服务器、钩子和智能体定义。生成带有可操作发现的安全等级 (A-F)。
+**What it scans:** CLAUDE.md, settings.json, MCP configs, hooks, agent definitions, and skills across 5 categories — secrets detection (14 patterns), permission auditing, hook injection analysis, MCP server risk profiling, and agent config review.
 
-在 Claude Code 中使用 `/security-scan` 来运行它，或者通过 [GitHub Action](https://github.com/affaan-m/agentshield) 添加到 CI。
+**The `--opus` flag** runs three Claude Opus 4.6 agents in a red-team/blue-team/auditor pipeline. The attacker finds exploit chains, the defender evaluates protections, and the auditor synthesizes both into a prioritized risk assessment. Adversarial reasoning, not just pattern matching.
+
+**Output formats:** Terminal (color-graded A-F), JSON (CI pipelines), Markdown, HTML. Exit code 2 on critical findings for build gates.
+
+Use `/security-scan` in Claude Code to run it, or add to CI with the [GitHub Action](https://github.com/affaan-m/agentshield).
 
 [GitHub](https://github.com/affaan-m/agentshield) | [npm](https://www.npmjs.com/package/ecc-agentshield)
 
-### 🧠 持续学习 v2
+### 🧠 Continuous Learning v2
 
-基于本能的学习系统会自动学习您的模式：
+The instinct-based learning system automatically learns your patterns:
 
 ```bash
 /instinct-status        # Show learned instincts with confidence
@@ -383,43 +420,42 @@ npx ecc-agentshield init
 /evolve                 # Cluster related instincts into skills
 ```
 
-完整文档请参阅 `skills/continuous-learning-v2/`。
+See `skills/continuous-learning-v2/` for full documentation.
 
-***
+---
 
-## 📋 要求
+## 📋 Requirements
 
-### Claude Code CLI 版本
+### Claude Code CLI Version
 
-**最低版本：v2.1.0 或更高版本**
+**Minimum version: v2.1.0 or later**
 
-此插件需要 Claude Code CLI v2.1.0+，因为插件系统处理钩子的方式发生了变化。
+This plugin requires Claude Code CLI v2.1.0+ due to changes in how the plugin system handles hooks.
 
-检查您的版本：
-
+Check your version:
 ```bash
 claude --version
 ```
 
-### 重要提示：钩子自动加载行为
+### Important: Hooks Auto-Loading Behavior
 
-> ⚠️ **对于贡献者：** 请勿向 `.claude-plugin/plugin.json` 添加 `"hooks"` 字段。这由回归测试强制执行。
+> ⚠️ **For Contributors:** Do NOT add a `"hooks"` field to `.claude-plugin/plugin.json`. This is enforced by a regression test.
 
-Claude Code v2.1+ **会自动加载** 任何已安装插件中的 `hooks/hooks.json`（按约定）。在 `plugin.json` 中显式声明会导致重复检测错误：
+Claude Code v2.1+ **automatically loads** `hooks/hooks.json` from any installed plugin by convention. Explicitly declaring it in `plugin.json` causes a duplicate detection error:
 
 ```
 Duplicate hooks file detected: ./hooks/hooks.json resolves to already-loaded file
 ```
 
-**历史背景：** 这已导致此仓库中多次修复/还原循环（[#29](https://github.com/affaan-m/everything-claude-code/issues/29), [#52](https://github.com/affaan-m/everything-claude-code/issues/52), [#103](https://github.com/affaan-m/everything-claude-code/issues/103)）。Claude Code 版本之间的行为发生了变化，导致了混淆。我们现在有一个回归测试来防止这种情况再次发生。
+**History:** This has caused repeated fix/revert cycles in this repo ([#29](https://github.com/affaan-m/everything-claude-code/issues/29), [#52](https://github.com/affaan-m/everything-claude-code/issues/52), [#103](https://github.com/affaan-m/everything-claude-code/issues/103)). The behavior changed between Claude Code versions, leading to confusion. We now have a regression test to prevent this from being reintroduced.
 
-***
+---
 
-## 📥 安装
+## 📥 Installation
 
-### 选项 1：作为插件安装（推荐）
+### Option 1: Install as Plugin (Recommended)
 
-使用此仓库的最简单方式 - 作为 Claude Code 插件安装：
+The easiest way to use this repo - install as a Claude Code plugin:
 
 ```bash
 # Add this repo as a marketplace
@@ -429,7 +465,7 @@ Duplicate hooks file detected: ./hooks/hooks.json resolves to already-loaded fil
 /plugin install everything-claude-code@everything-claude-code
 ```
 
-或者直接添加到您的 `~/.claude/settings.json`：
+Or add directly to your `~/.claude/settings.json`:
 
 ```json
 {
@@ -447,32 +483,32 @@ Duplicate hooks file detected: ./hooks/hooks.json resolves to already-loaded fil
 }
 ```
 
-这将使您能够立即访问所有命令、代理、技能和钩子。
+This gives you instant access to all commands, agents, skills, and hooks.
 
-> **注意：** Claude Code 插件系统不支持通过插件分发 `rules`（[上游限制](https://code.claude.com/docs/en/plugins-reference)）。您需要手动安装规则：
+> **Note:** The Claude Code plugin system does not support distributing `rules` via plugins ([upstream limitation](https://code.claude.com/docs/en/plugins-reference)). You need to install rules manually:
 >
 > ```bash
-> # 首先克隆仓库
+> # Clone the repo first
 > git clone https://github.com/affaan-m/everything-claude-code.git
 >
-> # 选项 A：用户级规则（适用于所有项目）
+> # Option A: User-level rules (applies to all projects)
 > mkdir -p ~/.claude/rules
 > cp -r everything-claude-code/rules/common/* ~/.claude/rules/
-> cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/   # 选择您的技术栈
+> cp -r everything-claude-code/rules/typescript/* ~/.claude/rules/   # pick your stack
 > cp -r everything-claude-code/rules/python/* ~/.claude/rules/
 > cp -r everything-claude-code/rules/golang/* ~/.claude/rules/
 >
-> # 选项 B：项目级规则（仅适用于当前项目）
+> # Option B: Project-level rules (applies to current project only)
 > mkdir -p .claude/rules
 > cp -r everything-claude-code/rules/common/* .claude/rules/
-> cp -r everything-claude-code/rules/typescript/* .claude/rules/     # 选择您的技术栈
+> cp -r everything-claude-code/rules/typescript/* .claude/rules/     # pick your stack
 > ```
 
-***
+---
 
-### 🔧 选项 2：手动安装
+### 🔧 Option 2: Manual Installation
 
-如果您希望对安装的内容进行手动控制：
+If you prefer manual control over what's installed:
 
 ```bash
 # Clone the repo
@@ -494,39 +530,38 @@ cp everything-claude-code/commands/*.md ~/.claude/commands/
 cp -r everything-claude-code/skills/* ~/.claude/skills/
 ```
 
-#### 将钩子添加到 settings.json
+#### Add hooks to settings.json
 
-将 `hooks/hooks.json` 中的钩子复制到你的 `~/.claude/settings.json`。
+Copy the hooks from `hooks/hooks.json` to your `~/.claude/settings.json`.
 
-#### 配置 MCPs
+#### Configure MCPs
 
-将 `mcp-configs/mcp-servers.json` 中所需的 MCP 服务器复制到你的 `~/.claude.json`。
+Copy desired MCP servers from `mcp-configs/mcp-servers.json` to your `~/.claude.json`.
 
-**重要：** 将 `YOUR_*_HERE` 占位符替换为你实际的 API 密钥。
+**Important:** Replace `YOUR_*_HERE` placeholders with your actual API keys.
 
-***
+---
 
-## 🎯 关键概念
+## 🎯 Key Concepts
 
-### 智能体
+### Agents
 
-子智能体处理具有有限范围的委托任务。示例：
+Subagents handle delegated tasks with limited scope. Example:
 
 ```markdown
 ---
 name: code-reviewer
-description: 审查代码的质量、安全性和可维护性
+description: Reviews code for quality, security, and maintainability
 tools: ["Read", "Grep", "Glob", "Bash"]
 model: opus
 ---
 
-您是一位资深代码审查员...
-
+You are a senior code reviewer...
 ```
 
-### 技能
+### Skills
 
-技能是由命令或智能体调用的工作流定义：
+Skills are workflow definitions invoked by commands or agents:
 
 ```markdown
 # TDD Workflow
@@ -538,9 +573,9 @@ model: opus
 5. Verify 80%+ coverage
 ```
 
-### 钩子
+### Hooks
 
-钩子在工具事件上触发。示例 - 警告关于 console.log：
+Hooks fire on tool events. Example - warn about console.log:
 
 ```json
 {
@@ -552,9 +587,9 @@ model: opus
 }
 ```
 
-### 规则
+### Rules
 
-规则是始终遵循的指导原则，组织成 `common/`（与语言无关）+ 语言特定目录：
+Rules are always-follow guidelines, organized into `common/` (language-agnostic) + language-specific directories:
 
 ```
 rules/
@@ -564,13 +599,128 @@ rules/
   golang/          # Go specific patterns and tools
 ```
 
-有关安装和结构详情，请参阅 [`rules/README.md`](rules/README.md)。
+See [`rules/README.md`](rules/README.md) for installation and structure details.
 
-***
+---
 
-## 🧪 运行测试
+## 🗺️ Which Agent Should I Use?
 
-该插件包含一个全面的测试套件：
+Not sure where to start? Use this quick reference:
+
+| I want to... | Use this command | Agent used |
+|--------------|-----------------|------------|
+| Plan a new feature | `/plan "Add auth"` | planner |
+| Design system architecture | `/plan` + architect agent | architect |
+| Write code with tests first | `/tdd` | tdd-guide |
+| Review code I just wrote | `/code-review` | code-reviewer |
+| Fix a failing build | `/build-fix` | build-error-resolver |
+| Run end-to-end tests | `/e2e` | e2e-runner |
+| Find security vulnerabilities | `/security-scan` | security-reviewer |
+| Remove dead code | `/refactor-clean` | refactor-cleaner |
+| Update documentation | `/update-docs` | doc-updater |
+| Review Go code | `/go-review` | go-reviewer |
+| Review Python code | `/python-review` | python-reviewer |
+| Audit database queries | *(auto-delegated)* | database-reviewer |
+
+### Common Workflows
+
+**Starting a new feature:**
+```
+/plan "Add user authentication with OAuth"   → planner creates implementation blueprint
+/tdd                                          → tdd-guide enforces write-tests-first
+/code-review                                  → code-reviewer checks your work
+```
+
+**Fixing a bug:**
+```
+/tdd                                          → tdd-guide: write a failing test that reproduces it
+                                              → implement the fix, verify test passes
+/code-review                                  → code-reviewer: catch regressions
+```
+
+**Preparing for production:**
+```
+/security-scan                                → security-reviewer: OWASP Top 10 audit
+/e2e                                          → e2e-runner: critical user flow tests
+/test-coverage                                → verify 80%+ coverage
+```
+
+---
+
+## ❓ FAQ
+
+<details>
+<summary><b>How do I check which agents/commands are installed?</b></summary>
+
+```bash
+/plugin list everything-claude-code@everything-claude-code
+```
+
+This shows all available agents, commands, and skills from the plugin.
+</details>
+
+<details>
+<summary><b>My hooks aren't working / I see "Duplicate hooks file" errors</b></summary>
+
+This is the most common issue. **Do NOT add a `"hooks"` field to `.claude-plugin/plugin.json`.** Claude Code v2.1+ automatically loads `hooks/hooks.json` from installed plugins. Explicitly declaring it causes duplicate detection errors. See [#29](https://github.com/affaan-m/everything-claude-code/issues/29), [#52](https://github.com/affaan-m/everything-claude-code/issues/52), [#103](https://github.com/affaan-m/everything-claude-code/issues/103).
+</details>
+
+<details>
+<summary><b>My context window is shrinking / Claude is running out of context</b></summary>
+
+Too many MCP servers eat your context. Each MCP tool description consumes tokens from your 200k window, potentially reducing it to ~70k.
+
+**Fix:** Disable unused MCPs per project:
+```json
+// In your project's .claude/settings.json
+{
+  "disabledMcpServers": ["supabase", "railway", "vercel"]
+}
+```
+
+Keep under 10 MCPs enabled and under 80 tools active.
+</details>
+
+<details>
+<summary><b>Can I use only some components (e.g., just agents)?</b></summary>
+
+Yes. Use Option 2 (manual installation) and copy only what you need:
+
+```bash
+# Just agents
+cp everything-claude-code/agents/*.md ~/.claude/agents/
+
+# Just rules
+cp -r everything-claude-code/rules/common/* ~/.claude/rules/
+```
+
+Each component is fully independent.
+</details>
+
+<details>
+<summary><b>Does this work with Cursor / OpenCode?</b></summary>
+
+Yes. ECC is cross-platform:
+- **Cursor**: Pre-translated configs in `.cursor/`. See [Cursor IDE Support](#cursor-ide-support).
+- **OpenCode**: Full plugin support in `.opencode/`. See [OpenCode Support](#-opencode-support).
+- **Claude Code**: Native — this is the primary target.
+</details>
+
+<details>
+<summary><b>How do I contribute a new skill or agent?</b></summary>
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
+1. Fork the repo
+2. Create your skill in `skills/your-skill-name/SKILL.md` (with YAML frontmatter)
+3. Or create an agent in `agents/your-agent.md`
+4. Submit a PR with a clear description of what it does and when to use it
+</details>
+
+---
+
+## 🧪 Running Tests
+
+The plugin includes a comprehensive test suite:
 
 ```bash
 # Run all tests
@@ -582,36 +732,35 @@ node tests/lib/package-manager.test.js
 node tests/hooks/hooks.test.js
 ```
 
-***
+---
 
-## 🤝 贡献
+## 🤝 Contributing
 
-**欢迎并鼓励贡献。**
+**Contributions are welcome and encouraged.**
 
-此仓库旨在成为社区资源。如果你有：
+This repo is meant to be a community resource. If you have:
+- Useful agents or skills
+- Clever hooks
+- Better MCP configurations
+- Improved rules
 
-* 有用的智能体或技能
-* 巧妙的钩子
-* 更好的 MCP 配置
-* 改进的规则
+Please contribute! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-请贡献！请参阅 [CONTRIBUTING.md](CONTRIBUTING.md) 了解指南。
+### Ideas for Contributions
 
-### 贡献想法
+- Language-specific skills (Rust, C#, Swift, Kotlin) — Go, Python, Java already included
+- Framework-specific configs (Rails, Laravel, FastAPI, NestJS) — Django, Spring Boot already included
+- DevOps agents (Kubernetes, Terraform, AWS, Docker)
+- Testing strategies (different frameworks, visual regression)
+- Domain-specific knowledge (ML, data engineering, mobile)
 
-* 特定语言技能 (Rust, C#, Swift, Kotlin) — Go, Python, Java 已包含
-* 特定框架配置 (Rails, Laravel, FastAPI, NestJS) — Django, Spring Boot 已包含
-* DevOps 智能体 (Kubernetes, Terraform, AWS, Docker)
-* 测试策略 (不同框架，视觉回归)
-* 领域特定知识 (ML, 数据工程, 移动端)
+---
 
-***
+## Cursor IDE Support
 
-## Cursor IDE 支持
+ecc-universal includes pre-translated configurations for [Cursor IDE](https://cursor.com). The `.cursor/` directory contains rules, agents, skills, commands, and MCP configs adapted for Cursor's format.
 
-ecc-universal 包含为 [Cursor IDE](https://cursor.com) 预翻译的配置。`.cursor/` 目录包含适用于 Cursor 格式的规则、智能体、技能、命令和 MCP 配置。
-
-### 快速开始 (Cursor)
+### Quick Start (Cursor)
 
 ```bash
 # Install the package
@@ -622,26 +771,26 @@ npm install ecc-universal
 ./install.sh --target cursor python golang
 ```
 
-### 已翻译内容
+### What's Translated
 
-| 组件 | Claude Code → Cursor | 对等性 |
+| Component | Claude Code → Cursor | Parity |
 |-----------|---------------------|--------|
-| 规则 | 添加了 YAML frontmatter，路径扁平化 | 完全 |
-| 智能体 | 模型 ID 已扩展，工具 → 只读标志 | 完全 |
-| 技能 | 无需更改 (标准相同) | 相同 |
-| 命令 | 路径引用已更新，多-\* 已存根 | 部分 |
-| MCP 配置 | 环境变量插值语法已更新 | 完全 |
-| 钩子 | Cursor 中无等效项 | 参见替代方案 |
+| Rules | YAML frontmatter added, paths flattened | Full |
+| Agents | Model IDs expanded, tools → readonly flag | Full |
+| Skills | No changes needed (identical standard) | Identical |
+| Commands | Path references updated, multi-* stubbed | Partial |
+| MCP Config | Env interpolation syntax updated | Full |
+| Hooks | No equivalent in Cursor | See alternatives |
 
-详情请参阅 [.cursor/README.md](.cursor/README.md)，完整迁移指南请参阅 [.cursor/MIGRATION.md](.cursor/MIGRATION.md)。
+See [.cursor/README.md](.cursor/README.md) for details and [.cursor/MIGRATION.md](.cursor/MIGRATION.md) for the full migration guide.
 
-***
+---
 
-## 🔌 OpenCode 支持
+## 🔌 OpenCode Support
 
-ECC 提供 **完整的 OpenCode 支持**，包括插件和钩子。
+ECC provides **full OpenCode support** including plugins and hooks.
 
-### 快速开始
+### Quick Start
 
 ```bash
 # Install OpenCode
@@ -651,25 +800,25 @@ npm install -g opencode
 opencode
 ```
 
-配置会自动从 `.opencode/opencode.json` 检测。
+The configuration is automatically detected from `.opencode/opencode.json`.
 
-### 功能对等
+### Feature Parity
 
-| 特性 | Claude Code | OpenCode | 状态 |
+| Feature | Claude Code | OpenCode | Status |
 |---------|-------------|----------|--------|
-| 智能体 | ✅ 14 agents | ✅ 12 agents | **Claude Code 领先** |
-| 命令 | ✅ 30 commands | ✅ 24 commands | **Claude Code 领先** |
-| 技能 | ✅ 28 skills | ✅ 16 skills | **Claude Code 领先** |
-| 钩子 | ✅ 3 phases | ✅ 20+ events | **OpenCode 更多！** |
-| 规则 | ✅ 8 rules | ✅ 8 rules | **完全一致** |
-| MCP Servers | ✅ Full | ✅ Full | **完全一致** |
-| 自定义工具 | ✅ Via hooks | ✅ Native support | **OpenCode 更好** |
+| Agents | ✅ 13 agents | ✅ 12 agents | **Claude Code leads** |
+| Commands | ✅ 31 commands | ✅ 24 commands | **Claude Code leads** |
+| Skills | ✅ 43 skills | ✅ 16 skills | **Claude Code leads** |
+| Hooks | ✅ 3 phases | ✅ 20+ events | **OpenCode has more!** |
+| Rules | ✅ 8 rules | ✅ 8 rules | **Full parity** |
+| MCP Servers | ✅ Full | ✅ Full | **Full parity** |
+| Custom Tools | ✅ Via hooks | ✅ Native support | **OpenCode is better** |
 
-### 通过插件实现的钩子支持
+### Hook Support via Plugins
 
-OpenCode 的插件系统比 Claude Code 更复杂，有 20 多种事件类型：
+OpenCode's plugin system is MORE sophisticated than Claude Code with 20+ event types:
 
-| Claude Code 钩子 | OpenCode 插件事件 |
+| Claude Code Hook | OpenCode Plugin Event |
 |-----------------|----------------------|
 | PreToolUse | `tool.execute.before` |
 | PostToolUse | `tool.execute.after` |
@@ -677,122 +826,207 @@ OpenCode 的插件系统比 Claude Code 更复杂，有 20 多种事件类型：
 | SessionStart | `session.created` |
 | SessionEnd | `session.deleted` |
 
-**额外的 OpenCode 事件**：`file.edited`、`file.watcher.updated`、`message.updated`、`lsp.client.diagnostics`、`tui.toast.show` 等等。
+**Additional OpenCode events**: `file.edited`, `file.watcher.updated`, `message.updated`, `lsp.client.diagnostics`, `tui.toast.show`, and more.
 
-### 可用命令 (24)
+### Available Commands (31)
 
-| 命令 | 描述 |
+| Command | Description |
 |---------|-------------|
-| `/plan` | 创建实施计划 |
-| `/tdd` | 强制执行 TDD 工作流 |
-| `/code-review` | 审查代码变更 |
-| `/security` | 运行安全审查 |
-| `/build-fix` | 修复构建错误 |
-| `/e2e` | 生成端到端测试 |
-| `/refactor-clean` | 移除死代码 |
-| `/orchestrate` | 多代理工作流 |
-| `/learn` | 从会话中提取模式 |
-| `/checkpoint` | 保存验证状态 |
-| `/verify` | 运行验证循环 |
-| `/eval` | 根据标准进行评估 |
-| `/update-docs` | 更新文档 |
-| `/update-codemaps` | 更新代码地图 |
-| `/test-coverage` | 分析覆盖率 |
-| `/go-review` | Go 代码审查 |
-| `/go-test` | Go TDD 工作流 |
-| `/go-build` | 修复 Go 构建错误 |
-| `/skill-create` | 从 git 生成技能 |
-| `/instinct-status` | 查看习得的本能 |
-| `/instinct-import` | 导入本能 |
-| `/instinct-export` | 导出本能 |
-| `/evolve` | 将本能聚类为技能 |
-| `/setup-pm` | 配置包管理器 |
+| `/plan` | Create implementation plan |
+| `/tdd` | Enforce TDD workflow |
+| `/code-review` | Review code changes |
+| `/build-fix` | Fix build errors |
+| `/e2e` | Generate E2E tests |
+| `/refactor-clean` | Remove dead code |
+| `/orchestrate` | Multi-agent workflow |
+| `/learn` | Extract patterns from session |
+| `/checkpoint` | Save verification state |
+| `/verify` | Run verification loop |
+| `/eval` | Evaluate against criteria |
+| `/update-docs` | Update documentation |
+| `/update-codemaps` | Update codemaps |
+| `/test-coverage` | Analyze coverage |
+| `/go-review` | Go code review |
+| `/go-test` | Go TDD workflow |
+| `/go-build` | Fix Go build errors |
+| `/python-review` | Python code review (PEP 8, type hints, security) |
+| `/multi-plan` | Multi-model collaborative planning |
+| `/multi-execute` | Multi-model collaborative execution |
+| `/multi-backend` | Backend-focused multi-model workflow |
+| `/multi-frontend` | Frontend-focused multi-model workflow |
+| `/multi-workflow` | Full multi-model development workflow |
+| `/pm2` | Auto-generate PM2 service commands |
+| `/sessions` | Manage session history |
+| `/skill-create` | Generate skills from git |
+| `/instinct-status` | View learned instincts |
+| `/instinct-import` | Import instincts |
+| `/instinct-export` | Export instincts |
+| `/evolve` | Cluster instincts into skills |
+| `/setup-pm` | Configure package manager |
 
-### 插件安装
+### Plugin Installation
 
-**选项 1：直接使用**
-
+**Option 1: Use directly**
 ```bash
 cd everything-claude-code
 opencode
 ```
 
-**选项 2：作为 npm 包安装**
-
+**Option 2: Install as npm package**
 ```bash
 npm install ecc-universal
 ```
 
-然后添加到您的 `opencode.json`：
-
+Then add to your `opencode.json`:
 ```json
 {
   "plugin": ["ecc-universal"]
 }
 ```
 
-### 文档
+### Documentation
 
-* **迁移指南**：`.opencode/MIGRATION.md`
-* **OpenCode 插件 README**：`.opencode/README.md`
-* **整合的规则**：`.opencode/instructions/INSTRUCTIONS.md`
-* **LLM 文档**：`llms.txt`（完整的 OpenCode 文档，供 LLM 使用）
+- **Migration Guide**: `.opencode/MIGRATION.md`
+- **OpenCode Plugin README**: `.opencode/README.md`
+- **Consolidated Rules**: `.opencode/instructions/INSTRUCTIONS.md`
+- **LLM Documentation**: `llms.txt` (complete OpenCode docs for LLMs)
 
-***
+---
 
-## 📖 背景
+## 📖 Background
 
-我从实验性推出以来就一直在使用 Claude Code。在 2025 年 9 月，与 [@DRodriguezFX](https://x.com/DRodriguezFX) 一起使用 Claude Code 构建 [zenith.chat](https://zenith.chat)，赢得了 Anthropic x Forum Ventures 黑客马拉松。
+I've been using Claude Code since the experimental rollout. Won the Anthropic x Forum Ventures hackathon in Sep 2025 building [zenith.chat](https://zenith.chat) with [@DRodriguezFX](https://x.com/DRodriguezFX) - entirely using Claude Code.
 
-这些配置已在多个生产应用程序中经过实战测试。
+These configs are battle-tested across multiple production applications.
 
-***
+---
 
-## ⚠️ 重要说明
+## Token Optimization
 
-### 上下文窗口管理
+Claude Code usage can be expensive if you don't manage token consumption. These settings significantly reduce costs without sacrificing quality.
 
-**关键：** 不要一次性启用所有 MCP。启用过多工具后，你的 200k 上下文窗口可能会缩小到 70k。
+### Recommended Settings
 
-经验法则：
+Add to `~/.claude/settings.json`:
 
-* 配置 20-30 个 MCP
-* 每个项目保持启用少于 10 个
-* 活动工具少于 80 个
+```json
+{
+  "model": "sonnet",
+  "env": {
+    "MAX_THINKING_TOKENS": "10000",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"
+  }
+}
+```
 
-在项目配置中使用 `disabledMcpServers` 来禁用未使用的工具。
+| Setting | Default | Recommended | Impact |
+|---------|---------|-------------|--------|
+| `model` | opus | **sonnet** | ~60% cost reduction; handles 80%+ of coding tasks |
+| `MAX_THINKING_TOKENS` | 31,999 | **10,000** | ~70% reduction in hidden thinking cost per request |
+| `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` | 95 | **50** | Compacts earlier — better quality in long sessions |
 
-### 定制化
+Switch to Opus only when you need deep architectural reasoning:
+```
+/model opus
+```
 
-这些配置适用于我的工作流。你应该：
+### Daily Workflow Commands
 
-1. 从引起共鸣的部分开始
-2. 根据你的技术栈进行修改
-3. 移除你不使用的部分
-4. 添加你自己的模式
+| Command | When to Use |
+|---------|-------------|
+| `/model sonnet` | Default for most tasks |
+| `/model opus` | Complex architecture, debugging, deep reasoning |
+| `/clear` | Between unrelated tasks (free, instant reset) |
+| `/compact` | At logical task breakpoints (research done, milestone complete) |
+| `/cost` | Monitor token spending during session |
 
-***
+### Strategic Compaction
 
-## 🌟 Star 历史
+The `strategic-compact` skill (included in this plugin) suggests `/compact` at logical breakpoints instead of relying on auto-compaction at 95% context. See `skills/strategic-compact/SKILL.md` for the full decision guide.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=affaan-m/everything-claude-code\&type=Date)](https://star-history.com/#affaan-m/everything-claude-code\&Date)
+**When to compact:**
+- After research/exploration, before implementation
+- After completing a milestone, before starting the next
+- After debugging, before continuing feature work
+- After a failed approach, before trying a new one
 
-***
+**When NOT to compact:**
+- Mid-implementation (you'll lose variable names, file paths, partial state)
 
-## 🔗 链接
+### Context Window Management
 
-* **速查指南 (从此开始):** [Claude Code 万事速查指南](https://x.com/affaanmustafa/status/2012378465664745795)
-* **详细指南 (进阶):** [Claude Code 万事详细指南](https://x.com/affaanmustafa/status/2014040193557471352)
-* **关注:** [@affaanmustafa](https://x.com/affaanmustafa)
-* **zenith.chat:** [zenith.chat](https://zenith.chat)
-* **技能目录:** [awesome-agent-skills](https://github.com/JackyST0/awesome-agent-skills)
+**Critical:** Don't enable all MCPs at once. Each MCP tool description consumes tokens from your 200k window, potentially reducing it to ~70k.
 
-***
+- Keep under 10 MCPs enabled per project
+- Keep under 80 tools active
+- Use `disabledMcpServers` in project config to disable unused ones
 
-## 📄 许可证
+### Agent Teams Cost Warning
 
-MIT - 自由使用，根据需要修改，如果可以请回馈贡献。
+Agent Teams spawns multiple context windows. Each teammate consumes tokens independently. Only use for tasks where parallelism provides clear value (multi-module work, parallel reviews). For simple sequential tasks, subagents are more token-efficient.
 
-***
+---
 
-**如果此仓库对你有帮助，请点星。阅读两份指南。构建伟大的东西。**
+## ⚠️ Important Notes
+
+### Token Optimization
+
+Hitting daily limits? See the **[Token Optimization Guide](docs/token-optimization.md)** for recommended settings and workflow tips.
+
+Quick wins:
+
+```json
+// ~/.claude/settings.json
+{
+  "model": "sonnet",
+  "env": {
+    "MAX_THINKING_TOKENS": "10000",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
+  }
+}
+```
+
+Use `/clear` between unrelated tasks, `/compact` at logical breakpoints, and `/cost` to monitor spending.
+
+### Customization
+
+These configs work for my workflow. You should:
+1. Start with what resonates
+2. Modify for your stack
+3. Remove what you don't use
+4. Add your own patterns
+
+---
+
+## 💜 Sponsors
+
+This project is free and open source. Sponsors help keep it maintained and growing.
+
+[**Become a Sponsor**](https://github.com/sponsors/affaan-m) | [Sponsor Tiers](SPONSORS.md)
+
+---
+
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=affaan-m/everything-claude-code&type=Date)](https://star-history.com/#affaan-m/everything-claude-code&Date)
+
+---
+
+## 🔗 Links
+
+- **Shorthand Guide (Start Here):** [The Shorthand Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2012378465664745795)
+- **Longform Guide (Advanced):** [The Longform Guide to Everything Claude Code](https://x.com/affaanmustafa/status/2014040193557471352)
+- **Follow:** [@affaanmustafa](https://x.com/affaanmustafa)
+- **zenith.chat:** [zenith.chat](https://zenith.chat)
+- **Skills Directory:** [awesome-agent-skills](https://github.com/JackyST0/awesome-agent-skills)
+
+---
+
+## 📄 License
+
+MIT - Use freely, modify as needed, contribute back if you can.
+
+---
+
+**Star this repo if it helps. Read both guides. Build something great.**

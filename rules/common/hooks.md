@@ -1,33 +1,30 @@
-# Hooks 系统
+# Hooks System
 
-## Hook 类型
+## Hook Types
 
-* **PreToolUse**：工具执行前（验证、参数修改）
-* **PostToolUse**：工具执行后（自动格式化、检查）
-* **Stop**：会话结束时（最终验证）
+- **PreToolUse**: Before tool execution (validation, parameter modification)
+- **PostToolUse**: After tool execution (auto-format, checks)
+- **Stop**: When session ends (final verification)
 
-## 自动接受权限
+## Auto-Accept Permissions
 
-谨慎使用：
+Use with caution:
+- Enable for trusted, well-defined plans
+- Disable for exploratory work
+- Never use dangerously-skip-permissions flag
+- Configure `allowedTools` in `~/.claude.json` instead
 
-* 为受信任、定义明确的计划启用
-* 为探索性工作禁用
-* 切勿使用 dangerously-skip-permissions 标志
-* 改为在 `~/.claude.json` 中配置 `allowedTools`
+## TodoWrite Best Practices
 
-## TodoWrite 最佳实践
+Use TodoWrite tool to:
+- Track progress on multi-step tasks
+- Verify understanding of instructions
+- Enable real-time steering
+- Show granular implementation steps
 
-使用 TodoWrite 工具来：
-
-* 跟踪多步骤任务的进度
-* 验证对指令的理解
-* 实现实时指导
-* 展示详细的实现步骤
-
-待办事项列表可揭示：
-
-* 步骤顺序错误
-* 缺失的项目
-* 额外不必要的项目
-* 粒度错误
-* 对需求的理解有误
+Todo list reveals:
+- Out of order steps
+- Missing items
+- Extra unnecessary items
+- Wrong granularity
+- Misinterpreted requirements

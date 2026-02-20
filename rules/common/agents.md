@@ -1,52 +1,49 @@
-# 智能体编排
+# Agent Orchestration
 
-## 可用智能体
+## Available Agents
 
-位于 `~/.claude/agents/` 中：
+Located in `~/.claude/agents/`:
 
-| 智能体 | 用途 | 使用时机 |
+| Agent | Purpose | When to Use |
 |-------|---------|-------------|
-| planner | 实现规划 | 复杂功能、重构 |
-| architect | 系统设计 | 架构决策 |
-| tdd-guide | 测试驱动开发 | 新功能、错误修复 |
-| code-reviewer | 代码审查 | 编写代码后 |
-| security-reviewer | 安全分析 | 提交前 |
-| build-error-resolver | 修复构建错误 | 构建失败时 |
-| e2e-runner | 端到端测试 | 关键用户流程 |
-| refactor-cleaner | 清理死代码 | 代码维护 |
-| doc-updater | 文档 | 更新文档时 |
+| planner | Implementation planning | Complex features, refactoring |
+| architect | System design | Architectural decisions |
+| tdd-guide | Test-driven development | New features, bug fixes |
+| code-reviewer | Code review | After writing code |
+| security-reviewer | Security analysis | Before commits |
+| build-error-resolver | Fix build errors | When build fails |
+| e2e-runner | E2E testing | Critical user flows |
+| refactor-cleaner | Dead code cleanup | Code maintenance |
+| doc-updater | Documentation | Updating docs |
 
-## 即时智能体使用
+## Immediate Agent Usage
 
-无需用户提示：
+No user prompt needed:
+1. Complex feature requests - Use **planner** agent
+2. Code just written/modified - Use **code-reviewer** agent
+3. Bug fix or new feature - Use **tdd-guide** agent
+4. Architectural decision - Use **architect** agent
 
-1. 复杂的功能请求 - 使用 **planner** 智能体
-2. 刚编写/修改的代码 - 使用 **code-reviewer** 智能体
-3. 错误修复或新功能 - 使用 **tdd-guide** 智能体
-4. 架构决策 - 使用 **architect** 智能体
+## Parallel Task Execution
 
-## 并行任务执行
-
-对于独立操作，**始终**使用并行任务执行：
+ALWAYS use parallel Task execution for independent operations:
 
 ```markdown
-# 良好：并行执行
-同时启动 3 个智能体：
-1. 智能体 1：认证模块的安全分析
-2. 智能体 2：缓存系统的性能审查
-3. 智能体 3：工具类的类型检查
+# GOOD: Parallel execution
+Launch 3 agents in parallel:
+1. Agent 1: Security analysis of auth module
+2. Agent 2: Performance review of cache system
+3. Agent 3: Type checking of utilities
 
-# 不良：不必要的顺序执行
-先智能体 1，然后智能体 2，最后智能体 3
-
+# BAD: Sequential when unnecessary
+First agent 1, then agent 2, then agent 3
 ```
 
-## 多视角分析
+## Multi-Perspective Analysis
 
-对于复杂问题，使用拆分角色的子智能体：
-
-* 事实审查员
-* 高级工程师
-* 安全专家
-* 一致性审查员
-* 冗余检查器
+For complex problems, use split role sub-agents:
+- Factual reviewer
+- Senior engineer
+- Security expert
+- Consistency reviewer
+- Redundancy checker

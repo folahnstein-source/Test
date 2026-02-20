@@ -1,8 +1,15 @@
-# TypeScript/JavaScript 模式
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+---
+# TypeScript/JavaScript Patterns
 
-> 此文件在 [common/patterns.md](../common/patterns.md) 的基础上扩展了 TypeScript/JavaScript 特定的内容。
+> This file extends [common/patterns.md](../common/patterns.md) with TypeScript/JavaScript specific content.
 
-## API 响应格式
+## API Response Format
 
 ```typescript
 interface ApiResponse<T> {
@@ -17,7 +24,7 @@ interface ApiResponse<T> {
 }
 ```
 
-## 自定义 Hooks 模式
+## Custom Hooks Pattern
 
 ```typescript
 export function useDebounce<T>(value: T, delay: number): T {
@@ -32,7 +39,7 @@ export function useDebounce<T>(value: T, delay: number): T {
 }
 ```
 
-## 仓库模式
+## Repository Pattern
 
 ```typescript
 interface Repository<T> {
