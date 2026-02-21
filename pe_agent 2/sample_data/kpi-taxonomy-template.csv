@@ -1,0 +1,7 @@
+kpi_name,category,description,aggregation,default_unit
+pipeline_conversion_pct,commercial,Qualified-to-won conversion rate,avg,%
+gross_churn_pct,commercial,Gross customer churn by period,avg,%
+oee_pct,operations,Overall equipment effectiveness,avg,%
+on_time_delivery_pct,operations,On-time in-full delivery,avg,%
+revenue_per_fte_k,people,Revenue per full-time equivalent,avg,EURk
+sick_days_per_fte,people,Sick days per full-time equivalent,avg,days

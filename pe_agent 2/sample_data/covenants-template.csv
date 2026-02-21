@@ -1,0 +1,4 @@
+company,covenant_name,metric,formula_expr,threshold,direction,warning_buffer
+Alpen Components GmbH,Net Debt / EBITDA,leverage,net_debt / ebitda_ltm,4.0,<=,0.10
+Alpen Components GmbH,Interest Cover,interest_cover,ebitda_actual / interest_expense,3.0,>=,0.10
+Rhein Software Solutions GmbH,Gross Churn Limit,gross_churn_pct,gross_churn_pct,7.0,<=,0.10

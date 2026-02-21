@@ -1,0 +1,9 @@
+kpi_name,category,description,aggregation,default_unit
+oee_pct,operations,Overall equipment effectiveness,avg,%
+scrap_rate_pct,operations,Scrap units divided by production units,avg,%
+rework_rate_pct,operations,Reworked units divided by produced units,avg,%
+otif_pct,operations,On-time in-full delivery rate,avg,%
+backlog_coverage_months,operations,Backlog value divided by monthly shipments,avg,months
+throughput_units,operations,Total units produced,sum,units
+cycle_time_hours,operations,Average cycle time per unit,avg,hours
+energy_intensity_kwh_per_unit,operations,Energy use divided by units produced,avg,kwh/unit

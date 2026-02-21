@@ -1,0 +1,15 @@
+kpi_name,category,description,aggregation,default_unit
+revenue,financial,Total revenue in period,sum,EURm
+ebitda,financial,EBITDA in period,sum,EURm
+ebitda_margin_pct,financial,EBITDA divided by revenue,avg,%
+operating_cash_flow,liquidity,Operating cash flow in period,sum,EURm
+net_debt,leverage,Total debt minus cash,end,EURm
+leverage_net_debt_ebitda,leverage,Net debt divided by LTM EBITDA,end,x
+interest_cover,leverage,EBITDA divided by interest expense,avg,x
+dso,working_capital,Days sales outstanding,avg,days
+dpo,working_capital,Days payables outstanding,avg,days
+dio,working_capital,Days inventory outstanding,avg,days
+cash_conversion_cycle,working_capital,DSO plus DIO minus DPO,avg,days
+cash_runway_months,liquidity,Cash divided by monthly burn proxy,avg,months
+pipeline_conversion_pct,commercial,Qualified to won conversion rate,avg,%
+revenue_per_fte_k,people,Revenue per full-time equivalent,avg,EURk

@@ -1,0 +1,11 @@
+kpi_name,category,description,aggregation,default_unit
+arr,commercial,Annual recurring revenue,end,EURm
+mrr,commercial,Monthly recurring revenue,end,EURm
+nrr_pct,commercial,Net revenue retention,avg,%
+gross_churn_pct,commercial,Gross churn in period,avg,%
+net_churn_pct,commercial,Net churn in period,avg,%
+arpu,commercial,Average revenue per account,avg,EUR
+cac_payback_months,commercial,Months to recover acquisition cost,avg,months
+rule_of_40_pct,financial,Growth rate plus EBITDA margin,avg,%
+pipeline_coverage_x,commercial,Pipeline value divided by target bookings,end,x
+win_rate_pct,commercial,Won deals divided by total decisions,avg,%

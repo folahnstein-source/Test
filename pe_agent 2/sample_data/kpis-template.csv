@@ -1,0 +1,6 @@
+company,period_end,kpi_name,kpi_actual,kpi_budget,unit
+Rhein Software Solutions GmbH,2026-01-31,gross_churn_pct,8.7,6.2,%
+Rhein Software Solutions GmbH,2026-01-31,pipeline_conversion_pct,18.0,24.0,%
+Alpen Components GmbH,2026-01-31,oee_pct,75.0,80.0,%
+Alpen Components GmbH,2026-01-31,on_time_delivery_pct,87.0,92.0,%
+Iberia MedTech SL,2026-01-31,sick_days_per_fte,2.8,2.1,days

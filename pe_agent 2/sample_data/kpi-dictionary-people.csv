@@ -1,0 +1,7 @@
+kpi_name,category,description,aggregation,default_unit
+voluntary_attrition_pct,people,Voluntary leavers divided by average headcount,avg,%
+absence_days_per_fte,people,Sick and absence days per FTE,avg,days
+critical_role_vacancy_days,people,Average days key roles remain open,avg,days
+hiring_cycle_days,people,Days from role opening to accepted offer,avg,days
+training_hours_per_fte,people,Average training hours per FTE,avg,hours
+engagement_score,people,Employee engagement survey score,avg,score
