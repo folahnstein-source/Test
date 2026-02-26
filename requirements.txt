@@ -1,15 +1,36 @@
-# Web application
-flask>=3.0
+# Core AI/LLM
+anthropic>=0.40.0
+openai
+cohere
+google-genai>=1.0.0
 
-# Core agent functionality uses Python 3.10+ standard library only.
-# All API integrations (HTTP, JSON, XML, subprocess) use stdlib modules.
+# Google Services
+google-auth>=2.36.0
+google-auth-oauthlib>=1.2.0
+google-api-python-client>=2.160.0
+gspread>=6.1.0
 
-# Optional — install for enhanced functionality:
-#   requests          # More robust HTTP client (replaces urllib)
-#   anthropic         # Claude API for LLM-based lead qualification
-#   openai            # GPT-based analysis alternative
-#   pandas            # Tabular data manipulation and CSV export
-#   sqlalchemy        # SQL database persistence (replace JSON files)
-#   pydantic          # Stricter data validation
-#   schedule          # Periodic sourcing cycles (cron alternative)
-#   python-dotenv     # Load .env files automatically
+# Vector DB & RAG
+pinecone-client
+
+# Web Scraping & Automation
+apify-client>=1.8.0
+beautifulsoup4>=4.12.0
+playwright>=1.49.0
+httpx>=0.28.0
+requests>=2.32.0
+html2text>=2024.2.0
+
+# Data Processing
+pandas>=2.2.0
+Pillow>=11.0.0
+numpy>=1.26.0
+reportlab>=4.0.0
+
+# Computer Vision (for thumbnail face matching)
+mediapipe>=0.10.0
+opencv-python>=4.9.0
+
+# Infrastructure
+modal>=0.73.0
+python-dotenv>=1.0.0
